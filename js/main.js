@@ -19,3 +19,25 @@ function updateClock() {
 
 updateClock();
 setInterval(updateClock, 1000);
+
+function initNavbarScroll() {
+  const navbar = document.querySelector(".navbar");
+  if (!navbar) return;
+
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    const scrollingDown = currentScrollY > lastScrollY;
+
+    if (scrollingDown && currentScrollY > navbar.offsetHeight) {
+      navbar.classList.add("navbar--hidden");
+    } else if (!scrollingDown) {
+      navbar.classList.remove("navbar--hidden");
+    }
+
+    lastScrollY = currentScrollY;
+  });
+}
+
+initNavbarScroll();
