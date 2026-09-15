@@ -364,6 +364,136 @@ a.navbar__title:hover {
   gap: var(--space-8);
 }
 
+/* ===== Detail page (project case study) ===== */
+.detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-64);
+}
+
+.detail-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.detail-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-hero__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.watch-live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  background: var(--neutral-30);
+  border-radius: 34px;
+  padding: var(--space-8) var(--space-12);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0.5px;
+  color: var(--neutral-100);
+}
+
+.detail-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.detail-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 27px;
+  letter-spacing: 0.7px;
+  color: var(--neutral-100);
+}
+
+.detail-image {
+  width: 100%;
+  aspect-ratio: 840 / 491;
+  background: var(--neutral-30);
+  border-radius: 4px;
+}
+
+.detail-image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--space-24);
+  aspect-ratio: 840 / 1008;
+}
+
+.detail-image-grid .detail-image {
+  aspect-ratio: auto;
+  height: 100%;
+}
+
+.detail-image-grid__item--top-right {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.detail-image-grid__item--bottom-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.detail-image-grid__item--bottom-right {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* ===== Footer detail (project pages) ===== */
+.footer-detail {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-stroke);
+  padding-top: var(--space-40);
+}
+
+.footer-detail__email {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.footer-detail__label {
+  color: var(--color-paragraph);
+}
+
+.link--large {
+  font-size: 18px;
+  line-height: 27px;
+}
+
+.footer-detail__bar {
+  margin-top: var(--space-40);
+  max-width: 840px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--space-24) var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-40);
+  flex-wrap: wrap;
+}
+
 /* ===== Responsive breakpoints (matches Figma frames: 390 / 810 / 1440) ===== */
 
 /* Tablet and up */
