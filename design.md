@@ -145,17 +145,17 @@ Layout: `headline` → `selected-works` (grid 4 work-card + tombol "All Works") 
 - [x] Extract detail project **Werk: Personnel Management** → sudah jadi `werk-personnel-management.html` lengkap dengan 10 gambar (folder: `assets/images/personnel-detail-page/`). Termasuk pola baru: 2 gambar full-width bertumpuk berurutan tanpa grid
 - [x] Extract detail project **Werk: CRM** → sudah jadi `werk-crm.html` lengkap dengan 5 gambar (folder: `assets/images/crm-detail-page/`). Sempat ketemu bug konten di Figma (paragraf Outcome copy-paste dari Personnel Management) — sudah dilaporkan ke user dan diperbaiki sebelum di-extract
 - [x] Extract detail project **Werk: Mobile App** → sudah jadi `werk-mobile-apps.html` lengkap dengan 6 gambar (folder: `assets/images/mobile-apps-detail-page/`)
-- [x] Extract detail project **Atopia Space** → sudah jadi `atopia-space.html`, struktur lengkap. Termasuk pola baru: grid 2 kolom dengan lebar TIDAK sama (rasio ~500:316, class `.detail-image-grid--wide-narrow`), dipakai 2x.
-  - **Catatan penting:** nama frame gambar di Figma project ini banyak yang bentrok/dipakai berulang (img-1, img-2_1/2_2, img-4_1/2/3 semua muncul >1x untuk gambar berbeda). Sudah disepakati dengan user pakai penomoran baru berurutan (bukan nama asli Figma). Upload ke `assets/images/atopia-space-detail-page/` dengan nama:
+- [x] Extract detail project **Atopia Space** → sudah jadi `atopia-space.html`, struktur lengkap.
+  - **Update (re-extract):** user merapikan ulang frame di Figma — rename semua layer gambar jadi penomoran sekuensial baru (lebih gampang buat upload), hapus 1 pasang gambar yang dianggap tidak perlu (grid di bawah "Proximity vs. Manual Interaction Triggers" dihapus total, sekarang cuma 1 gambar tunggal di section itu), dan grid 2 kolom yang tadinya asimetris (~500:316, `.detail-image-grid--wide-narrow`) dikembalikan ke rata 50:50 biasa (`.detail-image-grid` tanpa modifier). Struktur HTML & nama file sudah disesuaikan dengan Figma yang baru. Total gambar sekarang 11 (turun dari 13).
+  - Upload ke `assets/images/atopia-space-detail-page/` dengan nama (sesuai nama layer Figma yang baru, urut sesuai halaman):
     - `img-1` — Contextual Modals & Inline Trimming (tunggal)
-    - `img-2` — Proximity vs. Manual Interaction Triggers (tunggal pertama)
-    - `img-3_1` / `img-3_2` — Proximity vs. Manual Interaction Triggers, grid asimetris (kiri lebar / kanan sempit)
-    - `img-4` — Unified Asset Library & Inline Verification (tunggal)
-    - `img-5_1` / `img-5_2` — Unified Asset Library & Inline Verification, grid 2 kolom rata
-    - `img-6` — Simplifying 3D Acoustics (tunggal)
-    - `img-7` — Progressive POI Configuration (tunggal)
-    - `img-8_1` / `img-8_2` — Progressive POI Configuration, grid asimetris (kiri lebar / kanan sempit)
-    - `img-9_1` / `img-9_2` — Rich Metadata & Asset Stacking, grid 2 kolom rata
+    - `img-2` — Proximity vs. Manual Interaction Triggers (tunggal, tidak ada grid lagi)
+    - `img-3_1` — Unified Asset Library & Inline Verification (tunggal)
+    - `img-3_2` / `img-3_3` — Unified Asset Library & Inline Verification, grid 2 kolom rata
+    - `img-4` — Simplifying 3D Acoustics (tunggal)
+    - `img-5_1` — Progressive POI Configuration (tunggal)
+    - `img-5_2` / `img-5_3` — Progressive POI Configuration, grid 2 kolom rata (bukan asimetris lagi)
+    - `img-6_1` / `img-6_2` — Rich Metadata & Asset Stacking, grid 2 kolom rata
 - [ ] Extract 2 halaman detail project sisanya (Kasatmata, ZNTRAL) — pakai pola yang sama, tinggal sesuaikan jumlah section & gambar per project
 - [x] **Booksmart Corporate Landing Page** — TIDAK butuh halaman detail sendiri. Card-nya di `works.html` langsung link keluar ke `https://booksmart.store/corporate-site/` (buka tab baru), sama seperti badge "Watch live" di project lain
 - [x] Export sisa thumbnail di halaman All Works (10/10 sudah lengkap)
