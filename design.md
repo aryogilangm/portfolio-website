@@ -3,6 +3,8 @@
 Sumber: Figma file `website-aryogilangm-v2` (page "asset" = components & tokens, page "design" = page layouts).
 File ini jadi rujukan utama saat coding, supaya hasil di kode konsisten sama desain di Figma.
 
+> Untuk spec detail tiap reusable component (state, variant, contoh markup) lihat [components.md](components.md) — file ini cuma kasih ringkasan singkatnya di bagian 2.
+
 ---
 
 ## 1. Design Tokens
@@ -83,9 +85,11 @@ Figma punya 2 grup terpisah tapi nilainya sama (`padding system/*` dan `spacing 
 
 ## 2. Reusable Components (dari page "asset")
 
+> Ringkasan singkat — spec lengkap (state, contoh markup, catatan koreksi bug) ada di [components.md](components.md).
+
 | Component | Variant/State | Catatan |
 |---|---|---|
-| `nav-bar` | `home`, `detail-page` | Teks "HOME" / judul halaman, style Header/20/Medium, padding 16px vertikal 40px horizontal. **Dipakai di halaman index & detail project, TIDAK dipakai di halaman "home"** |
+| `nav-bar` | `home` (putih+border), `detail-page` (transparent, tanpa border) | Teks "HOME" / "ALL WORKS", style Header/20/Medium, padding 16px vertikal 40px horizontal. `home` dipakai di halaman index (works.html), `detail-page` dipakai di semua halaman detail project. **TIDAK dipakai di halaman "home" (index.html)** |
 | `button` | default | radius 8px, padding 8px 16px, bg putih, border `#ededed`, teks abu |
 | `Link` | size (Default/Large) × state (default/hover/pressed) | underline, warna berubah abu → biru saat hover/pressed |
 | `work-card` | — | Gambar (rectangle) + Work Title + Subtitle, dipakai di grid project |
@@ -135,8 +139,10 @@ Layout: `headline` → `selected-works` (grid 4 work-card + tombol "All Works") 
 ## 4. Yang Masih Perlu Disiapkan / Dikerjakan
 
 - [x] Extract detail section **index** → sudah jadi `works.html` (All Works), grid 1/2/3 kolom
-- [ ] Extract 9 halaman detail project (Booksmart, Bookdrop, dst.) — kemungkinan besar pola/layout-nya sama, cukup cek 1-2 dulu sebagai referensi
-- [ ] Export sisa thumbnail: Booksmart Corporate Landing Page, Werk Personnel Management, Werk CRM, Atopia Space, Kasatmata, ZNTRAL (4 sudah ada: Booksmart, Bookdrop, ESS, Mobile Apps)
+- [x] Extract detail project **Booksmart** → sudah jadi `booksmart.html`, jadi template pola untuk 9 project lainnya (lihat [components.md](components.md) bagian 7 "Detail Page Content Structure")
+- [ ] Extract 9 halaman detail project sisanya (Bookdrop, ESS, Personnel Management, CRM, Mobile Apps, Atopia Space, Kasatmata, ZNTRAL, Booksmart Corporate Landing Page) — pakai pola yang sama dari Booksmart, tinggal sesuaikan jumlah section & gambar per project
+- [x] Export sisa thumbnail di halaman All Works (10/10 sudah lengkap)
+- [x] Upload & pasang 10 gambar konten Booksmart (img-1 s.d. img-8, termasuk img-7_1/2/3)
 - [ ] Export icon yang benar-benar dipakai dari "Icon - Bootstrap"
 - [ ] Cross-check dengan live Framer site untuk animasi/interaksi yang tidak kebaca dari Figma statis
 

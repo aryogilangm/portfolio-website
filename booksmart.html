@@ -8,91 +8,108 @@
 </head>
 <body>
 
-  <nav class="navbar">
+  <nav class="navbar navbar--transparent">
     <div class="navbar__inner">
-      <a href="index.html" class="navbar__title">HOME</a>
+      <a href="works.html" class="navbar__title">ALL WORKS</a>
     </div>
   </nav>
 
-  <main class="container detail-page">
-    <header class="detail-hero">
-      <div class="detail-hero__top">
-        <p class="title">Booksmart</p>
-        <a href="https://booksmart.store/" target="_blank" rel="noopener" class="watch-live">
-          Watch live
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3M8.5 1.5V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
+  <main class="detail-page">
+
+    <section class="detail-section detail-section--tight">
+      <header class="detail-hero">
+        <div class="detail-hero__top">
+          <p class="title">Booksmart</p>
+          <a href="https://booksmart.store/" target="_blank" rel="noopener" class="watch-live">
+            Watch live
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3M8.5 1.5V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <div class="detail-hero__text">
+          <p class="paragraph">Booksmart runs one of the largest book libraries in Southeast Asia, serving both everyday readers and enterprise clients across the region. But having a massive catalog meant nothing if people couldn&rsquo;t find what they were looking for, or gave up before checkout. High friction across the shopping journey was quietly killing conversions: poor product discovery, and a checkout flow that bled users at every step.</p>
+          <p class="paragraph">I led an end-to-end redesign of the core journey, from homepage to payment, built around one goal: get people to what they want, fast. Structured categorization, context-rich search, and a progressive stepper checkout cut the cognitive load and shortened the path to purchase.</p>
+        </div>
+      </header>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Faster Access to Booksmart&rsquo;s Catalog</h2>
+        <p class="paragraph">The legacy system caused high navigation friction: categories only showed 7 books, forcing users to click &ldquo;See All&rdquo; and load a new page just to keep browsing. I kept users on the Landing Page instead, introducing a two-level filter hierarchy (Category and Sub-category) that updates the catalog instantly without page reloads, drastically cutting the time it takes to find a specific book.</p>
       </div>
-      <div class="detail-hero__text">
-        <p class="paragraph">Booksmart runs one of the largest book libraries in Southeast Asia, serving both everyday readers and enterprise clients across the region. But having a massive catalog meant nothing if people couldn&rsquo;t find what they were looking for, or gave up before checkout. High friction across the shopping journey was quietly killing conversions: poor product discovery, and a checkout flow that bled users at every step.</p>
-        <p class="paragraph">I led an end-to-end redesign of the core journey, from homepage to payment, built around one goal: get people to what they want, fast. Structured categorization, context-rich search, and a progressive stepper checkout cut the cognitive load and shortened the path to purchase.</p>
+
+      <img class="detail-image" src="assets/images/booksmart-detail-page/img-1.png" alt="Booksmart landing page catalog filter" />
+
+      <div class="detail-block">
+        <h3 class="detail-title">Contextual Sub-Categorization</h3>
+        <p class="paragraph">Segmented controls (New Arrivals, Best Sellers) act as secondary filters, using a familiar UI pattern to instantly narrow results below without adding cognitive load.</p>
+        <img class="detail-image" src="assets/images/booksmart-detail-page/img-2.png" alt="Booksmart segmented sub-category filter" />
       </div>
-    </header>
 
-    <section class="detail-block">
-      <h2 class="detail-title">Faster Access to Booksmart&rsquo;s Catalog</h2>
-      <p class="paragraph">The legacy system caused high navigation friction: categories only showed 7 books, forcing users to click &ldquo;See All&rdquo; and load a new page just to keep browsing. I kept users on the Landing Page instead, introducing a two-level filter hierarchy (Category and Sub-category) that updates the catalog instantly without page reloads, drastically cutting the time it takes to find a specific book.</p>
-      <div class="detail-image"></div>
+      <div class="detail-subgroup">
+        <div class="detail-block">
+          <h3 class="detail-title">Cross-Discovery Search</h3>
+          <p class="paragraph">Search became an ecosystem bridge rather than a plain lookup tool. Clicking into the search bar (zero-state) immediately shows suggestions to guide intent before the user even starts typing.</p>
+          <img class="detail-image" src="assets/images/booksmart-detail-page/img-3.png" alt="Booksmart search zero-state suggestions" />
+        </div>
+        <div class="detail-block">
+          <p class="paragraph">Search results now surface books alongside relevant &ldquo;Collections&rdquo; and &ldquo;Author&rdquo; profiles, encouraging community curation and laying the groundwork for Booksmart&rsquo;s upcoming affiliate program.</p>
+          <img class="detail-image" src="assets/images/booksmart-detail-page/img-4.png" alt="Booksmart search results with collections and authors" />
+        </div>
+      </div>
     </section>
 
-    <section class="detail-block">
-      <h2 class="detail-title">Contextual Sub-Categorization</h2>
-      <p class="paragraph">Segmented controls (New Arrivals, Best Sellers) act as secondary filters, using a familiar UI pattern to instantly narrow results below without adding cognitive load.</p>
-      <div class="detail-image"></div>
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Driving Early Purchase Decisions with Promo Visibility</h2>
+        <p class="paragraph">The legacy system hid promos until final checkout, so users browsing the Product Detail Page had no visibility into discounts, weakening purchase intent and often pushing them to leave the page just to hunt for promo codes. I brought discount visibility upfront onto the Product Detail Page itself, creating a psychological trigger that speeds up purchasing decisions.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Contextual Voucher Section</h3>
+        <p class="paragraph">Promos are dynamically sorted by relevance to the specific product, prioritizing high-value discounts like free shipping or bundles, so users get an immediate sense of value without hunting for codes.</p>
+        <img class="detail-image" src="assets/images/booksmart-detail-page/img-5.png" alt="Booksmart contextual voucher section" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Extended Promo Management</h3>
+        <p class="paragraph">A &ldquo;See All&rdquo; modal lets users browse every available promo without leaving the PDP, including a manual input field for edge cases like B2B clients using special admin-generated codes.</p>
+        <img class="detail-image" src="assets/images/booksmart-detail-page/img-6.png" alt="Booksmart extended promo management modal" />
+      </div>
     </section>
 
-    <section class="detail-block">
-      <h2 class="detail-title">Cross-Discovery Search</h2>
-      <p class="paragraph">Search became an ecosystem bridge rather than a plain lookup tool. Clicking into the search bar (zero-state) immediately shows suggestions to guide intent before the user even starts typing.</p>
-      <div class="detail-image"></div>
-      <p class="paragraph">Search results now surface books alongside relevant &ldquo;Collections&rdquo; and &ldquo;Author&rdquo; profiles, encouraging community curation and laying the groundwork for Booksmart&rsquo;s upcoming affiliate program.</p>
-      <div class="detail-image"></div>
-    </section>
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Reducing Transaction Friction with Segmented Checkout</h2>
+        <p class="paragraph">The legacy checkout was one massive, single-page form for both shipping and payment, with no real-time visibility into cart contents while filling it out, raising drop-off risk from sheer uncertainty. I restructured the layout entirely, splitting the input process and adding a persistent reference point throughout.</p>
+      </div>
 
-    <section class="detail-block">
-      <h2 class="detail-title">Driving Early Purchase Decisions with Promo Visibility</h2>
-      <p class="paragraph">The legacy system hid promos until final checkout, so users browsing the Product Detail Page had no visibility into discounts, weakening purchase intent and often pushing them to leave the page just to hunt for promo codes. I brought discount visibility upfront onto the Product Detail Page itself, creating a psychological trigger that speeds up purchasing decisions.</p>
-    </section>
-
-    <section class="detail-block">
-      <h2 class="detail-title">Contextual Voucher Section</h2>
-      <p class="paragraph">Promos are dynamically sorted by relevance to the specific product, prioritizing high-value discounts like free shipping or bundles, so users get an immediate sense of value without hunting for codes.</p>
-      <div class="detail-image"></div>
-    </section>
-
-    <section class="detail-block">
-      <h2 class="detail-title">Extended Promo Management</h2>
-      <p class="paragraph">A &ldquo;See All&rdquo; modal lets users browse every available promo without leaving the PDP, including a manual input field for edge cases like B2B clients using special admin-generated codes.</p>
-      <div class="detail-image"></div>
-    </section>
-
-    <section class="detail-block">
-      <h2 class="detail-title">Reducing Transaction Friction with Segmented Checkout</h2>
-      <p class="paragraph">The legacy checkout was one massive, single-page form for both shipping and payment, with no real-time visibility into cart contents while filling it out, raising drop-off risk from sheer uncertainty. I restructured the layout entirely, splitting the input process and adding a persistent reference point throughout.</p>
-    </section>
-
-    <section class="detail-block">
-      <h2 class="detail-title">3-Step Checkout Stepper</h2>
-      <p class="paragraph">I broke the form into three digestible stages: Shipping Information, Shipping Method, and Payment Method, so users focus on one task at a time instead of facing an intimidating wall of fields.</p>
       <div class="detail-image-grid">
-        <div class="detail-image detail-image-grid__item detail-image-grid__item--top-right"></div>
-        <div class="detail-image detail-image-grid__item detail-image-grid__item--bottom-left"></div>
-        <div class="detail-image detail-image-grid__item detail-image-grid__item--bottom-right"></div>
+        <div class="detail-image-grid__text">
+          <h3 class="detail-title">3-Step Checkout Stepper</h3>
+          <p class="paragraph">I broke the form into three digestible stages: Shipping Information, Shipping Method, and Payment Method, so users focus on one task at a time instead of facing an intimidating wall of fields.</p>
+        </div>
+        <img class="detail-image detail-image-grid__item--top-right" src="assets/images/booksmart-detail-page/img-7_1.png" alt="Booksmart checkout step 1 shipping information" />
+        <img class="detail-image detail-image-grid__item--bottom-left" src="assets/images/booksmart-detail-page/img-7_2.png" alt="Booksmart checkout step 2 shipping method" />
+        <img class="detail-image detail-image-grid__item--bottom-right" src="assets/images/booksmart-detail-page/img-7_3.png" alt="Booksmart checkout step 3 payment method" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Persistent Order Summary Sidebar</h3>
+        <p class="paragraph">A sticky Order Summary on the right keeps items, applied vouchers, and total cost visible throughout all three steps. For B2B bulk purchases, the item list scrolls independently while the pricing breakdown and total stay anchored at the bottom, uninterrupted.</p>
+        <img class="detail-image" src="assets/images/booksmart-detail-page/img-8.png" alt="Booksmart persistent order summary sidebar" />
       </div>
     </section>
 
-    <section class="detail-block">
-      <h2 class="detail-title">Persistent Order Summary Sidebar</h2>
-      <p class="paragraph">A sticky Order Summary on the right keeps items, applied vouchers, and total cost visible throughout all three steps. For B2B bulk purchases, the item list scrolls independently while the pricing breakdown and total stay anchored at the bottom, uninterrupted.</p>
-      <div class="detail-image"></div>
+    <section class="detail-section detail-section--outro">
+      <div class="detail-block">
+        <h2 class="detail-title">Outcome</h2>
+        <p class="paragraph">The result is a shopping journey that removes friction at every point users tend to drop off. Browsing no longer means bouncing between pages just to see more books, discounts are visible the moment a user considers a purchase instead of being a last-minute surprise, and checkout no longer feels like filling out a tax form with no idea what&rsquo;s actually in the cart. Every change traces back to the same principle: keep users oriented and moving forward, whether they&rsquo;re an individual reader browsing casually or a B2B client processing a bulk order.</p>
+      </div>
     </section>
 
-    <section class="detail-block">
-      <h2 class="detail-title">Outcome</h2>
-      <p class="paragraph">The result is a shopping journey that removes friction at every point users tend to drop off. Browsing no longer means bouncing between pages just to see more books, discounts are visible the moment a user considers a purchase instead of being a last-minute surprise, and checkout no longer feels like filling out a tax form with no idea what&rsquo;s actually in the cart. Every change traces back to the same principle: keep users oriented and moving forward, whether they&rsquo;re an individual reader browsing casually or a B2B client processing a bulk order.</p>
-    </section>
   </main>
 
   <footer class="footer-detail">
@@ -101,9 +118,11 @@
       <a href="mailto:agmaudyansa@gmail.com" class="link link--large">agmaudyansa@gmail.com</a>
     </div>
     <div class="footer-detail__bar">
-      <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
-      <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
-      <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+      <div class="footer-detail__links">
+        <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+      </div>
       <p class="paragraph">&copy;2026</p>
     </div>
   </footer>
