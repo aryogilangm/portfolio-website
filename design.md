@@ -141,7 +141,8 @@ Layout: `headline` → `selected-works` (grid 4 work-card + tombol "All Works") 
 - [x] Extract detail section **index** → sudah jadi `works.html` (All Works), grid 1/2/3 kolom
 - [x] Extract detail project **Booksmart** → sudah jadi `booksmart.html`, jadi template pola untuk project lainnya (lihat [components.md](components.md) bagian 7 "Detail Page Content Structure")
 - [x] Extract detail project **Bookdrop** → sudah jadi `bookdrop.html` lengkap dengan 17 gambar. Tidak ada badge "Watch live" (internal tool, bukan public site)
-- [ ] Extract 8 halaman detail project sisanya (ESS, Personnel Management, CRM, Mobile Apps, Atopia Space, Kasatmata, ZNTRAL, Booksmart Corporate Landing Page) — pakai pola yang sama, tinggal sesuaikan jumlah section & gambar per project
+- [x] Extract detail project **Werk: ESS** → sudah jadi `werk-ess.html` lengkap dengan 10 gambar (folder: `assets/images/ess-detail-page/`). Struktur pakai semua variasi grid (1/2/4 gambar)
+- [ ] Extract 7 halaman detail project sisanya (Personnel Management, CRM, Mobile Apps, Atopia Space, Kasatmata, ZNTRAL, Booksmart Corporate Landing Page) — pakai pola yang sama, tinggal sesuaikan jumlah section & gambar per project
 - [x] Export sisa thumbnail di halaman All Works (10/10 sudah lengkap)
 - [x] Upload & pasang 10 gambar konten Booksmart (img-1 s.d. img-8, termasuk img-7_1/2/3)
 - [ ] Export icon yang benar-benar dipakai dari "Icon - Bootstrap"

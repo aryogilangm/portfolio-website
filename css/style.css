@@ -473,10 +473,17 @@ a.navbar__title:hover {
 
 /* Grid images keep their own natural proportions (no forced crop/stretch)
    — unlike the single full-width .detail-image, which is a fixed 840/491
-   crop on purpose. */
-.detail-image-grid .detail-image {
+   crop on purpose. Only applies to real <img> tags: they have an
+   intrinsic size to size from. Placeholder <div>s (before the real
+   image is uploaded) have nothing to size from and would collapse to
+   0 height, so they keep a fallback ratio instead. */
+.detail-image-grid img.detail-image {
   aspect-ratio: auto;
   object-fit: contain;
+}
+
+.detail-image-grid div.detail-image {
+  aspect-ratio: 408 / 492;
 }
 
 .detail-image-grid__text {
