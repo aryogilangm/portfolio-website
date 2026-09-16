@@ -222,13 +222,17 @@ detail-page (max-width 1440, center)
 
 ### Aturan penting
 - **Setiap "card" (`detail-section`) punya border** (`border-bottom: 1px solid #ededed`) — KECUALI section terakhir ("Outcome") yang memang tidak ada stroke-nya di Figma.
-- Section pertama (hero) dan terakhir (outcome) pakai padding-top lebih kecil (48px, modifier `.detail-section--tight` / `.detail-section--outro`), section di tengah pakai 80px.
+- Section pertama (hero) dan terakhir (outcome) pakai padding-top lebih kecil (48px di SEMUA breakpoint, modifier `.detail-section--tight` / `.detail-section--outro`). Section di tengah: **64px di mobile**, **80px di tablet & desktop** (≥768px) — awalnya disamain 80px di semua breakpoint, sudah dikoreksi setelah dicek ulang data mobile di Figma.
 - Gap antar `detail-block` dalam 1 `detail-section`: **56px**. Gap di dalam `detail-subgroup` (beberapa gambar untuk 1 topik yang sama): **40px**.
-- **Kalau ada grid gambar** (misal 3 gambar untuk 1 sub-judul, contoh: "3-Step Checkout Stepper" di Booksmart) — judul dan paragraf-nya **ikut jadi bagian dari grid** (mengisi 1 cell), BUKAN ditulis terpisah di atas grid. Ini sempat salah diimplementasikan (teks di luar grid, cell kiri-atas dibiarkan kosong) sebelum dikoreksi berdasarkan screenshot & re-check Figma.
+- **Kalau ada grid gambar** (2, 3, atau 5 gambar untuk 1 sub-judul — sudah ketemu semua variasinya di Booksmart & Bookdrop) — judul dan paragraf-nya **ikut jadi bagian dari grid** (mengisi cell kiri-atas), BUKAN ditulis terpisah di atas grid. Ini sempat salah diimplementasikan (teks di luar grid, cell kiri-atas dibiarkan kosong) sebelum dikoreksi berdasarkan screenshot & re-check Figma.
+- Grid gambar **tidak butuh class posisi manual** — cukup `.detail-image-grid` diisi berurutan: `.detail-image-grid__text` (kalau ada) sebagai child PERTAMA, lalu sejumlah `<img class="detail-image">` sesuai kebutuhan. CSS Grid auto-placement otomatis mengisi kolom kanan lalu turun baris demi baris, persis urutan di Figma. Pola yang sama juga dipakai untuk "2 gambar sejajar tanpa teks" (tinggal isi 2 `<img>` saja, tanpa `__text`).
+- **Grid gambar cuma 2 kolom di tablet & desktop (≥768px).** Di mobile, grid jadi **1 kolom vertikal** (gambar stack ke bawah, full-width) supaya tetap enak dibaca — ini juga sempat kelewatan (awalnya grid 2 kolom dipaksakan sampai ke mobile, bikin gambar jadi kecil dan sempit) sebelum dikoreksi.
+- **Gambar di dalam grid TIDAK di-crop/di-stretch** — pakai `aspect-ratio: auto` (bukan rasio tetap seperti `.detail-image` biasa), jadi tiap gambar tampil di proporsi aslinya sesuai file yang di-upload. Baris grid otomatis menyesuaikan tinggi ke gambar yang paling tinggi di baris itu (perilaku default CSS Grid, tidak perlu diatur manual). Ini sempat salah — awalnya grid images dipaksa rasio 408:492 seragam via `object-fit: cover`, hasilnya banyak gambar ke-crop/stretch tidak sesuai aslinya — sudah dikoreksi berdasarkan perbandingan screenshot desktop/tab vs mobile dari Figma.
 - Gambar pakai `border-radius: 6px` (beda dengan `work-card` yang 4px — jangan disamakan).
+- Kalau project tidak punya live site publik (contoh: Bookdrop, tool internal), **badge "Watch live" di-skip sepenuhnya** — cukup judul project tanpa badge di sebelahnya.
 
 ### Implementasi
-`.detail-page`, `.detail-section`, `.detail-section--tight`, `.detail-section--outro`, `.detail-subgroup`, `.detail-block`, `.detail-title`, `.detail-hero`, `.watch-live`, `.detail-image`, `.detail-image-grid` (+ modifier `__item--top-right` / `__item--bottom-left` / `__item--bottom-right`), `.detail-image-grid__text` — semua di [css/style.css](css/style.css).
+`.detail-page`, `.detail-section`, `.detail-section--tight`, `.detail-section--outro`, `.detail-subgroup`, `.detail-block`, `.detail-title`, `.detail-hero`, `.watch-live`, `.detail-image`, `.detail-image-grid`, `.detail-image-grid__text` — semua di [css/style.css](css/style.css).
 
 ```html
 <section class="detail-section">
@@ -239,15 +243,21 @@ detail-page (max-width 1440, center)
   <img class="detail-image" src="..." alt="..." />
 </section>
 
-<!-- kalau ada grid gambar dengan teks di salah satu cell -->
+<!-- grid gambar dengan teks di cell kiri-atas (jumlah gambar bebas, tinggal tambah <img>) -->
 <div class="detail-image-grid">
   <div class="detail-image-grid__text">
     <h3 class="detail-title">Sub-judul</h3>
     <p class="paragraph">...</p>
   </div>
-  <img class="detail-image detail-image-grid__item--top-right" src="..." />
-  <img class="detail-image detail-image-grid__item--bottom-left" src="..." />
-  <img class="detail-image detail-image-grid__item--bottom-right" src="..." />
+  <img class="detail-image" src="..." alt="..." />
+  <img class="detail-image" src="..." alt="..." />
+  <img class="detail-image" src="..." alt="..." />
+</div>
+
+<!-- grid gambar tanpa teks (misal 2 gambar sejajar) -->
+<div class="detail-image-grid">
+  <img class="detail-image" src="..." alt="..." />
+  <img class="detail-image" src="..." alt="..." />
 </div>
 ```
 

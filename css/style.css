@@ -381,7 +381,7 @@ a.navbar__title:hover {
 .detail-section {
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-stroke);
-  padding: var(--space-80) var(--gutter);
+  padding: var(--space-64) var(--gutter);
   display: flex;
   flex-direction: column;
   gap: var(--space-56);
@@ -458,38 +458,31 @@ a.navbar__title:hover {
   border-radius: 6px;
 }
 
+/* Image grid: stacks as a single column on mobile so images stay
+   full-width and readable. Becomes a proper 2-column grid at tablet+
+   (works for 2, 3, or 5 images by just adding more <img> children —
+   auto-placement fills left-to-right, top-to-bottom). Put a
+   .detail-image-grid__text as the FIRST child to reserve the top-left
+   cell for a title+paragraph instead of an image (tablet+ only —
+   on mobile it just appears above the images like any other block). */
 .detail-image-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: var(--space-24);
-  aspect-ratio: 840 / 1008;
 }
 
+/* Grid images keep their own natural proportions (no forced crop/stretch)
+   — unlike the single full-width .detail-image, which is a fixed 840/491
+   crop on purpose. */
 .detail-image-grid .detail-image {
   aspect-ratio: auto;
-  height: 100%;
+  object-fit: contain;
 }
 
 .detail-image-grid__text {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-}
-
-.detail-image-grid__item--top-right {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.detail-image-grid__item--bottom-left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.detail-image-grid__item--bottom-right {
-  grid-column: 2;
-  grid-row: 2;
 }
 
 /* ===== Footer detail (project pages) ===== */
@@ -558,6 +551,18 @@ a.navbar__title:hover {
 @media (min-width: 768px) {
   :root {
     --gutter: var(--space-100);
+  }
+
+  .detail-section {
+    padding-bottom: var(--space-80);
+  }
+
+  .detail-section:not(.detail-section--tight):not(.detail-section--outro) {
+    padding-top: var(--space-80);
+  }
+
+  .detail-image-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookdrop — Aryo Gilang Maudyansa</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar navbar--transparent">
+    <div class="navbar__inner">
+      <a href="works.html" class="navbar__title">ALL WORKS</a>
+    </div>
+  </nav>
+
+  <main class="detail-page">
+
+    <section class="detail-section detail-section--tight">
+      <header class="detail-hero">
+        <div class="detail-hero__top">
+          <p class="title">Bookdrop</p>
+        </div>
+        <div class="detail-hero__text">
+          <p class="paragraph">Bookdrop runs the daily operations behind Booksmart&rsquo;s regional e-commerce, from order fulfillment to distributor logistics. But the system was built for a business that no longer existed. As Booksmart scaled into complex B2B fulfillment, a platform designed for simple B2C orders became the bottleneck: cluttered dashboards, endless scrolling, and no way to split one order across multiple destinations.</p>
+          <p class="paragraph">I rearchitected the core order engine and dashboard experience to match how the business actually operates now, at regional B2B scale.</p>
+        </div>
+      </header>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Transforming the Dashboard into a Strategic Command Center</h2>
+        <p class="paragraph">The legacy dashboard was a bare tracker with only three widgets, leaving management with strategic blind spots since there was no way to drill into what was actually driving performance. I introduced targeted data visualizations paired with a progressive disclosure model, keeping the main interface scannable while giving stakeholders a dedicated path to dive deep when they need to.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Strategic Performance Leaderboards</h3>
+        <p class="paragraph">I added four new widgets: Top Supplier Leaderboard, Top Selling Product Leaderboard, Top Sales Channel Leaderboard, and Revenue by Country, surfacing the strongest revenue streams and supply chain performers at a glance to directly inform strategic decisions.</p>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-1.png" alt="Bookdrop strategic performance leaderboards widget" />
+      </div>
+
+      <div class="detail-image-grid">
+        <div class="detail-image-grid__text">
+          <h3 class="detail-title">Deep-Dive Detail Pages</h3>
+          <p class="paragraph">For metrics that need more depth, I built dedicated detail pages for Today&rsquo;s Orders, Total Revenue, and all three leaderboards. Admins see high-level numbers on the dashboard and click through for the full operational breakdown, without cluttering the main view.</p>
+        </div>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_1.png" alt="Bookdrop deep-dive detail page 1" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_2.png" alt="Bookdrop deep-dive detail page 2" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_3.png" alt="Bookdrop deep-dive detail page 3" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_4.png" alt="Bookdrop deep-dive detail page 4" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_5.png" alt="Bookdrop deep-dive detail page 5" />
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Bulk Uploads &amp; Multi-Shipment Logistics</h2>
+        <p class="paragraph">The legacy order process was manual and rigid: admins entered items one by one, and because the system forced a 1:1 ratio between an order and a shipping address, sending items to multiple branches meant duplicating the entire order per location, multiplying workload and skewing tracking data. I redesigned the order engine for scale, introducing mass data ingestion to bypass manual entry and decoupling shipping logic from the core order, so a single transaction can route quantities to multiple destinations without duplicating the order ID.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Automating Mass Data Entry (Bulk Entry)</h3>
+        <p class="paragraph">A .xls upload feature (ISBN, Title, Quantity) instantly populates the product list for massive B2B orders, turning tedious manual entry into a one-click process.</p>
+        <div class="detail-image-grid">
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_1.png" alt="Bookdrop bulk entry upload 1" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_2.png" alt="Bookdrop bulk entry upload 2" />
+        </div>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Dynamic Multi-Shipment Allocation</h3>
+        <p class="paragraph">I overhauled the shipping flow so admins can add multiple addresses within one order and use a visual allocation interface to distribute quantities across destinations, like splitting 200 books across 3 regional branches smoothly.</p>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_1.png" alt="Bookdrop multi-shipment allocation overview" />
+        <div class="detail-image-grid">
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_2.png" alt="Bookdrop multi-shipment allocation 2" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_3.png" alt="Bookdrop multi-shipment allocation 3" />
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Frictionless &amp; Safe Post-Order Modification</h2>
+        <p class="paragraph">Since real-world operations need flexibility, admins can switch shipment types (Single to Multiple, or back) directly from the Order Detail Page, restricted to orders still in &ldquo;Processing&rdquo; status to keep it safe.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Preventing Over-allocation (Single to Multiple)</h3>
+        <p class="paragraph">Adding a new address requires first freeing up quantity from the primary address, preventing negative stock errors. Deleting a destination auto-redistributes its items back to unallocated stock, and the system disables deletion once only one address remains, preventing accidental zero-destination orders.</p>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-5.png" alt="Bookdrop preventing over-allocation" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Smart Redistribution (Multiple to Single)</h3>
+        <p class="paragraph">Deleting a destination automatically redistributes those items to the unlocated items. The system smartly disables the deletion capability once only one address remains, preventing accidental zero-destination orders.</p>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-6.png" alt="Bookdrop smart redistribution" />
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h3 class="detail-title">Restructuring the Product Architecture</h3>
+        <p class="paragraph">The legacy Product Detail page crammed eight operational forms into one endless scroll, forcing admins to hunt for specific data and slowing down routine work. I reorganized it into a categorized tab system, grouping related data so admins only see what they need at any given moment.</p>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-7.png" alt="Bookdrop restructured product architecture" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Consolidating the Core (Product Tab)</h3>
+        <p class="paragraph">The default tab houses front-end facing data. I merged redundant sections like &ldquo;Product Information&rdquo; and &ldquo;Product Organization&rdquo; into one cohesive form covering metadata, imagery, pricing, and sales channel configuration, so marketing or content admins can work without logistical distractions.</p>
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-8.png" alt="Bookdrop consolidated product tab" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Decoupling Logistics (Manufacturer &amp; Supplier Tabs)</h3>
+        <p class="paragraph">Heavy supply-chain data now lives in its own dedicated &ldquo;Manufacturer&rdquo; and &ldquo;Supplier&rdquo; tabs. An admin fixing a typo in a book&rsquo;s description no longer scrolls past print-cost calculations or supplier lead-time matrices, cutting the risk of accidental edits to unrelated fields.</p>
+        <div class="detail-image-grid">
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_1.png" alt="Bookdrop manufacturer tab" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_2.png" alt="Bookdrop supplier tab" />
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section detail-section--outro">
+      <div class="detail-block">
+        <h2 class="detail-title">Outcome</h2>
+        <p class="paragraph">The result is a back-office system that finally matches the scale it&rsquo;s meant to operate at. Management gets a dashboard that actually informs decisions instead of just displaying numbers, admins process B2B bulk orders in a fraction of the manual steps it used to take, and routine product updates no longer mean scrolling past unrelated supply-chain data just to fix a typo. Bookdrop went from a system built for simple B2C transactions to one that can genuinely handle the complexity of regional B2B logistics.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer-detail">
+    <div class="footer-detail__email">
+      <p class="paragraph footer-detail__label">Email</p>
+      <a href="mailto:agmaudyansa@gmail.com" class="link link--large">agmaudyansa@gmail.com</a>
+    </div>
+    <div class="footer-detail__bar">
+      <div class="footer-detail__links">
+        <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+      </div>
+      <p class="paragraph">&copy;2026</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
