@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atopia Space — Aryo Gilang Maudyansa</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar navbar--transparent">
+    <div class="navbar__inner">
+      <a href="works.html" class="navbar__title">ALL WORKS</a>
+    </div>
+  </nav>
+
+  <main class="detail-page">
+
+    <section class="detail-section detail-section--tight">
+      <header class="detail-hero">
+        <div class="detail-hero__top">
+          <p class="title">Atopia Space</p>
+        </div>
+        <div class="detail-hero__text">
+          <p class="paragraph">Building a VR art gallery from scratch usually means hiring a game developer. Atopia Space set out to change that, letting artists build and publish immersive 3D/VR exhibitions without touching a game engine. The catch: spatial tools like ambient sound and object tethering are inherently 3D concepts, and translating them into something a non-technical artist could use on a flat 2D screen is genuinely hard.</p>
+          <p class="paragraph">I designed a modular web-based spatial editor that abstracts those 3D mechanics into intuitive, drag-and-drop interactions. Creators place attachments and set visual radius controls directly in the browser, no code, no game engine, and craft full VR environments from there.</p>
+        </div>
+      </header>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Object-Attached Multimedia</h2>
+        <p class="paragraph">In a physical gallery, a curator can rely on a plaque or a tour guide to explain an artwork&rsquo;s context, but in VR, static 2D text panels break immersion. Attaching audio-visual files to 3D objects is usually a technical process built for game developers, not fine artists. I designed a seamless web interface that lets artists tether multimedia directly to specific art objects, so when a visitor interacts with the piece in VR, the media feels native to the object instead of a disconnected pop-up.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Contextual Modals &amp; Inline Trimming</h3>
+        <p class="paragraph">Instead of sending creators to a separate media management page, clicking any artwork triggers an immediate contextual modal. Through &ldquo;Add Media,&rdquo; users attach audio or video directly to the object and use inline trimming tools to select playback segments, no external editing software needed.</p>
+        <div class="detail-image"></div>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Proximity vs. Manual Interaction Triggers</h3>
+        <p class="paragraph">Spatial trigger controls are built directly into the media properties. Creators choose whether media plays manually on interaction, or auto-plays within a set radius as the visitor approaches the artwork in VR.</p>
+        <div class="detail-image"></div>
+        <div class="detail-image-grid detail-image-grid--wide-narrow">
+          <div class="detail-image"></div>
+          <div class="detail-image"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Spatial Audio Spheres</h2>
+        <p class="paragraph">Virtual galleries lack the acoustics of physical spaces and feel sterile by default, and while background music is easy to add, it isn&rsquo;t immersive. Mapping localized sound (like waves near a seascape painting) to specific areas means manipulating invisible audio zones on a 2D screen, which is cognitively hard. I designed &ldquo;Audio Spheres&rdquo; that let creators place and choreograph how sound fades in and out as visitors move through the gallery, turning a static 3D model into a curated sensory space.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Unified Asset Library &amp; Inline Verification</h3>
+        <p class="paragraph">Adding an audio sphere opens a universal quick-add menu that pulls from a side-panel Asset Library, retaining previously used files for reuse instead of forcing a new upload every time. Inline playback lets users preview a track&rsquo;s atmosphere before committing it to the space.</p>
+        <div class="detail-image"></div>
+        <div class="detail-image-grid">
+          <div class="detail-image"></div>
+          <div class="detail-image"></div>
+        </div>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Simplifying 3D Acoustics</h3>
+        <p class="paragraph">Translating 3D sound physics into a 2D interface is complex, so I abstracted it into a focused configuration modal: creators set default volume and define the spatial activation range (how close a visitor must be to trigger the audio) through simple range inputs and visual boundaries, no audio engineering knowledge required.</p>
+        <div class="detail-image"></div>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Standalone Points of Interest</h2>
+        <p class="paragraph">Tying all curatorial information to art objects restricts what a creator can do. Curators often need to guide visitors along a path, add historical context, or leave spatial trivia in empty corridors, all independent of any specific artwork. I introduced the standalone Point of Interest (POI): an independent spatial anchor supporting 2D images, 3D objects, audio, and video, letting creators build trails, lore, or wayfinding markers on their own terms.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Progressive POI Configuration</h3>
+        <p class="paragraph">Adding a POI uses the same mental model as adding audio: the unified quick-add menu, format selection, and the same reused asset library, keeping the learning curve low as creators populate the space.</p>
+        <div class="detail-image"></div>
+        <div class="detail-image-grid detail-image-grid--wide-narrow">
+          <div class="detail-image"></div>
+          <div class="detail-image"></div>
+        </div>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Rich Metadata &amp; Asset Stacking</h3>
+        <p class="paragraph">A POI functions as a full informational plaque, capturing titles and descriptions alongside its primary asset. To prevent visual clutter from dozens of individual markers, I built an &ldquo;Asset Stacking&rdquo; architecture that lets multiple assets of the same type group under one POI location, keeping the gallery clean while laying groundwork for future mixed-media clustering.</p>
+        <div class="detail-image-grid">
+          <div class="detail-image"></div>
+          <div class="detail-image"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section detail-section--outro">
+      <div class="detail-block">
+        <h2 class="detail-title">Outcome</h2>
+        <p class="paragraph">The result is a spatial editor that gives non-technical artists tools that used to require a game developer. Context no longer breaks immersion through static text panels, sound design becomes something a curator can shape directly instead of settling for generic background music, and curatorial freedom is no longer boxed in by what&rsquo;s physically attached to an art object. Atopia Space turns VR gallery-building from a technical exercise into a creative one.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer-detail">
+    <div class="footer-detail__email">
+      <p class="paragraph footer-detail__label">Email</p>
+      <a href="mailto:agmaudyansa@gmail.com" class="link link--large">agmaudyansa@gmail.com</a>
+    </div>
+    <div class="footer-detail__bar">
+      <div class="footer-detail__links">
+        <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+      </div>
+      <p class="paragraph">&copy;2026</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

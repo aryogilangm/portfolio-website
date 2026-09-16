@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Werk: CRM — Aryo Gilang Maudyansa</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar navbar--transparent">
+    <div class="navbar__inner">
+      <a href="works.html" class="navbar__title">ALL WORKS</a>
+    </div>
+  </nav>
+
+  <main class="detail-page">
+
+    <section class="detail-section detail-section--tight">
+      <header class="detail-hero">
+        <div class="detail-hero__top">
+          <p class="title">Werk: CRM</p>
+        </div>
+        <div class="detail-hero__text">
+          <p class="paragraph">Most CRMs fail the same way: rigid workflows and high-friction data entry push sales reps back to spreadsheets the moment the tool gets in their way. Something as small as logging a missing contact can mean abandoning an active deal mid-flow, and the result is lost visibility and a database full of incomplete &ldquo;ghost&rdquo; records nobody trusts.</p>
+          <p class="paragraph">I designed a CRM architecture built on what I call Controlled Flexibility: frictionless data entry that keeps reps working inside the system instead of falling back to workarounds outside it.</p>
+        </div>
+      </header>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Inline Quick Add</h2>
+        <p class="paragraph">Forcing sales reps to abandon an active Opportunity form just to log a missing contact kills momentum, but letting them skip fields entirely creates useless &ldquo;ghost data&rdquo; that corrupts the CRM. I designed an &ldquo;Inline Quick Add&rdquo; modal that lets users create linked profiles on the fly without leaving their primary task, enforcing a Minimum Viable Data (MVD) threshold so every new record stays actionable without slowing anyone down.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">The Quick Add Modal</h3>
+        <p class="paragraph">When a user searches for a company or contact that doesn&rsquo;t exist yet, an &ldquo;Add as new&rdquo; prompt appears. Clicking it doesn&rsquo;t navigate away, it opens a focused modal directly over the current form. Once saved, the modal closes and the new entity auto-populates back into the original search field, keeping the workflow uninterrupted.</p>
+        <img class="detail-image" src="assets/images/crm-detail-page/img-1.png" alt="CRM quick add modal" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Minimum Viable Data (MVD) Enforcement</h3>
+        <p class="paragraph">To avoid cognitive overload and abandonment, the Quick Add modal strips away non-essential fields like billing addresses or tax numbers, requiring only three inputs: Entity Name, Phone Number, and Email. This captures actionable contact details instantly, deferring full profile-building to later.</p>
+        <img class="detail-image" src="assets/images/crm-detail-page/img-2.png" alt="CRM minimum viable data enforcement" />
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="detail-block">
+        <h2 class="detail-title">Modular Pipeline &amp; Property Architecture</h2>
+        <p class="paragraph">Rigid CRMs push sales teams back to spreadsheets, killing centralized visibility. I architected a modular framework built on &ldquo;Controlled Flexibility,&rdquo; letting teams customize pipelines and data properties on top of standard templates, adapting to any business model without compromising database integrity.</p>
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Dynamic Pipeline Construction &amp; SLA Tracking</h3>
+        <p class="paragraph">Instead of hardcoding sales stages, I built a pipeline builder that lets users map their real-world sales funnel exactly. Each stage supports &ldquo;Idle State&rdquo; and &ldquo;Warning State&rdquo; configurations, letting managers set automated SLAs that flag stagnant opportunities and drive proactive intervention.</p>
+        <img class="detail-image" src="assets/images/crm-detail-page/img-3.png" alt="CRM dynamic pipeline construction and SLA tracking" />
+      </div>
+
+      <div class="detail-block">
+        <h3 class="detail-title">Custom Properties</h3>
+        <p class="paragraph">To capture industry-specific nuances without cluttering the interface for everyone else, I designed a Property Management system: users can toggle standard properties on or off and create custom fields (text, monetary, dropdown) as needed. The CRM&rsquo;s data structure grows with the business, with no backend developer required.</p>
+        <img class="detail-image" src="assets/images/crm-detail-page/img-4_1.png" alt="CRM custom properties 1" />
+        <img class="detail-image" src="assets/images/crm-detail-page/img-4_2.png" alt="CRM custom properties 2" />
+      </div>
+    </section>
+
+    <section class="detail-section detail-section--outro">
+      <div class="detail-block">
+        <h2 class="detail-title">Outcome</h2>
+        <p class="paragraph">The result is a CRM built to bend without breaking. Sales reps get a workflow that never asks them to choose between speed and clean data, and no deal gets abandoned mid-flow just to fix a database problem. For sales managers, the combination of custom pipelines and stage-level SLAs turns the CRM from a passive record-keeper into an active tool for catching deals before they stall. And because the system extends itself through configuration rather than code, it stays usable as the business evolves, without waiting on a developer to keep up.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer-detail">
+    <div class="footer-detail__email">
+      <p class="paragraph footer-detail__label">Email</p>
+      <a href="mailto:agmaudyansa@gmail.com" class="link link--large">agmaudyansa@gmail.com</a>
+    </div>
+    <div class="footer-detail__bar">
+      <div class="footer-detail__links">
+        <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+      </div>
+      <p class="paragraph">&copy;2026</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

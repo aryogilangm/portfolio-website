@@ -571,6 +571,17 @@ a.navbar__title:hover {
   .detail-image-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* Unequal 2-column split (~500:316 in Figma) instead of the usual
+     even 50/50 grid — used where one image is meant to read as the
+     "main" shot and the other as a supporting detail. Percentages,
+     not fr units: fr tracks were computing as equal-width here
+     (placeholder <div> grid items with no intrinsic content size
+     seem to break fr's free-space distribution), while percentages
+     size correctly. */
+  .detail-image-grid--wide-narrow {
+    grid-template-columns: 61.27% 38.73%;
+  }
 }
 
 /* Desktop */
