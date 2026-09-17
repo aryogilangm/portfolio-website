@@ -99,8 +99,14 @@
   --color-button-text: var(--neutral-70);
   --color-button-text-pressed: var(--neutral-100);
 
+  --color-list-content-idle-closed: var(--neutral-100);
+  --color-list-content-tab-idle-closed: var(--primary-main);
+  --color-list-content-idle-expand: var(--neutral-60);
+  --color-list-content-active-expand: var(--neutral-100);
+
   /* spacing scale */
   --space-4: 4px;
+  --space-6: 6px;
   --space-8: 8px;
   --space-12: 12px;
   --space-16: 16px;
@@ -128,6 +134,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Smooth-scrolls native anchor jumps (content-nav links, any #id href) at
+   every breakpoint — this is what the browser uses for `<a href="#...">`
+   navigation, so it covers desktop, tablet and mobile with one rule and
+   no JS. Reduced-motion override lives with the other transition resets
+   below. */
+html {
+  scroll-behavior: smooth;
 }
 
 img {
@@ -163,6 +178,10 @@ body.is-leaving {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   body {
     opacity: 1;
     animation: none;
@@ -170,6 +189,14 @@ body.is-leaving {
 
   body.is-leaving {
     transition: none;
+  }
+
+  .content-nav,
+  .content-nav__label,
+  .content-nav__list,
+  .content-nav__list li,
+  .content-nav__link {
+    transition: none !important;
   }
 }
 
@@ -622,6 +649,281 @@ a.navbar__title:hover {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+/* ===== Content nav ("List of content") — detail pages =====
+   Desktop (>=1280px, hover-driven): default state shows just the label.
+   On hover/focus, the label fades out and the section list fades in
+   over it. The list is positioned absolute (out of flow) so it never
+   affects .content-nav's own box height — that keeps the fixed
+   vertical-center anchor (top:50% + translateY(-50%)) stable instead of
+   re-centering as the list reveals.
+
+   Mobile & tablet (<1280px, no hover): the label is a real <button> —
+   tapping it toggles .content-nav.is-expanded (see initContentNav in
+   main.js), which turns the button into the header of a bottom-anchored
+   card and reveals the list below it. */
+.content-nav {
+  position: fixed;
+  z-index: 20;
+}
+
+.content-nav__label {
+  /* button reset — this is a <button> now so it can be tapped without
+     a hover state to rely on; strip the browser chrome back down to
+     how the plain label text used to look. */
+  display: block;
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--color-list-content-idle-closed);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.15s ease-out;
+}
+
+@media (max-width: 1279.98px) {
+  .content-nav {
+    left: 50%;
+    bottom: var(--space-24);
+    transform: translateX(-50%);
+    /* No explicit width here on purpose — the pill hugs the label's own
+       content width (like the Framer reference's "hug" sizing). The
+       expanded list gets its own fixed width below, kept from leaking
+       into this hug-width via position:absolute (see .content-nav__list). */
+    /* Same hide-on-scroll-down / show-on-scroll-up behavior as .navbar
+       (identical transition value, on purpose — see initContentNav's
+       scroll handler in main.js, which mirrors initNavbarScroll's). */
+    transition: transform 1s ease;
+  }
+
+  .content-nav.content-nav--hidden {
+    transform: translateX(-50%) translateY(150%);
+  }
+
+  .content-nav__label {
+    display: inline-block;
+    width: max-content;
+    padding: var(--space-8) var(--space-16);
+    background: var(--color-bg);
+    border: 1px solid var(--color-stroke);
+    border-radius: 8px;
+    box-shadow: 0 10px 10px -4px rgba(0, 0, 0, 0.1);
+    color: var(--color-list-content-tab-idle-closed);
+  }
+
+  /* Expanded state shows the list only — no "List of content" header above
+     it (unlike the desktop label, which stays as the closed-state trigger
+     text). The trigger button disappears the instant the list opens, and
+     comes back once it's collapsed again via outside click or scroll (see
+     initContentNav in main.js). */
+  .content-nav.is-expanded .content-nav__label {
+    display: none;
+  }
+
+  .content-nav__list {
+    /* Absolute + self-centered (left:50% + translateX(-50%), same trick
+       .content-nav uses on itself) so its fixed 280px width never
+       contributes to .content-nav's own hug-width sizing — if it stayed
+       in normal flow, the browser would size the pill to fit this box
+       too (that was the actual bug: the 280px card width was leaking
+       into the closed pill's width). Anchoring bottom:0 keeps it growing
+       from the same bottom edge as before, independent of the label.
+
+       Open/close itself is transform+opacity only now (no max-height
+       animation) — picked after comparing 3 techniques live: this one
+       ("cascade pop + soft bounce") vs. a precise grid-rows grow and a
+       plain no-bounce pop. Enter overshoots slightly past 100% then
+       settles (cubic-bezier(0.34,1.56,0.64,1), a mild spring/back-out
+       curve — never more than a slight overshoot per the spring
+       guidance), landing with a bit of physical "life". Close stays
+       calm/linear and faster (160ms vs 320ms) — the bounce belongs to
+       arriving, not leaving (exits are quieter than enters). */
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: min(280px, calc(100vw - (var(--space-24) * 2)));
+    list-style: none;
+    background: var(--color-bg);
+    border: 1px solid var(--color-stroke);
+    border-radius: 8px;
+    transform-origin: bottom center;
+    transform: translateX(-50%) translateY(6px) scale(0.9);
+    opacity: 0;
+    /* Unlike the old max-height:0 approach, this box is always at real
+       size (just scaled/translated away), so it still occupies that
+       footprint over the label underneath — pointer-events:none while
+       closed keeps it from silently eating taps meant for the button. */
+    pointer-events: none;
+    transition: transform 160ms cubic-bezier(0.2, 0, 0, 1), opacity 140ms ease-in;
+  }
+
+  .content-nav.is-expanded .content-nav__list {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+    transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 200ms ease-out;
+  }
+
+  .content-nav__list .content-nav__link {
+    padding: var(--space-8) var(--space-20);
+    /* Cascading per-item reveal, same 18ms-per-row ladder as the
+       desktop hover version, for the same reason: entering rows feel
+       staggered/alive, closing doesn't need it (see nth-child rules
+       below apply only .is-expanded). */
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 220ms cubic-bezier(0.2, 0, 0, 1), transform 220ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .content-nav.is-expanded .content-nav__list .content-nav__link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .content-nav.is-expanded .content-nav__list li:nth-child(2) .content-nav__link {
+    transition-delay: 18ms;
+  }
+  .content-nav.is-expanded .content-nav__list li:nth-child(3) .content-nav__link {
+    transition-delay: 36ms;
+  }
+  .content-nav.is-expanded .content-nav__list li:nth-child(4) .content-nav__link {
+    transition-delay: 54ms;
+  }
+  .content-nav.is-expanded .content-nav__list li:nth-child(5) .content-nav__link {
+    transition-delay: 72ms;
+  }
+  .content-nav.is-expanded .content-nav__list li:nth-child(6) .content-nav__link {
+    transition-delay: 90ms;
+  }
+}
+
+@media (min-width: 1280px) {
+  .content-nav {
+    top: 50%;
+    left: var(--space-24);
+    transform: translateY(-50%);
+  }
+}
+
+.content-nav__link {
+  display: block;
+  padding: var(--space-6) 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--color-list-content-idle-expand);
+  text-decoration: none;
+  transition: color 0.15s ease-out;
+}
+
+/* Active section (scroll-spy, see initContentNav in main.js) — the only
+   "selected" affordance on mobile/tablet, since there's no hover there. */
+.content-nav__link.is-active {
+  color: var(--color-list-content-active-expand);
+}
+
+@media (min-width: 1280px) {
+  .content-nav__list {
+    /* Absolute + top:50%/translateY(-50%), same trick as the label's
+       parent: top:50% resolves against .content-nav's (constant) height,
+       translateY(-50%) resolves against the LIST's OWN height — which
+       now changes as each <li> grows (see below). As that happens,
+       translateY(-50%) recalculates every frame, so the list's own
+       vertical center stays pinned to that same point while its edges
+       grow outward — the "expand from the middle" effect, driven by
+       genuine reflow instead of a scale() illusion. */
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    /* No gap here on purpose — spacing comes from padding on
+       .content-nav__link instead, so the hoverable box of each link
+       touches its neighbor with zero dead space between them. A flex
+       `gap` would leave a strip with no element in it; the cursor
+       crossing that strip while moving down the list drops out of
+       .content-nav's hover chain and the list flickers shut mid-way
+       instead of closing once, cleanly, when the mouse actually leaves. */
+    width: 220px;
+    list-style: none;
+    pointer-events: none;
+  }
+
+  .content-nav:hover .content-nav__label,
+  .content-nav:focus-within .content-nav__label {
+    opacity: 0;
+  }
+
+  /* Each <li> starts collapsed and grows to reveal its link — this is
+     what makes the list's total height (and so its centered position)
+     animate smoothly frame-by-frame, rather than popping to full size
+     in one step. Deliberate exception to "animate transform/opacity
+     only": max-height here isn't for a large panel where reflow cost
+     would matter, it's a handful of 14px list rows, and no other
+     technique reproduces this exact grow-from-center feel (mirrors
+     https://muhraufan.com/work/tiket-discover-full.html's section rail,
+     which animates height for the same reason). */
+  .content-nav__list li {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 280ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .content-nav:hover .content-nav__list li,
+  .content-nav:focus-within .content-nav__list li {
+    max-height: 60px;
+  }
+
+  .content-nav__link {
+    opacity: 0;
+    transition: color 0.15s ease-out, opacity 240ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .content-nav:hover .content-nav__link,
+  .content-nav:focus-within .content-nav__link {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Staggered cascade on open — each row starts its fade-in a beat
+     after the one above it (same ladder as the reference site: 18ms
+     per step). Only the entering direction needs this; closing
+     collapses in reverse automatically since these are transitions,
+     not keyframes, so a quick mouse-leave doesn't wait for a full
+     staggered close before it starts retracting. */
+  .content-nav:hover .content-nav__list li:nth-child(2) .content-nav__link,
+  .content-nav:focus-within .content-nav__list li:nth-child(2) .content-nav__link {
+    transition-delay: 18ms;
+  }
+  .content-nav:hover .content-nav__list li:nth-child(3) .content-nav__link,
+  .content-nav:focus-within .content-nav__list li:nth-child(3) .content-nav__link {
+    transition-delay: 36ms;
+  }
+  .content-nav:hover .content-nav__list li:nth-child(4) .content-nav__link,
+  .content-nav:focus-within .content-nav__list li:nth-child(4) .content-nav__link {
+    transition-delay: 54ms;
+  }
+  .content-nav:hover .content-nav__list li:nth-child(5) .content-nav__link,
+  .content-nav:focus-within .content-nav__list li:nth-child(5) .content-nav__link {
+    transition-delay: 72ms;
+  }
+  .content-nav:hover .content-nav__list li:nth-child(6) .content-nav__link,
+  .content-nav:focus-within .content-nav__list li:nth-child(6) .content-nav__link {
+    transition-delay: 90ms;
+  }
+
+  .content-nav__link:hover,
+  .content-nav__link:focus-visible {
+    color: var(--color-list-content-active-expand);
+  }
 }
 
 /* ===== Footer detail (project pages) ===== */

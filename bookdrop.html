@@ -5,16 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bookdrop — Aryo Gilang Maudyansa</title>
   <link rel="stylesheet" href="css/style.css" />
-  <script type="importmap">
-  {
-    "imports": {
-      "@aiforui/lapse": "/node_modules/@aiforui/lapse/dist/index.mjs",
-      "@aiforui/lapse/panel": "/node_modules/@aiforui/lapse/dist/panel.mjs",
-      "@aiforui/lapse/install": "/node_modules/@aiforui/lapse/dist/install.mjs"
-    }
-  }
-  </script>
-  <script type="module" src="js/lapse-dev.js"></script>
 </head>
 <body>
 
@@ -24,9 +14,21 @@
     </div>
   </nav>
 
+  <nav class="content-nav" aria-label="Section navigation">
+    <button type="button" class="content-nav__label" aria-expanded="false">List of content</button>
+    <ul class="content-nav__list">
+      <li><a href="#overview" class="content-nav__link">Overview</a></li>
+      <li><a href="#transforming-the-dashboard" class="content-nav__link">Transforming the Dashboard into a Strategic Command Center</a></li>
+      <li><a href="#bulk-uploads" class="content-nav__link">Bulk Uploads &amp; Multi-Shipment Logistics</a></li>
+      <li><a href="#frictionless-post-order-modification" class="content-nav__link">Frictionless &amp; Safe Post-Order Modification</a></li>
+      <li><a href="#restructuring-product-architecture" class="content-nav__link">Restructuring the Product Architecture</a></li>
+      <li><a href="#outcome" class="content-nav__link">Outcome</a></li>
+    </ul>
+  </nav>
+
   <main class="detail-page">
 
-    <section class="detail-section detail-section--tight">
+    <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
         <div class="detail-hero__top">
           <p class="title">Bookdrop</p>
@@ -38,7 +40,7 @@
       </header>
     </section>
 
-    <section class="detail-section">
+    <section id="transforming-the-dashboard" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">Transforming the Dashboard into a Strategic Command Center</h2>
         <p class="paragraph">The legacy dashboard was a bare tracker with only three widgets, leaving management with strategic blind spots since there was no way to drill into what was actually driving performance. I introduced targeted data visualizations paired with a progressive disclosure model, keeping the main interface scannable while giving stakeholders a dedicated path to dive deep when they need to.</p>
@@ -65,7 +67,7 @@
       </div>
     </section>
 
-    <section class="detail-section">
+    <section id="bulk-uploads" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">Bulk Uploads &amp; Multi-Shipment Logistics</h2>
         <p class="paragraph">The legacy order process was manual and rigid: admins entered items one by one, and because the system forced a 1:1 ratio between an order and a shipping address, sending items to multiple branches meant duplicating the entire order per location, multiplying workload and skewing tracking data. I redesigned the order engine for scale, introducing mass data ingestion to bypass manual entry and decoupling shipping logic from the core order, so a single transaction can route quantities to multiple destinations without duplicating the order ID.</p>
@@ -95,7 +97,7 @@
       </div>
     </section>
 
-    <section class="detail-section">
+    <section id="frictionless-post-order-modification" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">Frictionless &amp; Safe Post-Order Modification</h2>
         <p class="paragraph">Since real-world operations need flexibility, admins can switch shipment types (Single to Multiple, or back) directly from the Order Detail Page, restricted to orders still in &ldquo;Processing&rdquo; status to keep it safe.</p>
@@ -118,7 +120,7 @@
       </div>
     </section>
 
-    <section class="detail-section">
+    <section id="restructuring-product-architecture" class="detail-section">
       <div class="detail-block detail-block--media">
         <div class="detail-block__text detail-block__text--section-headline">
           <h3 class="detail-title">Restructuring the Product Architecture</h3>
@@ -147,7 +149,7 @@
       </div>
     </section>
 
-    <section class="detail-section detail-section--outro">
+    <section id="outcome" class="detail-section detail-section--outro">
       <div class="detail-block">
         <h2 class="detail-title">Outcome</h2>
         <p class="paragraph">The result is a back-office system that finally matches the scale it&rsquo;s meant to operate at. Management gets a dashboard that actually informs decisions instead of just displaying numbers, admins process B2B bulk orders in a fraction of the manual steps it used to take, and routine product updates no longer mean scrolling past unrelated supply-chain data just to fix a typo. Bookdrop went from a system built for simple B2C transactions to one that can genuinely handle the complexity of regional B2B logistics.</p>

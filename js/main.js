@@ -74,3 +74,92 @@ function initPageTransition() {
 }
 
 initPageTransition();
+
+function initContentNav() {
+  const nav = document.querySelector(".content-nav");
+  const toggle = document.querySelector(".content-nav__label");
+  const links = document.querySelectorAll(".content-nav__link");
+  if (!links.length) return;
+
+  if (nav && toggle) {
+    const collapse = () => {
+      nav.classList.remove("is-expanded");
+      toggle.setAttribute("aria-expanded", "false");
+    };
+
+    toggle.addEventListener("click", () => {
+      const expanded = nav.classList.toggle("is-expanded");
+      toggle.setAttribute("aria-expanded", String(expanded));
+    });
+
+    links.forEach((link) => link.addEventListener("click", collapse));
+
+    document.addEventListener("click", (e) => {
+      if (nav.classList.contains("is-expanded") && !nav.contains(e.target)) {
+        collapse();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && nav.classList.contains("is-expanded")) {
+        collapse();
+        toggle.focus();
+      }
+    });
+
+    // Same hide-on-scroll-down / show-on-scroll-up pattern as the navbar
+    // (see initNavbarScroll) — only has a visible effect at the tab/mobile
+    // breakpoint, where .content-nav--hidden has a CSS rule; harmless
+    // no-op on desktop.
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (nav.classList.contains("is-expanded")) collapse();
+
+        const currentScrollY = window.scrollY;
+        const scrollingDown = currentScrollY > lastScrollY;
+
+        if (scrollingDown && currentScrollY > nav.offsetHeight) {
+          nav.classList.add("content-nav--hidden");
+        } else if (!scrollingDown) {
+          nav.classList.remove("content-nav--hidden");
+        }
+
+        lastScrollY = currentScrollY;
+      },
+      { passive: true }
+    );
+  }
+
+  const sections = Array.from(links)
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
+
+  const linkForSection = new Map(
+    sections.map((section, i) => [section, links[i]])
+  );
+
+  const setActive = (section) => {
+    links.forEach((link) => link.classList.remove("is-active"));
+    linkForSection.get(section)?.classList.add("is-active");
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting);
+      if (visible.length === 0) return;
+
+      const topMost = visible.reduce((a, b) =>
+        a.boundingClientRect.top <= b.boundingClientRect.top ? a : b
+      );
+      setActive(topMost.target);
+    },
+    { rootMargin: "-20% 0px -70% 0px" }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+}
+
+initContentNav();

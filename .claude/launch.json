@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "static-server",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-l", "5500", "."],
-      "port": 5500
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "npx -y serve -l ${PORT:-5500} ."],
+      "port": 5500,
+      "autoPort": true
     }
   ]
 }
