@@ -187,7 +187,32 @@ Ditemukan lewat full spacing re-audit setelah user merapikan variable binding di
 - [x] Export sisa thumbnail di halaman All Works (10/10 sudah lengkap)
 - [x] Upload & pasang 10 gambar konten Booksmart (img-1 s.d. img-8, termasuk img-7_1/2/3)
 - [ ] Export icon yang benar-benar dipakai dari "Icon - Bootstrap"
-- [ ] Cross-check dengan live Framer site untuk animasi/interaksi yang tidak kebaca dari Figma statis
+- [x] Cross-check dengan live Framer site untuk animasi/interaksi yang tidak kebaca dari Figma statis → dicek langsung (trace DOM mutation, bukan cuma visual): site Framer live-nya ternyata TIDAK punya animasi page-transition (instant swap, tanpa fade/slide apapun). Jadi transisi di bawah ini didesain dari nol lewat eksplorasi prototype, bukan hasil contek dari Framer.
+
+---
+
+## 5. Page Transition — Quiet Fade
+
+Dieksplorasi lewat 4 kandidat prototype (Quiet Fade, Fade + Slide, Directional Slide, Overlay Wipe) yang dibandingkan langsung side-by-side. **Quiet Fade** yang dipilih final.
+
+### Kenapa Quiet Fade
+User eksplisit minta gaya "simple, clean, professional" — bukan yang "meriah". Overlay Wipe (panel warna penuh + monogram) dan Directional Slide (dua layar geser horizontal) ditolak karena kesan "berpindah ruang"-nya terlalu terasa/dramatis untuk portfolio ini. Fade + Slide (crossfade + sedikit geser vertikal) sempat jadi kandidat kuat kedua, tapi Quiet Fade menang karena benar-benar "tidak kentara" — cocok dengan preferensi user.
+
+### Spec
+- **Exit** (halaman lama): `opacity 1 → 0`, 160ms, `ease-in`
+- **Enter** (halaman baru): `opacity 0 → 1`, 220ms, `ease-out`, delay 60ms (supaya sedikit overlap dengan exit, biar terasa nyambung bukan dua kejadian terpisah)
+- Cuma animate `opacity` — tidak ada transform/gerakan sama sekali (`emil-animations`: animate hanya `transform`/`opacity`, dan exit ~20-30% lebih cepat dari enter — 160/220 = 27% lebih cepat, sesuai aturan)
+- Menghormati `prefers-reduced-motion`: kalau aktif, transisi di-skip total (langsung swap, tanpa fade)
+
+### Implementasi
+Berlaku **site-wide** secara otomatis (bukan cuma home ↔ works) karena logic-nya ditaruh di [js/main.js](js/main.js) yang sudah di-include semua halaman:
+- **Enter**: CSS `@keyframes page-fade-in` di [css/style.css](css/style.css), jalan otomatis tiap `<body>` di-load.
+- **Exit**: `js/main.js` intercept klik ke semua `<a>` internal (same-origin, bukan `target="_blank"`, bukan anchor `#hash` di halaman yang sama), `preventDefault()`, tambah class `.is-leaving` (trigger CSS transition fade-out), baru `location.href` dieksekusi via `setTimeout` 160ms (nunggu exit selesai). Link eksternal (mailto, social media, `Booksmart Corporate Landing Page` yang buka tab baru) otomatis di-skip, jalan normal tanpa fade.
+
+### Rejected
+- **Overlay Wipe** — panel `primary-main` (#0030bf) full-screen + monogram "AG", 600ms total (340ms masuk ease-out / 260ms keluar ease-in). Paling "branded"/dramatis dari 4 kandidat, tapi kepanjangan & kurang "clean" buat karakter portfolio ini.
+- **Directional Slide** — dua layar geser horizontal bersamaan (360ms, ease-in-out), tanpa fade. Motion-nya benar secara teknis (paired-timing, easing sesuai kaidah "layout shift" bukan "enter/exit"), tapi tetap lebih "terasa" dibanding fade-based options.
+- **Fade + Slide** — crossfade + translateY 24px. Sempat jadi kandidat, sampai di-tune juga (opacity & slide dipisah jadi 2 animasi independen, slide delay 250ms supaya fade kebaca dulu baru posisi bergeser — feedback dari rekaman Lapse). Akhirnya tetap kalah dari Quiet Fade karena user lebih suka yang benar-benar tanpa gerakan.
 
 ---
 

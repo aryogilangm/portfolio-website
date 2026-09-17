@@ -41,3 +41,36 @@ function initNavbarScroll() {
 }
 
 initNavbarScroll();
+
+function initPageTransition() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  document.addEventListener("click", (e) => {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    const link = e.target.closest("a");
+    if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+
+    let url;
+    try {
+      url = new URL(link.href, location.href);
+    } catch {
+      return;
+    }
+    if (url.protocol !== "http:" && url.protocol !== "https:") return;
+    if (url.origin !== location.origin) return;
+    if (url.pathname === location.pathname && url.hash) return;
+
+    e.preventDefault();
+    document.body.style.animation = "none";
+    document.body.style.opacity = "1";
+    document.body.classList.add("is-leaving");
+    setTimeout(() => {
+      location.href = link.href;
+    }, 160);
+  });
+}
+
+initPageTransition();
