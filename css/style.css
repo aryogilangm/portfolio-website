@@ -511,6 +511,15 @@ a.navbar__title:hover {
   gap: var(--space-4);
 }
 
+/* Exception: Bookdrop's "Restructuring the Product Architecture" block
+   opens its content-section directly (no separate non-image
+   section-headline before it) and is meant to read as that section's
+   headline despite having an image — so its title-to-paragraph gap
+   stays 12px (the section-headline value) instead of the usual 4px. */
+.detail-block__text.detail-block__text--section-headline {
+  gap: var(--space-12);
+}
+
 .detail-block.detail-block--media {
   gap: var(--space-16);
 }
