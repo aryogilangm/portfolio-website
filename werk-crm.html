@@ -14,9 +14,19 @@
     </div>
   </nav>
 
+  <nav class="content-nav" aria-label="Section navigation">
+    <button type="button" class="content-nav__label" aria-expanded="false">List of content</button>
+    <ul class="content-nav__list">
+      <li><a href="#overview" class="content-nav__link">Overview</a></li>
+      <li><a href="#inline-quick-add" class="content-nav__link">Inline Quick Add</a></li>
+      <li><a href="#modular-pipeline-property-architecture" class="content-nav__link">Modular Pipeline &amp; Property Architecture</a></li>
+      <li><a href="#outcome" class="content-nav__link">Outcome</a></li>
+    </ul>
+  </nav>
+
   <main class="detail-page">
 
-    <section class="detail-section detail-section--tight">
+    <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
         <div class="detail-hero__top">
           <p class="title">Werk: CRM</p>
@@ -28,7 +38,7 @@
       </header>
     </section>
 
-    <section class="detail-section">
+    <section id="inline-quick-add" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">Inline Quick Add</h2>
         <p class="paragraph">Forcing sales reps to abandon an active Opportunity form just to log a missing contact kills momentum, but letting them skip fields entirely creates useless &ldquo;ghost data&rdquo; that corrupts the CRM. I designed an &ldquo;Inline Quick Add&rdquo; modal that lets users create linked profiles on the fly without leaving their primary task, enforcing a Minimum Viable Data (MVD) threshold so every new record stays actionable without slowing anyone down.</p>
@@ -51,7 +61,7 @@
       </div>
     </section>
 
-    <section class="detail-section">
+    <section id="modular-pipeline-property-architecture" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">Modular Pipeline &amp; Property Architecture</h2>
         <p class="paragraph">Rigid CRMs push sales teams back to spreadsheets, killing centralized visibility. I architected a modular framework built on &ldquo;Controlled Flexibility,&rdquo; letting teams customize pipelines and data properties on top of standard templates, adapting to any business model without compromising database integrity.</p>
@@ -75,7 +85,7 @@
       </div>
     </section>
 
-    <section class="detail-section detail-section--outro">
+    <section id="outcome" class="detail-section detail-section--outro">
       <div class="detail-block">
         <h2 class="detail-title">Outcome</h2>
         <p class="paragraph">The result is a CRM built to bend without breaking. Sales reps get a workflow that never asks them to choose between speed and clean data, and no deal gets abandoned mid-flow just to fix a database problem. For sales managers, the combination of custom pipelines and stage-level SLAs turns the CRM from a passive record-keeper into an active tool for catching deals before they stall. And because the system extends itself through configuration rather than code, it stays usable as the business evolves, without waiting on a developer to keep up.</p>

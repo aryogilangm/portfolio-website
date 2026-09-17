@@ -14,9 +14,19 @@
     </div>
   </nav>
 
+  <nav class="content-nav" aria-label="Section navigation">
+    <button type="button" class="content-nav__label" aria-expanded="false">List of content</button>
+    <ul class="content-nav__list">
+      <li><a href="#overview" class="content-nav__link">Overview</a></li>
+      <li><a href="#ecosystem-trigger" class="content-nav__link">The Ecosystem Trigger</a></li>
+      <li><a href="#immutable-audit-trail" class="content-nav__link">The Immutable Audit Trail</a></li>
+      <li><a href="#outcome" class="content-nav__link">Outcome</a></li>
+    </ul>
+  </nav>
+
   <main class="detail-page">
 
-    <section class="detail-section detail-section--tight">
+    <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
         <div class="detail-hero__top">
           <p class="title">Werk: Personnel Management</p>
@@ -28,7 +38,7 @@
       </header>
     </section>
 
-    <section class="detail-section">
+    <section id="ecosystem-trigger" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">The Ecosystem Trigger</h2>
         <p class="paragraph">Traditional onboarding forces HR into redundant data entry across disconnected systems, often leaving new hires without proper access on day one. I turned the static onboarding form into a centralized automation trigger: one HR configuration now provisions the employee&rsquo;s profile and access rights across the entire Werk ecosystem in a single click.</p>
@@ -56,7 +66,7 @@
       </div>
     </section>
 
-    <section class="detail-section">
+    <section id="immutable-audit-trail" class="detail-section">
       <div class="detail-block">
         <h2 class="detail-title">The Immutable Audit Trail</h2>
         <p class="paragraph">Scattered employee records, career moves, disciplinary actions, leave companies exposed during audits without a reliable, tamper-proof timeline. I built a centralized &ldquo;History&rdquo; architecture that turns the employee page into an immutable source of truth, separating administrative movements from sensitive disciplinary records for fast retrieval and airtight compliance.</p>
@@ -93,7 +103,7 @@
       </div>
     </section>
 
-    <section class="detail-section detail-section--outro">
+    <section id="outcome" class="detail-section detail-section--outro">
       <div class="detail-block">
         <h2 class="detail-title">Outcome</h2>
         <p class="paragraph">The result is a Personnel module that turns HR from a data-entry bottleneck into a single point of configuration. Onboarding a new hire no longer means typing the same information into five disconnected systems, and access provisioning happens the moment the form is submitted, not days later after IT catches up. When audits or disputes come up, HR isn&rsquo;t digging through scattered records to reconstruct a timeline. The History architecture already has it: categorized, filterable, and backed by the actual documents tied to each action.</p>
