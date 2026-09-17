@@ -34,9 +34,11 @@
         <p class="paragraph">The legacy dashboard was a bare tracker with only three widgets, leaving management with strategic blind spots since there was no way to drill into what was actually driving performance. I introduced targeted data visualizations paired with a progressive disclosure model, keeping the main interface scannable while giving stakeholders a dedicated path to dive deep when they need to.</p>
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Strategic Performance Leaderboards</h3>
-        <p class="paragraph">I added four new widgets: Top Supplier Leaderboard, Top Selling Product Leaderboard, Top Sales Channel Leaderboard, and Revenue by Country, surfacing the strongest revenue streams and supply chain performers at a glance to directly inform strategic decisions.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Strategic Performance Leaderboards</h3>
+          <p class="paragraph">I added four new widgets: Top Supplier Leaderboard, Top Selling Product Leaderboard, Top Sales Channel Leaderboard, and Revenue by Country, surfacing the strongest revenue streams and supply chain performers at a glance to directly inform strategic decisions.</p>
+        </div>
         <img class="detail-image" src="assets/images/bookdrop-detail-page/img-1.png" alt="Bookdrop strategic performance leaderboards widget" />
       </div>
 
@@ -59,18 +61,22 @@
         <p class="paragraph">The legacy order process was manual and rigid: admins entered items one by one, and because the system forced a 1:1 ratio between an order and a shipping address, sending items to multiple branches meant duplicating the entire order per location, multiplying workload and skewing tracking data. I redesigned the order engine for scale, introducing mass data ingestion to bypass manual entry and decoupling shipping logic from the core order, so a single transaction can route quantities to multiple destinations without duplicating the order ID.</p>
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Automating Mass Data Entry (Bulk Entry)</h3>
-        <p class="paragraph">A .xls upload feature (ISBN, Title, Quantity) instantly populates the product list for massive B2B orders, turning tedious manual entry into a one-click process.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Automating Mass Data Entry (Bulk Entry)</h3>
+          <p class="paragraph">A .xls upload feature (ISBN, Title, Quantity) instantly populates the product list for massive B2B orders, turning tedious manual entry into a one-click process.</p>
+        </div>
         <div class="detail-image-grid">
           <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_1.png" alt="Bookdrop bulk entry upload 1" />
           <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_2.png" alt="Bookdrop bulk entry upload 2" />
         </div>
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Dynamic Multi-Shipment Allocation</h3>
-        <p class="paragraph">I overhauled the shipping flow so admins can add multiple addresses within one order and use a visual allocation interface to distribute quantities across destinations, like splitting 200 books across 3 regional branches smoothly.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Dynamic Multi-Shipment Allocation</h3>
+          <p class="paragraph">I overhauled the shipping flow so admins can add multiple addresses within one order and use a visual allocation interface to distribute quantities across destinations, like splitting 200 books across 3 regional branches smoothly.</p>
+        </div>
         <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_1.png" alt="Bookdrop multi-shipment allocation overview" />
         <div class="detail-image-grid">
           <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_2.png" alt="Bookdrop multi-shipment allocation 2" />
@@ -85,35 +91,45 @@
         <p class="paragraph">Since real-world operations need flexibility, admins can switch shipment types (Single to Multiple, or back) directly from the Order Detail Page, restricted to orders still in &ldquo;Processing&rdquo; status to keep it safe.</p>
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Preventing Over-allocation (Single to Multiple)</h3>
-        <p class="paragraph">Adding a new address requires first freeing up quantity from the primary address, preventing negative stock errors. Deleting a destination auto-redistributes its items back to unallocated stock, and the system disables deletion once only one address remains, preventing accidental zero-destination orders.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Preventing Over-allocation (Single to Multiple)</h3>
+          <p class="paragraph">Adding a new address requires first freeing up quantity from the primary address, preventing negative stock errors. Deleting a destination auto-redistributes its items back to unallocated stock, and the system disables deletion once only one address remains, preventing accidental zero-destination orders.</p>
+        </div>
         <img class="detail-image" src="assets/images/bookdrop-detail-page/img-5.png" alt="Bookdrop preventing over-allocation" />
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Smart Redistribution (Multiple to Single)</h3>
-        <p class="paragraph">Deleting a destination automatically redistributes those items to the unlocated items. The system smartly disables the deletion capability once only one address remains, preventing accidental zero-destination orders.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Smart Redistribution (Multiple to Single)</h3>
+          <p class="paragraph">Deleting a destination automatically redistributes those items to the unlocated items. The system smartly disables the deletion capability once only one address remains, preventing accidental zero-destination orders.</p>
+        </div>
         <img class="detail-image" src="assets/images/bookdrop-detail-page/img-6.png" alt="Bookdrop smart redistribution" />
       </div>
     </section>
 
     <section class="detail-section">
-      <div class="detail-block">
-        <h3 class="detail-title">Restructuring the Product Architecture</h3>
-        <p class="paragraph">The legacy Product Detail page crammed eight operational forms into one endless scroll, forcing admins to hunt for specific data and slowing down routine work. I reorganized it into a categorized tab system, grouping related data so admins only see what they need at any given moment.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Restructuring the Product Architecture</h3>
+          <p class="paragraph">The legacy Product Detail page crammed eight operational forms into one endless scroll, forcing admins to hunt for specific data and slowing down routine work. I reorganized it into a categorized tab system, grouping related data so admins only see what they need at any given moment.</p>
+        </div>
         <img class="detail-image" src="assets/images/bookdrop-detail-page/img-7.png" alt="Bookdrop restructured product architecture" />
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Consolidating the Core (Product Tab)</h3>
-        <p class="paragraph">The default tab houses front-end facing data. I merged redundant sections like &ldquo;Product Information&rdquo; and &ldquo;Product Organization&rdquo; into one cohesive form covering metadata, imagery, pricing, and sales channel configuration, so marketing or content admins can work without logistical distractions.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Consolidating the Core (Product Tab)</h3>
+          <p class="paragraph">The default tab houses front-end facing data. I merged redundant sections like &ldquo;Product Information&rdquo; and &ldquo;Product Organization&rdquo; into one cohesive form covering metadata, imagery, pricing, and sales channel configuration, so marketing or content admins can work without logistical distractions.</p>
+        </div>
         <img class="detail-image" src="assets/images/bookdrop-detail-page/img-8.png" alt="Bookdrop consolidated product tab" />
       </div>
 
-      <div class="detail-block">
-        <h3 class="detail-title">Decoupling Logistics (Manufacturer &amp; Supplier Tabs)</h3>
-        <p class="paragraph">Heavy supply-chain data now lives in its own dedicated &ldquo;Manufacturer&rdquo; and &ldquo;Supplier&rdquo; tabs. An admin fixing a typo in a book&rsquo;s description no longer scrolls past print-cost calculations or supplier lead-time matrices, cutting the risk of accidental edits to unrelated fields.</p>
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
+          <h3 class="detail-title">Decoupling Logistics (Manufacturer &amp; Supplier Tabs)</h3>
+          <p class="paragraph">Heavy supply-chain data now lives in its own dedicated &ldquo;Manufacturer&rdquo; and &ldquo;Supplier&rdquo; tabs. An admin fixing a typo in a book&rsquo;s description no longer scrolls past print-cost calculations or supplier lead-time matrices, cutting the risk of accidental edits to unrelated fields.</p>
+        </div>
         <div class="detail-image-grid">
           <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_1.png" alt="Bookdrop manufacturer tab" />
           <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_2.png" alt="Bookdrop supplier tab" />

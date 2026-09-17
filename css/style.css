@@ -215,15 +215,28 @@ a.navbar__title:hover {
 }
 
 /* ===== Layout container ===== */
+/* .container is home (index.html) only — works.html uses its own
+   .works-container instead, so these home-specific spacing overrides
+   below are scoped under .container and never touch works.html. */
 .container {
   max-width: 1440px;
   margin: 0 auto;
   padding: var(--space-80) var(--gutter);
 }
 
+@media (max-width: 767px) {
+  .container {
+    padding-bottom: var(--space-64);
+  }
+}
+
 /* ===== Headline / about ===== */
 .headline {
   margin-bottom: var(--space-64);
+}
+
+.container .headline {
+  margin-bottom: var(--space-40);
 }
 
 .about {
@@ -237,6 +250,11 @@ a.navbar__title:hover {
   gap: var(--space-24);
 }
 
+.container .about__text {
+  margin-top: var(--space-24);
+  gap: var(--space-16);
+}
+
 /* ===== Selected works ===== */
 .selected-works__title {
   font-family: var(--font-body);
@@ -248,12 +266,20 @@ a.navbar__title:hover {
   margin-bottom: var(--space-32);
 }
 
+.container .selected-works__title {
+  margin-bottom: var(--space-24);
+}
+
 .works {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-24);
   max-width: 840px;
   margin-bottom: var(--space-32);
+}
+
+.container .works {
+  margin-bottom: var(--space-24);
 }
 
 @media (min-width: 768px) {
@@ -371,9 +397,15 @@ a.navbar__title:hover {
 }
 
 /* ===== Detail page (project case study) ===== */
+/* Full viewport width on purpose — unlike .container (used on
+   index/works, which has no visible background or border), each
+   .detail-section needs its bg + border-bottom to reach the actual
+   screen edges. Capping .detail-page itself at 1440px left a plain
+   white gap beyond that width with no section chrome in it at all,
+   which read as the border "stopping in the middle" on wide screens.
+   Content is instead capped per-section via padding (see
+   .detail-section's desktop rule below). */
 .detail-page {
-  max-width: 1440px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
@@ -384,7 +416,10 @@ a.navbar__title:hover {
   padding: var(--space-64) var(--gutter);
   display: flex;
   flex-direction: column;
-  gap: var(--space-56);
+  /* 40px at mobile, 56px at tablet+ (see the tablet breakpoint below) —
+     confirmed by re-measuring Booksmart/Bookdrop's mobile frames after
+     the Figma spacing cleanup; previously flat 56px at every width. */
+  gap: var(--space-40);
 }
 
 .detail-section--tight {
@@ -394,6 +429,24 @@ a.navbar__title:hover {
 .detail-section--outro {
   border-bottom: none;
   padding-top: var(--space-48);
+}
+
+/* Images-only "gallery" variant (Kasatmata, ZNTRAL): no per-image
+   heading/paragraph, so the item-to-item gap is tighter than the usual
+   56px block gap: 16px mobile, 24px tablet+ (Kasatmata's desktop gap
+   was re-measured at 24px too after the Figma spacing cleanup — it's
+   no longer 40px, so this is one flat value from tablet up).
+   Compounded as .detail-section.detail-section--gallery so it reliably
+   outranks the plain .detail-section breakpoint rules below on
+   specificity, regardless of source order. */
+.detail-section.detail-section--gallery {
+  gap: var(--space-16);
+}
+
+@media (min-width: 768px) {
+  .detail-section.detail-section--gallery {
+    gap: var(--space-24);
+  }
 }
 
 .detail-subgroup {
@@ -435,10 +488,37 @@ a.navbar__title:hover {
   color: var(--neutral-100);
 }
 
+/* Text-only block (Figma "section-headline": h2/h3 + paragraph, no
+   image — section intros and "Outcome"). 12px gap between title and
+   paragraph, confirmed by re-measuring several section-headline and
+   Outcome frames in Figma after the spacing cleanup. */
 .detail-block {
   display: flex;
   flex-direction: column;
+  gap: var(--space-12);
+}
+
+/* Text-plus-image block (Figma "section-detail": a "headline" h3+p
+   pair immediately followed by one or more images/grids). Needs a
+   nested wrapper because the title-to-paragraph gap (4px) and the
+   text-to-image gap (16px mobile / 24px tablet+) are two different
+   values — a flat gap on one flex container can't produce both.
+   Compounded with .detail-block for specificity (same reasoning as
+   the gallery variant above). */
+.detail-block__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.detail-block.detail-block--media {
   gap: var(--space-16);
+}
+
+@media (min-width: 768px) {
+  .detail-block.detail-block--media {
+    gap: var(--space-24);
+  }
 }
 
 .detail-title {
@@ -486,10 +566,26 @@ a.navbar__title:hover {
   aspect-ratio: 408 / 492;
 }
 
+/* Gallery variant (Kasatmata, ZNTRAL): stays a 2-column grid even on
+   mobile (unlike the usual single-column-until-tablet grid), with its
+   own tighter gap per breakpoint (16 mobile / 24 tablet+), per Figma.
+   Compounded with .detail-image-grid for specificity, same reasoning
+   as .detail-section.detail-section--gallery above. */
+.detail-image-grid.detail-image-grid--gallery {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-16);
+}
+
+@media (min-width: 768px) {
+  .detail-image-grid.detail-image-grid--gallery {
+    gap: var(--space-24);
+  }
+}
+
 .detail-image-grid__text {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-4);
 }
 
 /* ===== Footer detail (project pages) ===== */
@@ -520,11 +616,15 @@ a.navbar__title:hover {
 }
 
 .footer-detail__bar {
-  margin-top: var(--space-40);
+  /* Fixed padding/margin here, NOT the --gutter scale used by the rest
+     of the page (300/100/40) — re-measured against Figma after the
+     spacing cleanup: horizontal padding is 20px mobile / 40px tablet+,
+     and the gap above the bar is 24px mobile / 32px tablet+. */
+  margin-top: var(--space-24);
   max-width: 840px;
   margin-left: auto;
   margin-right: auto;
-  padding: var(--space-24) var(--gutter);
+  padding: var(--space-24) var(--space-20);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -545,6 +645,9 @@ a.navbar__title:hover {
     flex-direction: row;
     justify-content: center;
     gap: var(--space-32);
+    margin-top: var(--space-32);
+    padding-left: var(--space-40);
+    padding-right: var(--space-40);
   }
 
   .footer-detail__links {
@@ -562,6 +665,7 @@ a.navbar__title:hover {
 
   .detail-section {
     padding-bottom: var(--space-80);
+    gap: var(--space-56);
   }
 
   .detail-section:not(.detail-section--tight):not(.detail-section--outro) {
@@ -588,5 +692,17 @@ a.navbar__title:hover {
 @media (min-width: 1280px) {
   :root {
     --gutter: var(--space-300);
+  }
+
+  /* Figma's desktop frame is exactly 1440px (300px gutter + 840px
+     content + 300px gutter). .detail-page has no max-width anymore
+     (so section backgrounds/borders reach the real screen edges on
+     wider monitors), so the 840px content column is instead capped
+     here directly: padding grows past 300px once the viewport clears
+     1440px, keeping content centered at a fixed 840px instead of
+     stretching wider and wider. */
+  .detail-section {
+    padding-left: max(var(--gutter), calc((100% - 840px) / 2));
+    padding-right: max(var(--gutter), calc((100% - 840px) / 2));
   }
 }

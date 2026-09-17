@@ -134,6 +134,21 @@ Layout: `headline` → `selected-works` (grid 4 work-card + tombol "All Works") 
 | Tablet | 810px | 100px |
 | Mobile | 390px | 40px |
 
+### 3.3 Spacing khusus halaman "home" (`.container`, beda dari halaman lain)
+
+Ditemukan lewat full spacing re-audit setelah user merapikan variable binding di Figma — beberapa angka di halaman home ternyata BEDA dari yang tadinya diasumsikan sama dengan pattern umum:
+
+| Elemen | Nilai benar (semua breakpoint kecuali disebutkan) | Implementasi lama (salah) |
+|---|---|---|
+| `.container` padding-bottom, mobile only | 64px | 80px (ikut nilai desktop/tablet) |
+| `.headline` margin-bottom | 40px | 64px |
+| `.about__text` margin-top (judul → paragraf) | 24px | 16px |
+| `.about__text` gap (antar paragraf) | 16px | 24px |
+| `.selected-works__title` margin-bottom | 24px | 32px |
+| `.works` margin-bottom (grid → tombol "All Works") | 24px | 32px |
+
+**Catatan penting:** `.selected-works__title` dan `.works` juga dipakai di `works.html` (via class yang sama), dan DI SANA nilai 32px memang benar (sudah dicek terpisah, cocok dengan Figma works-container). Jadi fix-nya BUKAN mengubah default class-nya, melainkan nambahin override `.container .selected-works__title` / `.container .works` yang cuma berlaku di dalam `.container` (home) — karena `.container` cuma dipakai di `index.html`, sementara `works.html` pakai `.works-container` yang terpisah. Lihat [components.md](components.md) untuk detail CSS-nya.
+
 ---
 
 ## 4. Yang Masih Perlu Disiapkan / Dikerjakan
@@ -156,7 +171,18 @@ Layout: `headline` → `selected-works` (grid 4 work-card + tombol "All Works") 
     - `img-5_1` — Progressive POI Configuration (tunggal)
     - `img-5_2` / `img-5_3` — Progressive POI Configuration, grid 2 kolom rata (bukan asimetris lagi)
     - `img-6_1` / `img-6_2` — Rich Metadata & Asset Stacking, grid 2 kolom rata
-- [ ] Extract 2 halaman detail project sisanya (Kasatmata, ZNTRAL) — pakai pola yang sama, tinggal sesuaikan jumlah section & gambar per project
+- [x] Extract detail project **Kasatmata** → sudah jadi `kasatmata.html`, tapi strukturnya BEDA dari project lain: cuma hero (judul + 2 paragraf) lalu 1 section berisi 6 gambar berurutan TANPA sub-judul/paragraf per gambar (murni showcase visual, bukan studi kasus). Tidak ada section "Outcome" di akhir. Tidak ada badge "Watch live". Upload ke `assets/images/kasatmata-detail-page/` dengan nama sesuai layer Figma:
+  - `img-1` — tunggal
+  - `img-2_1` / `img-2_2` — grid 2 kolom rata
+  - `img-3`, `img-4`, `img-5`, `img-6` — masing-masing tunggal
+  - **Spacing khusus (beda dari pola project studi-kasus lainnya):** karena tidak ada judul/paragraf per gambar, gap antar item DAN gap kolom grid-nya scale sendiri per breakpoint (bukan pakai gap block 56px yang biasa) — lihat detail lengkapnya di [components.md](components.md) bagian 7, varian "gallery". Grid 2 kolomnya juga TETAP 2 kolom sampai mobile (tidak stack ke 1 kolom seperti grid biasa).
+- [x] Extract detail project **ZNTRAL** → sudah jadi `zntral.html`. Pola sama seperti Kasatmata (images-only "gallery" variant, tanpa "Outcome", tanpa badge "Watch live"), 5 gambar-slot: 2 tunggal berurutan di atas, grid 2 kolom, 1 tunggal, grid 2 kolom (7 file total). Upload ke `assets/images/zntral-detail-page/` dengan nama:
+  - `img-1` — tunggal (gambar tambahan paling atas — TIDAK ada di frame Figma asli, ditambahkan langsung di kode atas permintaan user, jadi tidak match nama layer Figma persis)
+  - `img-2` — tunggal (ini yang di Figma bernama `img-1`)
+  - `img-3_1` / `img-3_2` — grid 2 kolom rata (di Figma bernama `img-2_1` / `img-2_2`)
+  - `img-4` — tunggal (di Figma bernama `img-3`)
+  - `img-5_1` / `img-5_2` — grid 2 kolom rata (di Figma bernama `img-4_1` / `img-4_2`)
+  - **Beda dari Kasatmata:** gap item di section desktop-nya 24px (bukan 40px seperti Kasatmata) — sama persis dengan gap kolom grid-nya. Makanya pakai modifier class tambahan `.detail-section--gallery-24` di samping `.detail-section--gallery` (lihat [components.md](components.md) bagian 7).
 - [x] **Booksmart Corporate Landing Page** — TIDAK butuh halaman detail sendiri. Card-nya di `works.html` langsung link keluar ke `https://booksmart.store/corporate-site/` (buka tab baru), sama seperti badge "Watch live" di project lain
 - [x] Export sisa thumbnail di halaman All Works (10/10 sudah lengkap)
 - [x] Upload & pasang 10 gambar konten Booksmart (img-1 s.d. img-8, termasuk img-7_1/2/3)

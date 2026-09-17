@@ -178,6 +178,7 @@ footer-detail
   - Ini sempat salah diimplementasikan pakai `gap: 40px` dan `flex-wrap: wrap` tanpa grouping yang jelas, hasilnya kadang malah kelihatan seperti grid/wrap acak. Sudah dikoreksi: gap yang benar 32px (bukan 40px), dan link di-grouping dalam `.footer-detail__links` supaya perilaku wrap di breakpoint kecil bisa dikontrol eksplisit.
   - **Mobile:** BUKAN 1 baris — 3 link (Linkedin/Dribbble/Upwork) di baris atas (center, gap 32px), lalu `©2026` di baris terpisah di bawahnya (gap 24px, center).
   - **Tablet & Desktop:** ke-4 item (3 link + copyright) satu baris horizontal, center, gap 32px rata — dicapai dengan `.footer-detail__links` di-set `display: contents` di breakpoint ≥768px, supaya link-link itu jadi direct flex child dari `.footer-detail__bar` dan menyatu dalam 1 row bareng copyright.
+- **`.footer-detail__bar` padding horizontal & jarak ke atas — TIDAK ikut skala `--gutter` (300/100/40) seperti elemen lain**, melainkan nilai fixed sendiri: padding kiri-kanan **20px mobile → 40px tablet & desktop**, jarak dari section Email di atasnya (`margin-top`) **24px mobile → 32px tablet & desktop**. Ini kebalik/salah sebelumnya (pakai `var(--gutter)` buat padding jadi 300px di desktop — bar-nya jadi ketarik terlalu sempit — dan `margin-top` di-flat 40px semua breakpoint) — ketemu & dikoreksi lewat full spacing re-audit setelah user merapikan variable binding di Figma.
 
 ### Implementasi
 `.footer-detail`, `.footer-detail__email`, `.footer-detail__label`, `.footer-detail__bar`, `.footer-detail__links` (wrapper khusus 3 link, supaya breakpoint mobile bisa misahin dari copyright) — lihat [css/style.css](css/style.css).
@@ -211,9 +212,11 @@ detail-page (max-width 1440, center)
 ├── detail-section (border-bottom, padding 48px top / 80px bottom / gutter kiri-kanan)
 │   └── hero: judul project + badge "Watch live" (opsional, hanya kalau live site ada) + 2 paragraf intro
 ├── detail-section (border-bottom, padding 80px vertikal)      ← 1 "card" per topik masalah
-│   ├── detail-block (judul besar masalah + paragraf, TANPA gambar)
+│   ├── detail-block (judul besar masalah + paragraf, TANPA gambar) — gap 12px
 │   ├── gambar besar (opsional, langsung setelah intro)
-│   ├── detail-block (sub-judul + paragraf + gambar) — bisa berulang beberapa kali
+│   ├── detail-block detail-block--media (sub-judul + paragraf + gambar) — bisa berulang beberapa kali
+│   │   ├── detail-block__text (sub-judul + paragraf, gap 4px)
+│   │   └── gambar / .detail-image-grid — gap dari __text ke gambar: 16px mobile, 24px tablet+
 │   └── detail-subgroup (kalau 1 topik butuh >1 gambar berurutan, gap lebih rapat: 40px vs 56px antar block biasa)
 ├── detail-section (sama seperti di atas) ← card berikutnya
 ├── ...
@@ -223,30 +226,64 @@ detail-page (max-width 1440, center)
 ### Aturan penting
 - **Setiap "card" (`detail-section`) punya border** (`border-bottom: 1px solid #ededed`) — KECUALI section terakhir ("Outcome") yang memang tidak ada stroke-nya di Figma.
 - Section pertama (hero) dan terakhir (outcome) pakai padding-top lebih kecil (48px di SEMUA breakpoint, modifier `.detail-section--tight` / `.detail-section--outro`). Section di tengah: **64px di mobile**, **80px di tablet & desktop** (≥768px) — awalnya disamain 80px di semua breakpoint, sudah dikoreksi setelah dicek ulang data mobile di Figma.
-- Gap antar `detail-block` dalam 1 `detail-section`: **56px**. Gap di dalam `detail-subgroup` (beberapa gambar untuk 1 topik yang sama): **40px**.
+- Gap antar `detail-block` dalam 1 `detail-section`: **40px di mobile, 56px di tablet & desktop** (≥768px). Gap di dalam `detail-subgroup` (beberapa gambar untuk 1 topik yang sama): **40px** di semua breakpoint.
+  - **Bug yang sempat kejadian:** awalnya di-flat 56px di semua breakpoint (termasuk mobile). Ketemu setelah user merapikan binding variable di Figma dan minta full re-audit — ternyata gap mobile-nya memang beda (40px), bukan ikut skala 56px yang sama seperti tablet/desktop. Dikoreksi dengan nambahin override `gap: var(--space-56)` di breakpoint tablet (≥768px), base-nya (mobile) jadi 40px.
+- **`.detail-block` itu sebenarnya dua konteks gap yang beda di Figma, sempat digabung jadi satu (bug):**
+  - Figma **`section-headline`** (h2/h3 + paragraf, TANPA gambar mengikuti — dipakai untuk intro tiap `detail-section` dan block "Outcome"): title-ke-paragraf gap-nya **12px** di semua breakpoint. Ini pakai `.detail-block` polos (tanpa modifier), children-nya `<h2>`/`<h3>` + `<p>` langsung, TIDAK perlu wrapper tambahan karena cuma 1 nilai gap yang dibutuhkan.
+  - Figma **`section-detail`** (`headline` h3+paragraf yang lalu diikuti gambar/grid) — title-ke-paragraf gap-nya CUMA **4px** (jauh lebih rapat dari 12px di atas), TAPI dari teks itu ke gambar pertamanya gap-nya **16px mobile / 24px tablet+**. Dua nilai gap yang beda ini nggak bisa direpresentasikan dengan 1 flex container gap tunggal, makanya butuh wrapper: `<div class="detail-block__text">` (isinya h3+p, gap 4px) sebagai child PERTAMA dari `<div class="detail-block detail-block--media">`, baru diikuti gambar/`.detail-image-grid` sebagai sibling-nya (gap 16/24px dari `.detail-block--media` sendiri).
+  - **Bug yang sempat kejadian:** sebelum dipisah, `.detail-block` dipakai flat buat KEDUA kasus dengan 1 gap value (16px), jadi title-ke-paragraf DAN paragraf-ke-gambar kepaksa sama padahal Figma-nya beda (4px vs 16/24px). Ketemu & dikoreksi setelah user kasih contoh screenshot spesifik + minta re-check ke Figma. Perbaikannya jalan lewat script Python (regex line-anchored, BUKAN `.*?` dengan `re.DOTALL` — sempat kena bug regex "melompat" ke `.detail-block` sibling berikutnya karena capture group non-greedy tetap bisa backtrack-extend melewati batas div kalau tidak dibatasi ke 1 baris) yang jalan di 7 halaman case-study sekaligus (Booksmart, Bookdrop, Werk ESS, Werk Personnel Management, Werk CRM, Werk Mobile App, Atopia Space) — Kasatmata & ZNTRAL tidak kena karena pola "gallery"-nya beda (lihat bagian bawah).
+  - Pola yang sama (title 4px → gambar) juga berlaku di `.detail-image-grid__text` (teks yang jadi cell pertama grid) — sebelumnya `gap:8px`, sudah dikoreksi ke `gap:4px`.
 - **Kalau ada grid gambar** (2, 3, atau 5 gambar untuk 1 sub-judul — sudah ketemu semua variasinya di Booksmart & Bookdrop) — judul dan paragraf-nya **ikut jadi bagian dari grid** (mengisi cell kiri-atas), BUKAN ditulis terpisah di atas grid. Ini sempat salah diimplementasikan (teks di luar grid, cell kiri-atas dibiarkan kosong) sebelum dikoreksi berdasarkan screenshot & re-check Figma.
 - Grid gambar **tidak butuh class posisi manual** — cukup `.detail-image-grid` diisi berurutan: `.detail-image-grid__text` (kalau ada) sebagai child PERTAMA, lalu sejumlah `<img class="detail-image">` sesuai kebutuhan. CSS Grid auto-placement otomatis mengisi kolom kanan lalu turun baris demi baris, persis urutan di Figma. Pola yang sama juga dipakai untuk "2 gambar sejajar tanpa teks" (tinggal isi 2 `<img>` saja, tanpa `__text`).
 - **Grid gambar cuma 2 kolom di tablet & desktop (≥768px).** Di mobile, grid jadi **1 kolom vertikal** (gambar stack ke bawah, full-width) supaya tetap enak dibaca — ini juga sempat kelewatan (awalnya grid 2 kolom dipaksakan sampai ke mobile, bikin gambar jadi kecil dan sempit) sebelum dikoreksi.
 - **Gambar di dalam grid TIDAK di-crop/di-stretch** — untuk `<img>` yang sudah beneran diisi sumber gambar, pakai `aspect-ratio: auto` (bukan rasio tetap seperti `.detail-image` biasa), jadi tiap gambar tampil di proporsi aslinya sesuai file yang di-upload. Baris grid otomatis menyesuaikan tinggi ke gambar yang paling tinggi di baris itu (perilaku default CSS Grid, tidak perlu diatur manual). Ini sempat salah — awalnya grid images dipaksa rasio 408:492 seragam via `object-fit: cover`, hasilnya banyak gambar ke-crop/stretch tidak sesuai aslinya — sudah dikoreksi berdasarkan perbandingan screenshot desktop/tab vs mobile dari Figma.
 - **Placeholder (`<div class="detail-image">`, sebelum gambar asli di-upload) tetap pakai rasio fallback 408:492** — beda dari `<img>` yang boleh `aspect-ratio: auto`. Sebab: div kosong nggak punya ukuran intrinsik buat dijadiin acuan rasio, jadi kalau dipaksa `auto` dia collapse jadi tinggi 0 (invisible). CSS-nya beda selector: `.detail-image-grid img.detail-image` (auto) vs `.detail-image-grid div.detail-image` (fallback 408:492) — begitu placeholder diganti jadi `<img>`, otomatis dapet behaviour yang benar tanpa perlu ubah CSS.
 - Gambar pakai `border-radius: 6px` (beda dengan `work-card` yang 4px — jangan disamakan).
-- **Kadang 1 sub-judul punya beberapa gambar full-width yang cuma di-stack vertikal (bukan grid)** — ditemukan di Werk: Personnel Management ("Progressive Disclosure via Dual-Axis Navigation" punya 2 gambar full-width berurutan). Ini beda dari grid: tinggal taruh beberapa `<img class="detail-image">` berurutan langsung di dalam `.detail-block` (bukan di dalam `.detail-image-grid`), masing-masing full-width 840:491 seperti gambar tunggal biasa.
+- **Kadang 1 sub-judul punya beberapa gambar full-width yang cuma di-stack vertikal (bukan grid)** — ditemukan di Werk: Personnel Management ("Progressive Disclosure via Dual-Axis Navigation" punya 2 gambar full-width berurutan). Ini beda dari grid: tinggal taruh beberapa `<img class="detail-image">` berurutan sebagai sibling dari `.detail-block__text` di dalam `.detail-block detail-block--media` (bukan di dalam `.detail-image-grid`), masing-masing full-width 840:491 seperti gambar tunggal biasa — gap antar gambar-nya ikut nilai `.detail-block--media` yang sama (16px mobile / 24px tablet+).
 - **Grid 2 kolom kadang lebarnya TIDAK sama** (sempat ditemukan di Atopia Space, rasio ~500:316, bukan 50:50) — pakai modifier class `.detail-image-grid--wide-narrow` di elemen `.detail-image-grid` yang sama (`<div class="detail-image-grid detail-image-grid--wide-narrow">`). Di mobile tetap stack 1 kolom seperti grid biasa, cuma di tablet+ kolomnya jadi timpang.
   - **Bug yang sempat kejadian:** pertama kali diimplementasikan pakai unit `fr` (`grid-template-columns: 500fr 316fr`), tapi entah kenapa di browser hasilnya malah rata 50:50 — sudah dites beberapa kombinasi `fr` (termasuk yang sederhana seperti `1fr 2fr`) dan semuanya ke-resolve sama rata, kemungkinan besar karena grid item-nya (placeholder `<div>` kosong) nggak punya ukuran intrinsik buat jadi basis distribusi `fr`. Fix-nya: pakai **persentase** (`61.27% 38.73%`, dari 500/816 dan 316/816) — persentase resolve dengan benar terlepas dari isi grid item-nya kosong atau tidak.
   - **Update:** user akhirnya revisi desainnya di Figma dan mengembalikan grid ini ke rata 50:50 biasa, jadi saat ini `.detail-image-grid--wide-narrow` TIDAK dipakai di halaman manapun. Class & CSS-nya tetap dipertahankan (tidak dihapus) karena kemungkinan dipakai lagi di project berikutnya (Kasatmata/ZNTRAL) kalau ada layout serupa.
 - **Kalau nama frame gambar di Figma bentrok/dipakai berulang** (beberapa gambar beda pakai nama sama persis, misal 2 layer `img-1` untuk 2 gambar berbeda) — jangan asumsikan file akan otomatis unik. Tanyakan ke user dulu: mereka rename manual di Figma, ATAU kita yang kasih penomoran baru berurutan sesuai urutan baca halaman (lebih cepat, tapi harus dikasih tabel mapping yang jelas biar user tahu file mana untuk konten yang mana). Ini kejadian di Atopia Space — lihat catatan lengkapnya di `design.md`.
 - Kalau project tidak punya live site publik (contoh: Bookdrop, tool internal), **badge "Watch live" di-skip sepenuhnya** — cukup judul project tanpa badge di sebelahnya.
+- **Varian "images-only" / "gallery"** (ditemukan di Kasatmata, kemungkinan juga ZNTRAL): project ini cuma menampilkan galeri gambar, bukan studi kasus dengan sub-judul & paragraf per section. Strukturnya jadi lebih sederhana:
+  ```
+  detail-page
+  ├── detail-section detail-section--tight (hero: judul + paragraf saja, sama seperti biasa)
+  └── detail-section detail-section--gallery (SATU section berisi semua gambar berurutan, TANPA section terpisah per topik, TANPA "Outcome")
+      ├── <img class="detail-image" ...>                                    ← gambar tunggal, langsung child .detail-section (skip .detail-block, karena tidak ada judul/paragraf untuk dibungkus)
+      ├── <div class="detail-image-grid detail-image-grid--gallery"> ... </div>   ← grid gambar (2/3/dst)
+      └── ...
+  ```
+  - **Modifier `.detail-section--gallery`:** karena tidak ada judul/paragraf per gambar yang butuh gap 56px standar, gap antar item di section ini lebih rapat: **16px mobile → 24px tablet & desktop** (satu nilai flat dari tablet ke atas, bukan naik lagi di desktop). Dipakai identik di Kasatmata & ZNTRAL — tidak butuh modifier tambahan per-project lagi (lihat catatan di bawah).
+  - **Modifier `.detail-image-grid--gallery`:** grid 2 kolomnya TETAP 2 kolom sampai ke mobile (beda dari `.detail-image-grid` biasa yang stack ke 1 kolom di mobile) — gap kolomnya **16px mobile → 24px tablet & desktop**.
+  - **Update (setelah full spacing re-audit):** awalnya Kasatmata terbaca punya gap 40px sendiri di desktop (beda dari ZNTRAL yang 24px), jadi sempat ada modifier tambahan `.detail-section--gallery-24` khusus ZNTRAL. Setelah user merapikan binding variable di Figma dan minta re-check total, ternyata Kasatmata desktop-nya JUGA 24px (bacaan 40px sebelumnya adalah dari frame yang belum di-bind ke variable dengan benar). Modifier `--gallery-24` sudah dihapus — sekarang `.detail-section--gallery` sendiri sudah 24px di desktop, dipakai sama persis oleh kedua project.
+  - **Bug spesifisitas CSS yang sempat kejadian:** `.detail-section--gallery` dan `.detail-image-grid--gallery` awalnya ditulis sebagai selector class tunggal, spesifisitas-nya SAMA dengan `.detail-section`/`.detail-image-grid` biasa. Begitu breakpoint tablet `.detail-section` (plain) juga diberi `gap` eksplisit (buat fix bug gap-mobile di atas), urutan di file jadi menentukan siapa menang — bukan modifier-nya. Fix: semua selector varian gallery ditulis compound (`.detail-section.detail-section--gallery`, `.detail-image-grid.detail-image-grid--gallery`) supaya spesifisitasnya PASTI lebih tinggi, tidak tergantung urutan di file lagi.
+  - Ini pola spacing yang beda sendiri dari section-section studi kasus, jadi selalu cross-check langsung ke Figma per breakpoint (jangan asumsikan ikut skala gap yang sama seperti project lain).
+
+- **Bug yang sempat kejadian: border-bottom tiap section "berhenti di tengah" di monitor lebar** (>1440px, misal 1920/2560). Penyebabnya: `.detail-page` awalnya dikasih `max-width: 1440px; margin: 0 auto`, jadi SELURUH section (termasuk background & border-bottom-nya) ikut kepotong di 1440px, nyisain area putih polos tanpa section chrome di kanan-kirinya kalau layar lebih lebar dari itu. Padahal `navbar` dan `footer-detail` (yang berada DI LUAR `.detail-page`) sudah full-width dengan benar — jadi kelihatan seperti section-nya doang yang "nanggung". Paling kentara di halaman yang gambarnya penuh selebar section kayak Kasatmata.
+  - **Fix:** `.detail-page` dihapus `max-width`/`margin`-nya (jadi full-width beneran, background+border tiap `.detail-section` reach ujung layar). Supaya konten (teks 840px) tetap kecap di lebar yang sama persis kayak Figma dan nggak ikut melebar di layar ultra-wide, `.detail-section` di breakpoint desktop (≥1280px) pakai `padding-left/right: max(var(--gutter), calc((100% - 840px) / 2))` — di ≤1440px hasilnya sama kayak sebelumnya (`--gutter` 300px), tapi begitu viewport lebih lebar dari 1440px, padding-nya otomatis nambah biar 840px kontennya tetap center, sementara background/border section-nya tetap full-bleed sampai ujung layar.
 
 ### Implementasi
-`.detail-page`, `.detail-section`, `.detail-section--tight`, `.detail-section--outro`, `.detail-subgroup`, `.detail-block`, `.detail-title`, `.detail-hero`, `.watch-live`, `.detail-image`, `.detail-image-grid`, `.detail-image-grid__text` — semua di [css/style.css](css/style.css).
+`.detail-page`, `.detail-section`, `.detail-section--tight`, `.detail-section--outro`, `.detail-subgroup`, `.detail-block`, `.detail-block--media`, `.detail-block__text`, `.detail-title`, `.detail-hero`, `.watch-live`, `.detail-image`, `.detail-image-grid`, `.detail-image-grid__text` — semua di [css/style.css](css/style.css).
 
 ```html
+<!-- text-only block (section-headline pattern, TANPA gambar mengikuti) -->
 <section class="detail-section">
   <div class="detail-block">
     <h2 class="detail-title">Judul masalah</h2>
     <p class="paragraph">...</p>
   </div>
-  <img class="detail-image" src="..." alt="..." />
+
+  <!-- sub-judul + paragraf + gambar: WAJIB pakai .detail-block--media +
+       .detail-block__text supaya title→paragraf (4px) dan teks→gambar
+       (16/24px) bisa punya gap yang beda -->
+  <div class="detail-block detail-block--media">
+    <div class="detail-block__text">
+      <h3 class="detail-title">Sub-judul</h3>
+      <p class="paragraph">...</p>
+    </div>
+    <img class="detail-image" src="..." alt="..." />
+  </div>
 </section>
 
 <!-- grid gambar dengan teks di cell kiri-atas (jumlah gambar bebas, tinggal tambah <img>) -->
