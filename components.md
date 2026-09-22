@@ -396,8 +396,37 @@ Referensi behavior-nya dari live site Framer milik user sendiri ([aryogilangm.fr
 
 **Fix:** `.content-nav` sekarang nggak punya `width` sama sekali (auto → shrink-to-fit, otomatis hug ke child yang lagi in-flow). `.content-nav__label` dikasih `width: max-content` (hug teksnya sendiri, ~126px buat "List of content"). Lebar 280px dipindah ke `.content-nav__list` doang, TAPI list-nya di-`position: absolute` — kalau dibiarkan tetap in-flow (normal, ikut alur dokumen), lebar 280px-nya bakal tetap "bocor" ke perhitungan shrink-to-fit parent walaupun lagi disembunyiin via `max-height:0;overflow:hidden` (dua hal itu cuma motong tinggi, bukan ngeluarin elemennya dari perhitungan lebar). Dengan `position:absolute`, list keluar total dari flow, jadi sama sekali nggak mempengaruhi lebar pill pas closed. List di-posisikan `left:50%; bottom:0; transform:translateX(-50%)` — self-centering, dan tetap growth dari titik anchor bawah yang sama persis kayak sebelumnya, terlepas dari lebar `.content-nav` sendiri.
 
-### Belum dikerjakan / catatan buat lanjutan
-- Belum dipasang ke halaman detail lain — kalau mau pasang ke semua halaman, tinggal copy markup `<nav class="content-nav">` dan sesuaikan daftar section + `id`-nya per halaman (CSS & JS-nya sudah generic, tidak perlu diubah, `initContentNav()` otomatis nyocokin `href` ke `id` section berdasarkan apa yang ada di markup masing-masing halaman).
+### Status rollout
+Sudah dipasang di semua halaman detail case-study (Bookdrop, Atopia Space, Booksmart, semua Werk) kecuali ZNTRAL & Kasatmata (gallery gambar doang, nggak ada section case-study buat di-navigate), dan di halaman artikel ([article-agentic-ai.html](article-agentic-ai.html), lihat section 9). Markup-nya selalu sama: copy `<nav class="content-nav">` + sesuaikan daftar section & `id`-nya per halaman — CSS & JS generic, `initContentNav()` otomatis nyocokin `href` ke `id` section apa pun yang ada di markup.
+
+---
+
+## 9. Article page (`article-agentic-ai.html`) — beda dari detail-page case-study
+
+**Kenapa halaman baru, bukan pola `detail-page` yang sudah ada:** case-study (Bookdrop, dkk) itu produk UI-heavy — tiap section punya heading singkat + 1 paragraf + gambar besar, dengan gap antar-block yang lega (40/56px, lihat `.detail-section`/`.detail-block`). Article ini tulisan panjang (personal essay soal proses belajar Claude Code buat bikin situs ini sendiri) — rhythm-nya harus lebih rapat & konsisten kayak artikel beneran, bukan spasi lega ala case-study. Dicek di Figma: gap antar SEMUA direct child section (judul→paragraf, paragraf→paragraf, paragraf→gambar) itu flat 24px di semua breakpoint, beda total dari detail-page punya.
+
+**Link masuknya:** section baru **"Experiments"** di home page ([index.html](index.html)), di antara `.headline` dan `.selected-works` — daftar tulisan/eksperimen yang akan nambah dari waktu ke waktu (`.experiments__list` isinya array `.experiment-card`, masing-masing cuma judul + deskripsi pendek, TANPA thumbnail gambar — beda dari `.work-card` yang selalu ada gambar). Dinamain "Experiments" (bukan "Articles"/"Blog") biar nggak generik — sesuai istilah user sendiri.
+
+### Reuse dari sistem `detail-page` yang sudah ada
+Ternyata strukturnya SANGAT mirip case-study (section dengan border-bottom + padding gutter-responsif + judul + isi), cuma beda rhythm-nya doang — jadi hampir semua class DIPAKAI ULANG, bukan bikin sistem paralel baru:
+- `.detail-page`, `.detail-section` (+ `--tight` buat hero, `--outro` buat "Outcome") — reuse APA ADANYA buat bg/border/padding/breakpoint gutter (40→100→300px, `--gutter` var yang sama persis).
+- **Satu-satunya tambahan:** `.detail-section.detail-section--article { gap: var(--space-24); }` — override gap-nya doang (compound class, pola yang sama kayak `.detail-section--gallery`), padding/border/breakpoint-nya tetap warisan dari `.detail-section`.
+- `.title` (headline biru "A Designer's First Attempt at Directing Agentic AI") dan `.detail-title` (judul tiap section: "Figma as the Foundation. Still.", dst) — reuse langsung, size/warna-nya di Figma cocok 1:1 sama token yang sudah ada.
+- `.paragraph` — reuse langsung buat semua body text.
+- `.navbar` — TAPI TANPA modifier `--transparent` (beda dari case-study yang transparan di atas hero image) karena halaman ini nggak punya hero image, nav-nya solid putih dari awal. Teksnya juga beda: `HOME` (link ke `index.html`), bukan `ALL WORKS` (link ke `works.html`) — reuse class `.navbar__title` yang sama, cuma teks & href-nya beda.
+- `.content-nav` — reuse 100% apa adanya (lihat section 8), daftar section-nya cuma disesuaikan sama section artikel ini (Overview, Figma as the Foundation. Still., First Encounter with Agentic AI, Being an Orchestrator. Not a Coder., Outcome).
+- `.footer-detail` — reuse 100% apa adanya, sama persis kayak semua halaman detail.
+
+### Class baru yang ditambahin
+- **`.caption`** (12px/Regular, warna sama kayak `.paragraph`) — teks kecil di bawah gambar, belum ada di sistem lama karena case-study nggak punya caption gambar.
+- **`.article-figure`** — wrapper flex-column gap 12px buat `<img class="detail-image">` + `<p class="caption">`. Gambar-nya reuse class `.detail-image` yang sudah ada (aspect-ratio 840/491 pas banget sama rasio file PNG yang di-export user, 1260×737).
+- **`.article-figure__placeholder`** — kotak dashed-border kosong, dipakai buat slot gambar/interactive yang belum jadi (lihat di bawah).
+
+### Gambar: full export dari Figma, bukan dibangun ulang
+Semua gambar (`assets/images/article-agentic_AI/img-1.png` s.d. `img-5.png`) itu FULL COMPOSITE export dari Figma — termasuk yang aslinya diagram custom di Figma (panah pemetaan warna, grid swatch token) dan yang before/after 2-gambar-berdampingan, semuanya sudah di-flatten jadi satu file PNG per section sama user. Jadi nggak perlu rebuild diagram-nya pakai HTML/CSS — tinggal `<img>` biasa persis kayak screenshot case-study lain.
+
+### Belum selesai
+Satu slot gambar di section "Being an Orchestrator. Not a Coder." masih placeholder (`.article-figure__placeholder`, teks "Interactive before/after demo — coming soon") — rencananya bakal jadi demo interaktif before/after dari iterasi animasi `content-nav` (draft awal yang user nggak suka sampai versi final yang dipakai sekarang), terinspirasi dari [muhraufan.com/work/tiket-discover.html](https://muhraufan.com/work/tiket-discover.html). Sengaja belum dibangun — user eksplisit minta extract struktur dulu, interactive-nya dikerjain bareng nanti.
 
 ---
 

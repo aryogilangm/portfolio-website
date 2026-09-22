@@ -163,3 +163,102 @@ function initContentNav() {
 }
 
 initContentNav();
+
+// Before/after content-nav animation-iteration demo (article-agentic-ai.html,
+// "Being an Orchestrator. Not a Coder.") — the interactive asset in
+// .iteration-demo. Opening is a plain click-to-toggle, on every device —
+// the one mechanism guaranteed to work everywhere. A first pass tried
+// branching on matchMedia("(hover: hover)") to open on mouseenter
+// instead, but touch browsers replay a synthetic mouseenter/mouseover
+// after a tap regardless of what that query reports, which left "Before"
+// stuck open with no way to tap it closed again. Real hover (+
+// focus-within, for keyboard) is layered back in as a pure-CSS
+// enhancement in style.css, gated to devices that actually support it —
+// click and hover both just toggle the same .is-open state, so neither
+// path can fight the other.
+//
+// The toggle is bound to the whole `.iteration-demo__nav` box, not just
+// the label: "Before" shifts its own position upward when it opens (see
+// --before-shift below), so a second tap at the exact spot the label
+// used to occupy would land on the list instead and never close it.
+// Binding to the nav means any tap on the now-visible content — label or
+// list — closes it again, regardless of where the open animation moved
+// things.
+function initInteractionDemo() {
+  const demo = document.getElementById("content-nav-iteration-demo");
+  if (!demo) return;
+
+  const switcher = demo.querySelector(".iteration-demo__switcher");
+  const tabs = demo.querySelectorAll(".iteration-demo__tab");
+  const panels = demo.querySelectorAll(".iteration-demo__panel");
+  const navs = demo.querySelectorAll(".iteration-demo__nav");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.remove("is-active"));
+      tab.classList.add("is-active");
+      switcher.dataset.active = tab.dataset.target;
+      panels.forEach((panel) =>
+        panel.classList.toggle("is-active", panel.dataset.panel === tab.dataset.target)
+      );
+    });
+  });
+
+  navs.forEach((nav) => {
+    nav.addEventListener("click", () => {
+      nav.classList.toggle("is-open");
+    });
+
+    // Hovering open (style.css, >=1280px) never touches .is-open — it's
+    // pure CSS. That's fine on its own, but if the same nav also gets
+    // clicked while still hovered, .is-open turns on too, and the two
+    // mechanisms fall out of sync the moment the pointer leaves: :hover
+    // stops applying, yet .is-open keeps the list forced open with no
+    // more clicks to close it. Clearing the class whenever the pointer
+    // (or keyboard focus) genuinely leaves the nav keeps both paths
+    // agreeing on "closed" once the user's attention has moved on.
+    //
+    // Blurring matters too: clicking a link or the label — the exact
+    // "hover, then click one of the sections" case that was reported —
+    // leaves that element focused, and CSS keeps the list open on
+    // :focus-within regardless of .is-open. Without releasing that
+    // focus, the list stays visibly open even after this handler clears
+    // the class, so the mouse leaving would silently do nothing.
+    nav.addEventListener("mouseleave", () => {
+      nav.classList.remove("is-open");
+      if (document.activeElement && nav.contains(document.activeElement)) {
+        document.activeElement.blur();
+      }
+    });
+
+    nav.addEventListener("focusout", (e) => {
+      if (!nav.contains(e.relatedTarget)) nav.classList.remove("is-open");
+    });
+  });
+
+  // "Before" (v1) grows straight down from the label instead of
+  // re-centering the way "After" (v2) does — that mismatch is the whole
+  // point of the demo. Left as pure CSS, the expanded block would sit low
+  // and could spill past the frame on a short mobile stage. Rather than a
+  // pixel offset that only holds at one exact container size, measure the
+  // list once here — up front, not at the moment it opens, since opening
+  // is now driven by CSS (:hover/:focus-within or .is-open) rather than
+  // JS — and write it to --before-shift (read by style.css) so the
+  // expanded block lands centered at any frame size (mobile stack or
+  // desktop ratio), no matter which mechanism opened it. Recomputed on
+  // resize since the link text rewraps, and the list's height with it,
+  // at different container widths.
+  const beforeNav = demo.querySelector(".iteration-demo__nav--v1");
+  const beforeList = beforeNav?.querySelector(".iteration-demo__nav-list");
+
+  const updateBeforeShift = () => {
+    if (!beforeNav || !beforeList) return;
+    const shift = beforeList.scrollHeight / 2 + 6;
+    beforeNav.style.setProperty("--before-shift", `-${shift}px`);
+  };
+
+  updateBeforeShift();
+  window.addEventListener("resize", updateBeforeShift);
+}
+
+initInteractionDemo();
