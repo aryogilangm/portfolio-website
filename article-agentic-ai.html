@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Designer's First Attempt at Directing Agentic AI — Aryo Gilang Maudyansa</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__title">HOME</a>
+    </div>
+  </nav>
+
+  <nav class="content-nav" aria-label="Section navigation">
+    <button type="button" class="content-nav__label" aria-expanded="false">List of content</button>
+    <ul class="content-nav__list">
+      <li><a href="#overview" class="content-nav__link">Overview</a></li>
+      <li><a href="#figma-foundation" class="content-nav__link">Figma as the Foundation. Still.</a></li>
+      <li><a href="#first-encounter" class="content-nav__link">First Encounter with Agentic AI</a></li>
+      <li><a href="#orchestrator-not-coder" class="content-nav__link">Being an Orchestrator. Not a Coder.</a></li>
+      <li><a href="#outcome" class="content-nav__link">Outcome</a></li>
+    </ul>
+  </nav>
+
+  <main class="detail-page">
+
+    <section id="overview" class="detail-section detail-section--article detail-section--tight">
+      <p class="title">A Designer's First Attempt at Directing Agentic AI</p>
+      <p class="paragraph">AI&rsquo;s growth over the past couple of years has quietly reshaped what design work looks like. Designers aren&rsquo;t just handing off concepts anymore, they&rsquo;re making ideas live faster than ever. Job listings have started saying it outright: AI in your workflow isn&rsquo;t optional anymore. I picked up on this late, more than a year late, watching from the sidelines while everyone else seemed to already be moving.</p>
+      <p class="paragraph">I closed that gap with a course from <a href="https://emilkowal.ski/" target="_blank" rel="noopener" class="link">Emil Kowalski</a>, someone whose design perspective I trust. I went in unsure where a designer even fits into agentic AI. I came out understanding my role clearly, not as a coder, but as a director. Everything in this case study grew from that shift.</p>
+    </section>
+
+    <section id="figma-foundation" class="detail-section detail-section--article">
+      <h2 class="detail-title">Figma as the Foundation. Still.</h2>
+      <p class="paragraph">For the past 5 years, Figma&rsquo;s been my daily driver. Auto-layout, variables, components — I thought I had it all figured out.</p>
+      <p class="paragraph">Turns out, &ldquo;good enough for a developer&rdquo; and &ldquo;good enough for an AI&rdquo; are two very different bars.</p>
+      <p class="paragraph">Here&rsquo;s the thing, in every job I&rsquo;ve had, handover was simple. I&rsquo;d hand off a Figma file, maybe drop a few notes in Slack if something was unclear, and developers would just&hellip; figure it out. No strict naming conventions, no rigid structure. Human developers can infer context. They ask questions. They fill in gaps.</p>
+      <p class="paragraph">Agentic AI can&rsquo;t do that. Not yet, anyway.</p>
+      <p class="paragraph">When I started working with Claude Code, I quickly realized my &ldquo;good enough&rdquo; files weren&rsquo;t cutting it. The AI reads structure, not intention. So if a frame is named &ldquo;Frame 47&rdquo; instead of &ldquo;Card - Pricing&rdquo;, it&rsquo;s already lost.</p>
+      <p class="paragraph"><span class="paragraph-highlight">Naming that actually means something.</span> Every layer, frame, and component got a name that describes what it is, not just what it looks like in the layers panel.</p>
+
+      <div class="article-figure">
+        <img class="detail-image" src="assets/images/article-agentic_AI/img-1.png" alt="Figma layer panel before and after renaming layers with meaningful names" />
+        <p class="caption">I used to name layers whatever Figma auto-generated. Turns out, that&rsquo;s basically speaking gibberish to an AI trying to understand my design.</p>
+      </div>
+
+      <p class="paragraph"><span class="paragraph-highlight">Variables, seriously this time.</span> Colors, spacing, typography — all tokenized. Not just for consistency, but so the AI could pick up on patterns instead of guessing values.</p>
+
+      <div class="article-figure">
+        <img class="detail-image" src="assets/images/article-agentic_AI/img-2.png" alt="Diagram mapping generic color variable names to semantic names" />
+        <p class="caption">I used to name colors like a spreadsheet. Now they read like sentences: main-bg-color, main-paragraph-color. Small shift, but it changed how accurately AI picked up my design intent.</p>
+      </div>
+
+      <p class="paragraph"><span class="paragraph-highlight">Component hierarchy that makes sense.</span> Nested components with clear parent-child relationships, so the logic behind the design is visible, not buried.</p>
+
+      <div class="article-figure">
+        <img class="detail-image" src="assets/images/article-agentic_AI/img-3.png" alt="Comparison of a clean component layer structure next to its rendered work card" />
+        <p class="caption">A clear hierarchy doesn&rsquo;t just help developers. It gives AI the structural context it needs to understand your component logic.</p>
+      </div>
+
+      <p class="paragraph">Honestly? This process made me realize something a bit uncomfortable. I&rsquo;d been getting away with messy handover for years simply because humans are good at filling gaps AI can&rsquo;t.</p>
+      <p class="paragraph">Cleaning up for AI ended up cleaning up my process for everyone. With the files finally in shape, there was nothing left to prepare. Just the AI, my Figma file, and whatever came next.</p>
+    </section>
+
+    <section id="first-encounter" class="detail-section detail-section--article">
+      <h2 class="detail-title">First Encounter with Agentic AI</h2>
+      <p class="paragraph">I&rsquo;ll be honest, before diving in, I built up this whole scary picture in my head.</p>
+      <p class="paragraph">I&rsquo;d watched people move fast with agentic AI, throwing around terminal commands and complex prompts like it was nothing. I expected the same for myself — messy trial and error, a steep learning curve.</p>
+
+      <div class="article-figure">
+        <img class="detail-image" src="assets/images/article-agentic_AI/img-4.png" alt="Claude Code terminal session reviewing and fixing issues" />
+        <p class="caption">Terminal-heavy workflows like this are what made me assume agentic AI meant speaking fluent developer. Turns out, it didn&rsquo;t have to. (Screenshot from Claude Code 101, Claude Academy)</p>
+      </div>
+
+      <p class="paragraph">Instead, the first time I described what I wanted to Claude Code, it just&hellip; understood. Not perfectly, but enough that I never felt like I was shouting into a void.</p>
+      <p class="paragraph">That&rsquo;s when things shifted. This wasn&rsquo;t about becoming a coder overnight, it was about communicating clearly, just in a language I hadn&rsquo;t used before.</p>
+      <p class="paragraph">Of course, it wasn&rsquo;t completely smooth. There was a point where I asked for a specific animation behavior, and what came back wasn&rsquo;t quite what I pictured. The timing felt off, not matching the interaction I had in mind. Instead of giving up or assuming it couldn&rsquo;t be done, I broke it down: showed a reference, described the easing I wanted, compared it side by side. A few iterations later, it clicked.</p>
+      <p class="paragraph">That small hiccup taught me something bigger, being the orchestrator meant I still had to know what &ldquo;right&rdquo; looked like. The AI could execute, but I still had to recognize when something was off, and be specific enough to guide it there.</p>
+      <p class="paragraph">Turns out, the scariest part wasn&rsquo;t the tool. It was my own assumption that I didn&rsquo;t belong in this workflow yet.</p>
+    </section>
+
+    <section id="orchestrator-not-coder" class="detail-section detail-section--article">
+      <h2 class="detail-title">Being an Orchestrator. Not a Coder.</h2>
+      <p class="paragraph">That first win didn&rsquo;t mean I&rsquo;d figured everything out, it just meant I&rsquo;d figured out my role. There&rsquo;s a version of &ldquo;AI-assisted design&rdquo; that sounds like magic, describe what you want, and it just appears. That&rsquo;s not quite what happened here. The clearest way I can explain my role: I decided what needed to happen, Claude Code figured out how to make it happen in code. But &ldquo;how&rdquo; still needed my input, over and over.</p>
+      <p class="paragraph">Color, for instance, was never up for negotiation. Every shade, every contrast decision that stayed fully mine. Claude Code implemented it, but the craft itself was untouched by AI. That&rsquo;s not a limitation of the tool; it&rsquo;s a boundary I set on purpose. Some decisions are design decisions, full stop.</p>
+
+      <div class="article-figure">
+        <img class="detail-image" src="assets/images/article-agentic_AI/img-5.png" alt="Full color token grid: neutral scale and semantic main, success, and error states" />
+        <p class="caption">Every shade, every state decided by hand. This is what &ldquo;fully mine&rdquo; actually looks like.</p>
+      </div>
+
+      <p class="paragraph">I had a specific interaction in mind, something snappy, not abrupt. First attempt from Claude Code was technically correct, but too linear, missing the bounce I pictured. So I broke it down like I would with a developer: showed a reference, described the easing in plain language, compared side-by-side. A few rounds later, it matched.</p>
+
+      <!-- Before/after content-nav animation-iteration demo, inspired by
+           muhraufan.com/work/tiket-discover.html. Logic lives in
+           initInteractionDemo (js/main.js). -->
+      <div class="iteration-demo" id="content-nav-iteration-demo">
+        <div class="iteration-demo__switcher-row">
+          <div class="iteration-demo__switcher" data-active="before">
+            <span class="iteration-demo__thumb" aria-hidden="true"></span>
+            <button type="button" class="iteration-demo__tab is-active" data-target="before">Before</button>
+            <button type="button" class="iteration-demo__tab" data-target="after">After</button>
+          </div>
+        </div>
+        <div class="iteration-demo__stage">
+          <div class="iteration-demo__panel is-active" data-panel="before">
+            <nav class="iteration-demo__nav iteration-demo__nav--v1">
+              <button type="button" class="iteration-demo__nav-label">List of content</button>
+              <ul class="iteration-demo__nav-list">
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Overview</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Transforming the Dashboard into a Strategic Command Center</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Bulk Uploads &amp; Multi-Shipment Logistics</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Frictionless &amp; Safe Post-Order Modification</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Restructuring the Product Architecture</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Outcome</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div class="iteration-demo__panel" data-panel="after">
+            <nav class="iteration-demo__nav iteration-demo__nav--v2">
+              <button type="button" class="iteration-demo__nav-label">List of content</button>
+              <ul class="iteration-demo__nav-list">
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Overview</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Transforming the Dashboard into a Strategic Command Center</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Bulk Uploads &amp; Multi-Shipment Logistics</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Frictionless &amp; Safe Post-Order Modification</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Restructuring the Product Architecture</a></li>
+                <li><a href="#" class="iteration-demo__nav-link" tabindex="-1" onclick="return false">Outcome</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <p class="paragraph">That loop, describe, generate, compare, and refine became the actual workflow. Not one prompt and done. More like a conversation where I kept saying &ldquo;closer, but not quite&rdquo; until it was.</p>
+      <p class="paragraph">Being the orchestrator meant I still had to know what &ldquo;right&rdquo; looked like. AI could execute fast, but it couldn&rsquo;t read my taste. That part stayed on me, every single time.</p>
+    </section>
+
+    <section id="outcome" class="detail-section detail-section--article detail-section--outro">
+      <h2 class="detail-title">Outcome</h2>
+      <p class="paragraph">Two weeks, that&rsquo;s how long it took from picking up the course to having this website live. Being the orchestrator that&rsquo;s the foundation I walked away with. Not writing code myself, but steering agentic AI toward the concept I actually envisioned, correcting it when it gets things wrong, the same way I would with any collaborator. It didn&rsquo;t replace how I used to work, the Figma discipline, the design instincts, all of it still matters, just pushed to a higher level.</p>
+      <p class="paragraph">Right now, I&rsquo;m already using this to turn my own design ideas into something live. And I&rsquo;m just getting started figuring out how far I can take it.</p>
+    </section>
+
+  </main>
+
+  <footer class="footer-detail">
+    <div class="footer-detail__email">
+      <p class="paragraph footer-detail__label">Email</p>
+      <a href="mailto:agmaudyansa@gmail.com" class="link link--large">agmaudyansa@gmail.com</a>
+    </div>
+    <div class="footer-detail__bar">
+      <div class="footer-detail__links">
+        <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+      </div>
+      <p class="paragraph">&copy;2026</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
