@@ -109,14 +109,28 @@
         <p class="paragraph">The legacy checkout was one massive, single-page form for both shipping and payment, with no real-time visibility into cart contents while filling it out, raising drop-off risk from sheer uncertainty. I restructured the layout entirely, splitting the input process and adding a persistent reference point throughout.</p>
       </div>
 
-      <div class="detail-image-grid">
-        <div class="detail-image-grid__text">
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
           <h3 class="detail-title">3-Step Checkout Stepper</h3>
           <p class="paragraph">I broke the form into three digestible stages: Shipping Information, Shipping Method, and Payment Method, so users focus on one task at a time instead of facing an intimidating wall of fields.</p>
         </div>
-        <img class="detail-image" src="assets/images/booksmart-detail-page/img-7_1.png" alt="Booksmart checkout step 1 shipping information" />
-        <img class="detail-image" src="assets/images/booksmart-detail-page/img-7_2.png" alt="Booksmart checkout step 2 shipping method" />
-        <img class="detail-image" src="assets/images/booksmart-detail-page/img-7_3.png" alt="Booksmart checkout step 3 payment method" />
+        <div class="stepper-demo">
+          <div class="stepper-demo__row">
+            <div class="stepper-demo__tabs" role="tablist" aria-label="Checkout steps">
+              <button type="button" class="stepper-demo__tab" role="tab" aria-selected="true">Step 1</button>
+              <button type="button" class="stepper-demo__tab" role="tab" aria-selected="false" tabindex="-1">Step 2</button>
+              <button type="button" class="stepper-demo__tab" role="tab" aria-selected="false" tabindex="-1">Step 3</button>
+              <div class="stepper-demo__overlay" aria-hidden="true"><span>Step 1</span><span>Step 2</span><span>Step 3</span></div>
+            </div>
+          </div>
+          <div class="stepper-demo__stage">
+            <div class="stepper-demo__shots">
+              <img class="stepper-demo__shot is-active" src="assets/images/booksmart-detail-page/interactive-step-1.png" alt="Booksmart checkout step 1 shipping information" draggable="false" />
+              <img class="stepper-demo__shot" src="assets/images/booksmart-detail-page/interactive-step-2.png" alt="Booksmart checkout step 2 shipping method" draggable="false" />
+              <img class="stepper-demo__shot" src="assets/images/booksmart-detail-page/interactive-step-3.png" alt="Booksmart checkout step 3 payment method" draggable="false" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="detail-block detail-block--media">

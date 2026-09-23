@@ -262,3 +262,58 @@ function initInteractionDemo() {
 }
 
 initInteractionDemo();
+
+// Stepper demo (booksmart.html): pill tab-switcher that cross-fades checkout
+// screenshots. The pill is a clipped overlay (see .stepper-demo in style.css);
+// this only measures the active tab and writes the clip-path.
+function initStepperDemos() {
+  document.querySelectorAll(".stepper-demo").forEach((demo) => {
+    const tabs = Array.from(demo.querySelectorAll(".stepper-demo__tab"));
+    const shots = Array.from(demo.querySelectorAll(".stepper-demo__shot"));
+    const overlay = demo.querySelector(".stepper-demo__overlay");
+    let current = 0;
+
+    const movePill = (i) => {
+      const tab = tabs[i];
+      const left = tab.offsetLeft - 4;
+      const right = overlay.offsetWidth - left - tab.offsetWidth;
+      overlay.style.clipPath = `inset(0 ${right}px 0 ${left}px round 60px)`;
+    };
+
+    // Set without animating: on load, and again once web fonts settle
+    // (Geist changes tab widths).
+    const snap = () => {
+      overlay.style.transition = "none";
+      movePill(current);
+      requestAnimationFrame(() => {
+        overlay.style.transition = "";
+      });
+    };
+
+    const select = (next, focus) => {
+      if (next === current) return;
+      shots[current].classList.remove("is-active");
+      shots[next].classList.add("is-active");
+      tabs.forEach((tab, i) => {
+        tab.setAttribute("aria-selected", i === next);
+        tab.tabIndex = i === next ? 0 : -1;
+      });
+      movePill(next);
+      if (focus) tabs[next].focus();
+      current = next;
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => select(i));
+      tab.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") select(Math.min(i + 1, tabs.length - 1), true);
+        if (e.key === "ArrowLeft") select(Math.max(i - 1, 0), true);
+      });
+    });
+
+    snap();
+    document.fonts?.ready.then(snap);
+  });
+}
+
+initStepperDemos();
