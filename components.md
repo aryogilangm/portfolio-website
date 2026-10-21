@@ -88,39 +88,50 @@ work-card (link, seluruh card bisa diklik)
 
 ## 4. `nav-bar`
 
-**Figma:** Component Set `nav-bar` (page asset), 2 variant: `home` (teks "HOME") / `detail-page` (teks "ALL WORKS")
-**Dipakai di:** [works.html](works.html) (variant `home`), semua halaman detail project seperti [booksmart.html](booksmart.html) (variant `detail-page`)
-**TIDAK dipakai di:** home (index.html) — sesuai instruksi sebelumnya, home tidak pakai navbar sama sekali.
+**Figma:** Component Set `nav-bar` (page asset), 3 variant: `home-page` (tanpa teks, toggle tema saja), `all-works` (teks "HOME" + toggle), `detail-page` (teks "ALL WORKS", transparent)
+**Dipakai di:** [index.html](index.html) (`home-page`), [works.html](works.html) (`all-works`), semua halaman detail project seperti [booksmart.html](booksmart.html) (`detail-page`, **belum** ada toggle tema di sini)
 
 ### Spec per variant
-| Variant | Teks | Link tujuan | Background | Border |
-|---|---|---|---|---|
-| `home` | "HOME" | `index.html` | `#ffffff` | border-bottom 1px `#ededed` |
-| `detail-page` | "ALL WORKS" | `works.html` | transparent (tanpa fill) | tidak ada |
+| Variant | Teks | Link tujuan | Background | Border | Toggle tema |
+|---|---|---|---|---|---|
+| `home-page` | — | — | transparent | tidak ada | ya, di kanan |
+| `all-works` | "HOME" | `index.html` | desktop (≥1280px): transparent, tanpa border · tab/mobile: terisi (`--color-navbar-bg`) + border-bottom 1px `--color-stroke` | lihat kolom background | ya, di kanan |
+| `detail-page` | "ALL WORKS" | `works.html` | transparent | tidak ada | belum |
 
 Sempat salah diimplementasikan — awalnya SEMUA navbar (termasuk yang harusnya variant `detail-page`) dikasih background putih + border, padahal main component `detail-page` di Figma itu transparent tanpa stroke sama sekali. Sudah dikoreksi lewat modifier class `.navbar--transparent`.
 
-- Padding: **fixed 40px kiri-kanan, 16px atas-bawah di SEMUA breakpoint** (tidak scale seperti container lain — ini juga sempat salah pakai `--gutter` yang scale 300/100/40, sudah dikoreksi)
-- Teks: Geist 20px Medium, warna `#0a0a0a`
+- Padding: **fixed 40px kiri-kanan, 16px atas-bawah di SEMUA breakpoint** (tidak scale seperti container lain). Navbar yang berisi toggle tingginya fixed 62px (sesuai Figma), toggle `margin-left: auto`.
+- Teks: Geist 20px Medium, warna `--color-navbar-text`
 
 ### Perilaku tambahan (di luar Figma static design, permintaan custom)
-Navbar **sticky** di atas, otomatis:
-- **Hilang** (translateY(-100%)) saat scroll ke bawah
-- **Muncul lagi** saat scroll ke atas
-- Transisi: `transform 1s ease` (awalnya pakai efek spring/bounce sesuai spec asli, tapi bounce-nya diminta dihilangkan)
+Navbar **sticky** di atas. Di halaman detail: **hilang** (translateY(-100%)) saat scroll ke bawah, **muncul lagi** saat scroll ke atas (`transform 1s ease`). **Di home dan works (class `.navbar--persistent`) navbar tetap terlihat** di semua breakpoint — dikecualikan di `initNavbarScroll()`.
+
+### Toggle tema
+Component `segmented-button/tab-swithcer` (Figma, type=Icon) berisi 2 tombol 32×32: matahari (light) dan bulan (dark). Pill luar 72×40 (padding 3px + border 1px `--color-stroke` = stroke Figma 1px di dalam padding 4px), radius 100px. Pill aktif (`.theme-toggle::before`) bergeser di belakang ikon; ikon aktif `--color-tab-switcher-text-active`, idle `--color-tab-switcher-text-idle`, hover idle `--color-tab-switcher-button-bg` (hanya di hover device). Default **light** (ikon matahari aktif). Animasi pergantiannya: lihat [`theme-transition`](design.md#6-theme-transition-theme-transition). Ikon SVG dari Bootstrap Icons (`brightness-high`, `moon`), bukan hasil export Figma. Mapping warna dark: [design.md §1.5](design.md).
 
 ### Implementasi
-`.navbar`, `.navbar__inner`, `.navbar__title`. Modifier `.navbar--transparent` untuk variant `detail-page`. Class `.navbar--hidden` ditoggle oleh JS di [js/main.js](js/main.js).
+`.navbar`, `.navbar__inner`, `.navbar__title`, `.theme-toggle`, `.theme-toggle__button`. Modifier: `.navbar--transparent` (detail-page), `.navbar--home` (home-page, tanpa border), `.navbar--transparent-desktop` (works: transparan hanya ≥1280px). `.navbar--persistent` (home & works: tidak pernah hilang saat scroll). `.navbar--hidden` ditoggle oleh JS di [js/main.js](js/main.js).
 
 ```html
-<!-- variant home, dipakai di works.html -->
-<nav class="navbar">
+<!-- home-page (index.html) -->
+<nav class="navbar navbar--home navbar--transparent">
   <div class="navbar__inner">
-    <a href="index.html" class="navbar__title">HOME</a>
+    <div class="theme-toggle" role="group" aria-label="Color theme">
+      <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><!-- svg sun --></button>
+      <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><!-- svg moon --></button>
+    </div>
   </div>
 </nav>
 
-<!-- variant detail-page, dipakai di semua halaman detail project -->
+<!-- all-works (works.html): sama, ditambah judul di kiri -->
+<nav class="navbar navbar--transparent-desktop">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__title">HOME</a>
+    <div class="theme-toggle" role="group" aria-label="Color theme">…</div>
+  </div>
+</nav>
+
+<!-- detail-page: belum ada toggle -->
 <nav class="navbar navbar--transparent">
   <div class="navbar__inner">
     <a href="works.html" class="navbar__title">ALL WORKS</a>
@@ -430,6 +441,48 @@ Satu slot gambar di section "Being an Orchestrator. Not a Coder." masih placehol
 
 ---
 
+## 10. `segmented-button` / `tab-switcher` (`.stepper-demo`) — TESTING, baru dipasang di [booksmart.html](booksmart.html) (section "3-Step Checkout Stepper")
+
+**Figma:** Component Set `interactive-booksmart-1` (page design), 3 variant (`Property 1=1/2/3`), berisi instance `segmented-button/tab-swithcer` di atas screenshot checkout Booksmart. Prototype-nya: klik tab → screenshot step ganti. Eksplorasi desktop ada di [explore/interactive-booksmart.html](explore/interactive-booksmart.html) (gambar di `explore/img/`), perbandingan label di [explore/compare-tab-labels.html](explore/compare-tab-labels.html). Desktop, tablet, dan mobile sudah.
+
+### Implementasi (di site)
+- CSS: blok `.stepper-demo*` di akhir `css/style.css`; JS: `initStepperDemos()` di `js/main.js` (generik, otomatis untuk semua `.stepper-demo` di halaman). Gambar: `assets/images/booksmart-detail-page/interactive-step-{1,2,3}.png`.
+- **Layout section:** teks + interactive ditumpuk atas-bawah pakai template `detail-block detail-block--media` (`.detail-block__text` = judul + paragraf, lalu 1 `.stepper-demo`), bukan lagi `.detail-image-grid` dengan teks di dalam grid. Gambar lama `img-7_1..3.png` sudah tidak dipakai di halaman ini.
+- Markup: `.stepper-demo > .stepper-demo__row > .stepper-demo__tabs[role=tablist]` (3 `button.stepper-demo__tab[role=tab]` + `.stepper-demo__overlay` aria-hidden berisi 3 `<span>` label) dan `.stepper-demo__stage > .stepper-demo__shots > img.stepper-demo__shot` (yang aktif pakai `.is-active`).
+
+### Spec
+- Wrapper pill: `padding: 4px`, `gap: 2px` antar tab, border 1px `#ededed` (neutral-30), radius 100px, bg putih. Tinggi total 38px.
+- **Tiap tab: tinggi DIKUNCI 28px** (`height: 28px` + flex `align-items/justify-content: center`), **bukan** hasil padding+line-height seperti sebelumnya. Padding cuma horizontal (`0 12px`). Geist 12px / Regular (400), **line-height 1x (rapat)**, **letter-spacing normal (0)**, radius 60px.
+  - Ini sengaja menyimpang dari token tipografi `Paragraph/12/Regular` (0.5px tracking / 18px line-height) yang dipakai di tempat lain di situs — devisiasi khusus buat komponen testing ini. Resep diambil dari referensi langsung ([aiforui.dev/learn/prototyping-interfaces?variant=ledger](https://aiforui.dev/learn/prototyping-interfaces?variant=ledger), diukur lewat DevTools): tab mereka tinggi 28px dikunci + `line-height:1` + tanpa `min-width`, bukan padding+line-height longgar kayak spec Figma awal (yang hasilnya tab 34px, pill 44px — kerasa "gede"/kurang rapi).
+  - **Tanpa `min-width` sama sekali** (sempat dicoba 80px lalu 64px sebagai "lantai minimum", akhirnya dihapus total — fit-content murni, sama kayak reference). Lebar tab 100% ngikut panjang teksnya + padding 12px kiri-kanan.
+- Aktif: pill hitam `#0a0a0a` (neutral-100) + teks putih. Idle: teks `#757575` (neutral-70), hover → neutral-100 (hanya di `(hover: hover) and (pointer: fine)`).
+- **Label: ikut nama step asli dari Figma** — `Shipping Information` / `Shipping Method` / `Payment Method`. Sempat diganti `Step 1/2/3` supaya pill nggak lebih dominan dibanding switcher artikel yang cuma 2 label pendek — tapi di [booksmart.html](booksmart.html) user minta balik ke nama asli, jadi itu yang kepasang di site sekarang. Prototype di `explore/interactive-booksmart.html` & `explore/compare-tab-labels.html` masih versi `Step 1/2/3` (belum disinkronkan, murni eksplorasi). Perbandingan 3 varian padding (A = spec Figma awal, B = percobaan padding lebih kecil, C = resep final di atas) ada di [explore/compare-segmented-padding.html](explore/compare-segmented-padding.html).
+
+### Animasi
+- Pill aktif digeser pakai **overlay hitam berisi salinan label putih yang di-clip** (`clip-path: inset(0 R 0 L round 60px)`), transisi 280ms `cubic-bezier(0.32, 0.72, 0, 1)`. Label asli di-`color: transparent` saat aktif, overlay `aria-hidden` + `pointer-events: none`.
+- **Jangan pakai `scaleX()` buat melebarkan pill** — sempat dicoba dan bikin sudut jadi lonjong/elips karena `border-radius` ikut ter-scale. `clip-path ... round` menjaga sudut tetap lingkaran sempurna di ukuran akhir.
+- Screenshot: **crossfade `opacity` saja, tanpa geser/scale**, disamakan dengan page transition site (`page-fade-in` / `body.is-leaving` di `css/style.css`): masuk 220ms `ease-out`, keluar 160ms `ease-in`. Sempat dicoba geser 16px sesuai arah, diganti jadi fade murni atas permintaan user (subtle, senada animasi halaman).
+- Press: `scale(0.96)` pada tab. Keyboard: panah kiri/kanan pindah tab. `prefers-reduced-motion` mematikan semua transisi.
+
+### Posisi gambar (gotcha)
+Export PNG dari Figma node `step N` ikut membawa area drop-shadow dan sudah ke-crop di tinggi frame Figma (1147×804 @2x, bukan 1092×1016), jadi kalau frame jadi lebih tinggi gambarnya "ngawang" (berhenti sebelum tepi bawah). Karena frame baru 559px vs 491px di Figma, gambar diperbesar ×1.138 (559/491) supaya proporsional dan **ujung bawahnya tepat menembus/menempel tepi bawah frame**, sama seperti desain (dicek: selisih 0.1px):
+- `.shots`: `top: 3.98cqw; left: 11.17cqw; width: 77.73cqw` (sudah termasuk padding shadow), di dalam stage `overflow: hidden`.
+- Ketiga export (step 1–3) harus **berukuran sama (1147×804 @2x) dan mulai di y yang sama** supaya transisi antar step tidak melompat. Sempat step 3 beda (mulai 4.5px lebih rendah, 795px tinggi) dan sempat ditambal dengan `object-fit: cover`; setelah user merapikan node di Figma dan di-export ulang, tambalan itu dihapus. Kalau export berikutnya beda ukuran lagi, perbaiki di Figma, bukan di CSS.
+- Kalau frame/rasio diubah lagi, hitung ulang skalanya; jangan pakai ukuran pixel tetap.
+
+### Frame — STANDARD interactive (sementara)
+Semua interactive asset pakai struktur & ukuran yang sama dengan `.iteration-demo` di artikel, bukan frame abu-abu 840×491 dari Figma:
+- Frame **bg `#f2f3f7` (sama dengan asset lain, JANGAN diganti putih)**, **tanpa border/stroke** (stroke hanya untuk interactive yang bg-nya putih; selain putih jangan dulu sampai ada update), radius 6px, lebar 100% (max 960px di eksplorasi), `overflow: hidden`.
+- Baris switcher di atas (`padding-top: 24px`, pill di-center, tinggi 44px), lalu **stage dengan `aspect-ratio: 840 / 491` di bawahnya**. Rasio 840/491 ada di stage saja, bukan di seluruh frame, jadi tinggi total = 24 + 44 + stage (+2px border kalau bg putih & pakai stroke) (di lebar 960: 629,97px, identik dengan artikel — sudah diukur).
+- Isi stage (screenshot) diposisikan pakai `cqw` (`container-type: inline-size` di stage; 1cqw = 8,4px pada lebar 840) supaya ikut skala dengan lebar frame.
+- **Container:** `container-type: inline-size` ada di frame (`.demo`), bukan di stage, karena di mobile stage menghitung tingginya sendiri pakai `cqw` (container query unit di elemen container itu sendiri mengacu ke container LEBIH ATAS, bukan dirinya).
+- **Breakpoint sama dengan `.iteration-demo` di article:**
+  - **Tablet & desktop (≥768px):** stage `aspect-ratio: 840 / 491`, layout desktop persis sama (dicek di 768px: rasio 1.711, gambar menempel bawah).
+  - **Mobile (<768px):** rasio dilepas (kalau dipaksa 840:491 screenshot jadi kecil sekali). Screenshot hampir selebar frame (`width: 94.5cqw; left: 2.77cqw`, gap 16px dari switcher: `top: calc(16px - 1.236cqw)`), dan tinggi stage = gap + tinggi gambar (`height: calc(16px + 65cqw)`) supaya ujung bawah gambar tetap menembus tepi frame. Dicek di 375px: bawah menempel (0), lebar gambar 324 dari frame 343, tidak ada scroll horizontal. Pill `Step 1/2/3` 250px muat tanpa perubahan.
+- Status "standard" ini sementara, sampai user memutuskan lain.
+
+---
+
 ## Ringkasan token warna yang dipakai lintas component
 
 Semua warna di atas berasal dari `design.md` (design tokens). Yang paling sering dipakai:
@@ -438,6 +491,6 @@ Semua warna di atas berasal dari `design.md` (design tokens). Yang paling sering
 |---|---|---|
 | `primary-main` | `#0030bf` | hover/pressed pada Link, title warna project |
 | `neutral-70` | `#757575` | teks default/secondary (paragraph, button text, link default) |
-| `neutral-100` | `#0a0a0a` | teks judul/dark (work-card title, nav-bar text, section title) |
+| `neutral-110` | `#0a0a0a` | teks judul/dark (work-card title, nav-bar text, section title) |
 | `neutral-30` | `#ededed` | border/stroke tipis (button, navbar, footer, work-card placeholder) |
 | `neutral-10` | `#ffffff` | background |

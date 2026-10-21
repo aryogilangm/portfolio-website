@@ -3,8 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // Theme: light by default; the navbar toggle persists the choice in localStorage.
+    (function () {
+      var theme = "light";
+      try { theme = localStorage.getItem("theme") === "dark" ? "dark" : "light"; } catch (e) {}
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <title>Aryo Gilang Maudyansa</title>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <meta name="description" content="UI/UX and Product Designer based in Surabaya with 5+ years of experience designing SaaS, ERP, HRIS, and e-commerce platforms across Southeast Asia." />
+  <link rel="canonical" href="https://aryogilang.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aryogilang.com/" />
+  <meta property="og:title" content="Aryo Gilang Maudyansa" />
+  <meta property="og:description" content="UI/UX and Product Designer based in Surabaya with 5+ years of experience designing SaaS, ERP, HRIS, and e-commerce platforms across Southeast Asia." />
+  <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Aryo Gilang Maudyansa" />
+  <meta name="twitter:description" content="UI/UX and Product Designer based in Surabaya with 5+ years of experience designing SaaS, ERP, HRIS, and e-commerce platforms across Southeast Asia." />
+  <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -22,10 +43,19 @@
 </head>
 <body>
 
+  <nav class="navbar navbar--home navbar--persistent navbar--transparent">
+    <div class="navbar__inner">
+      <div class="theme-toggle" role="group" aria-label="Color theme">
+        <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
+        <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
+      </div>
+    </div>
+  </nav>
+
   <main class="container">
     <section class="headline">
       <div class="about">
-        <p class="title">Hi, I&rsquo;m Aryo</p>
+        <h1 class="title">Hi, I&rsquo;m Aryo</h1>
         <div class="about__text">
           <p class="paragraph">I&rsquo;m a Surabaya-based UI/UX and Product Designer with 5+ years of experience designing for SaaS, ERP, HRIS, and e-commerce platforms across Southeast Asia and beyond.</p>
           <p class="paragraph">I&rsquo;ve designed for <a href="https://booksmart.store/" target="_blank" rel="noopener" class="link">Booksmart</a>, an e-commerce platform, and Bookdrop, its internal order management system. My work has also spanned an ERP for ZNTRAL, HRIS modules for <a href="https://werk.co.id/" target="_blank" rel="noopener" class="link">Werk</a>, and a VR curation platform for <a href="https://atopia.space/" target="_blank" rel="noopener" class="link">Atopia Space</a>.</p>
@@ -47,7 +77,7 @@
     </section>
 
     <section class="selected-works">
-      <p class="selected-works__title">SELECTED WORKS</p>
+      <h2 class="selected-works__title">SELECTED WORKS</h2>
 
       <div class="works">
         <a href="booksmart.html" class="work-card">
@@ -57,20 +87,20 @@
         </a>
 
         <a href="bookdrop.html" class="work-card">
-          <img class="work-card__thumb" src="assets/images/home/thumbnail-bookdrop.png" alt="Bookdrop thumbnail" />
+          <img class="work-card__thumb" src="assets/images/home/thumbnail-bookdrop.png" alt="Bookdrop thumbnail" loading="lazy" decoding="async" />
           <p class="work-card__title">Bookdrop</p>
           <p class="work-card__subtitle">E-commerce Back-Office &amp; OMS</p>
         </a>
 
         <a href="werk-ess.html" class="work-card">
-          <img class="work-card__thumb" src="assets/images/home/thumbnail-ess.png" alt="Werk: Employee Self Service thumbnail" />
+          <img class="work-card__thumb" src="assets/images/home/thumbnail-ess.png" alt="Werk: Employee Self Service thumbnail" loading="lazy" decoding="async" />
           <p class="work-card__title">Werk: Employee Self Service (ESS)</p>
           <p class="work-card__subtitle">B2B HRIS Platform</p>
         </a>
 
         <a href="werk-mobile-apps.html" class="work-card">
-          <img class="work-card__thumb" src="assets/images/home/thumbnail-mobile_ess.png" alt="Werk Mobile Apps thumbnail" />
-          <p class="work-card__title">Werk Mobile Apps</p>
+          <img class="work-card__thumb" src="assets/images/home/thumbnail-mobile_ess.png" alt="Werk: Mobile App thumbnail" loading="lazy" decoding="async" />
+          <p class="work-card__title">Werk: Mobile App</p>
           <p class="work-card__subtitle">HRIS Companion App</p>
         </a>
       </div>
