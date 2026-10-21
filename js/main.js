@@ -22,7 +22,8 @@ setInterval(updateClock, 1000);
 
 function initNavbarScroll() {
   const navbar = document.querySelector(".navbar");
-  if (!navbar) return;
+  // Navbars with the theme toggle (home, works) stay visible while scrolling.
+  if (!navbar || navbar.classList.contains("navbar--persistent")) return;
 
   let lastScrollY = window.scrollY;
 
@@ -41,6 +42,65 @@ function initNavbarScroll() {
 }
 
 initNavbarScroll();
+
+/* theme-transition — site-wide light/dark switch animation (see design.md §6).
+   themeTransition("dark" | "light") applies the theme, persists it and plays
+   the wipe: the new theme is revealed by a clip-path wipe over the old one
+   (View Transitions API), from the left going to dark and from the right
+   going back to light. Instant switch without the API or with reduced motion. */
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  document.querySelectorAll("[data-theme-option]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.themeOption === theme));
+  });
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (e) {}
+}
+
+function themeTransition(theme) {
+  if (theme === document.documentElement.dataset.theme) return;
+
+  const canAnimate =
+    document.startViewTransition &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!canAnimate) {
+    setTheme(theme);
+    return;
+  }
+
+  const hidden = theme === "light" ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)";
+
+  document.startViewTransition(() => setTheme(theme)).ready.then(() => {
+    document.documentElement.animate(
+      { clipPath: [hidden, "inset(0 0 0 0)"] },
+      {
+        duration: 600,
+        easing: "cubic-bezier(0.32, 0.72, 0, 1)",
+        pseudoElement: "::view-transition-new(root)",
+      }
+    );
+  });
+}
+
+window.themeTransition = themeTransition;
+
+function initThemeToggle() {
+  const buttons = document.querySelectorAll("[data-theme-option]");
+  if (!buttons.length) return;
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => themeTransition(button.dataset.themeOption));
+  });
+
+  // The inline <head> script already set data-theme; sync the pressed state to it.
+  const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  buttons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.themeOption === current));
+  });
+}
+
+initThemeToggle();
 
 function initPageTransition() {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -189,20 +249,42 @@ function initInteractionDemo() {
   if (!demo) return;
 
   const switcher = demo.querySelector(".iteration-demo__switcher");
+  const overlay = demo.querySelector(".iteration-demo__overlay");
   const tabs = demo.querySelectorAll(".iteration-demo__tab");
   const panels = demo.querySelectorAll(".iteration-demo__panel");
   const navs = demo.querySelectorAll(".iteration-demo__nav");
+
+  // Clip the overlay (white label copies on the pill) to the active tab.
+  const movePill = (tab) => {
+    const left = tab.offsetLeft - 4;
+    const right = overlay.offsetWidth - left - tab.offsetWidth;
+    overlay.style.clipPath = `inset(0 ${right}px 0 ${left}px round 60px)`;
+  };
+
+  // Set without animating: on load, and again once web fonts settle
+  // (Geist changes tab widths).
+  const snap = () => {
+    overlay.style.transition = "none";
+    movePill(demo.querySelector(".iteration-demo__tab.is-active"));
+    requestAnimationFrame(() => {
+      overlay.style.transition = "";
+    });
+  };
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       tabs.forEach((t) => t.classList.remove("is-active"));
       tab.classList.add("is-active");
       switcher.dataset.active = tab.dataset.target;
+      movePill(tab);
       panels.forEach((panel) =>
         panel.classList.toggle("is-active", panel.dataset.panel === tab.dataset.target)
       );
     });
   });
+
+  snap();
+  document.fonts?.ready.then(snap);
 
   navs.forEach((nav) => {
     nav.addEventListener("click", () => {

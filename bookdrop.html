@@ -3,8 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // Theme: light by default; the navbar toggle persists the choice in localStorage.
+    (function () {
+      var theme = "light";
+      try { theme = localStorage.getItem("theme") === "dark" ? "dark" : "light"; } catch (e) {}
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <title>Bookdrop — Aryo Gilang Maudyansa</title>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <meta name="description" content="Bookdrop runs Booksmart's regional e-commerce back-office, from order fulfillment to multi-destination distributor logistics." />
+  <link rel="canonical" href="https://aryogilang.com/bookdrop.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aryogilang.com/bookdrop.html" />
+  <meta property="og:title" content="Bookdrop — Aryo Gilang Maudyansa" />
+  <meta property="og:description" content="Bookdrop runs Booksmart's regional e-commerce back-office, from order fulfillment to multi-destination distributor logistics." />
+  <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Bookdrop — Aryo Gilang Maudyansa" />
+  <meta name="twitter:description" content="Bookdrop runs Booksmart's regional e-commerce back-office, from order fulfillment to multi-destination distributor logistics." />
+  <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -12,9 +33,13 @@
 </head>
 <body>
 
-  <nav class="navbar navbar--transparent">
+  <nav class="navbar navbar--transparent-desktop">
     <div class="navbar__inner">
       <a href="works.html" class="navbar__title">ALL WORKS</a>
+      <div class="theme-toggle" role="group" aria-label="Color theme">
+        <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
+        <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
+      </div>
     </div>
   </nav>
 
@@ -35,7 +60,7 @@
     <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
         <div class="detail-hero__top">
-          <p class="title">Bookdrop</p>
+          <h1 class="title">Bookdrop</h1>
         </div>
         <div class="detail-hero__text">
           <p class="paragraph">Bookdrop runs the daily operations behind Booksmart&rsquo;s regional e-commerce, from order fulfillment to distributor logistics. But the system was built for a business that no longer existed. As Booksmart scaled into complex B2B fulfillment, a platform designed for simple B2C orders became the bottleneck: cluttered dashboards, endless scrolling, and no way to split one order across multiple destinations.</p>
@@ -63,11 +88,11 @@
           <h3 class="detail-title">Deep-Dive Detail Pages</h3>
           <p class="paragraph">For metrics that need more depth, I built dedicated detail pages for Today&rsquo;s Orders, Total Revenue, and all three leaderboards. Admins see high-level numbers on the dashboard and click through for the full operational breakdown, without cluttering the main view.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_1.png" alt="Bookdrop deep-dive detail page 1" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_2.png" alt="Bookdrop deep-dive detail page 2" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_3.png" alt="Bookdrop deep-dive detail page 3" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_4.png" alt="Bookdrop deep-dive detail page 4" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_5.png" alt="Bookdrop deep-dive detail page 5" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_1.png" alt="Bookdrop deep-dive detail page 1" loading="lazy" decoding="async" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_2.png" alt="Bookdrop deep-dive detail page 2" loading="lazy" decoding="async" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_3.png" alt="Bookdrop deep-dive detail page 3" loading="lazy" decoding="async" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_4.png" alt="Bookdrop deep-dive detail page 4" loading="lazy" decoding="async" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_5.png" alt="Bookdrop deep-dive detail page 5" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -83,8 +108,8 @@
           <p class="paragraph">A .xls upload feature (ISBN, Title, Quantity) instantly populates the product list for massive B2B orders, turning tedious manual entry into a one-click process.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_1.png" alt="Bookdrop bulk entry upload 1" />
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_2.png" alt="Bookdrop bulk entry upload 2" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_1.png" alt="Bookdrop bulk entry upload 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_2.png" alt="Bookdrop bulk entry upload 2" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -93,10 +118,10 @@
           <h3 class="detail-title">Dynamic Multi-Shipment Allocation</h3>
           <p class="paragraph">I overhauled the shipping flow so admins can add multiple addresses within one order and use a visual allocation interface to distribute quantities across destinations, like splitting 200 books across 3 regional branches smoothly.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_1.png" alt="Bookdrop multi-shipment allocation overview" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_1.png" alt="Bookdrop multi-shipment allocation overview" loading="lazy" decoding="async" />
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_2.png" alt="Bookdrop multi-shipment allocation 2" />
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_3.png" alt="Bookdrop multi-shipment allocation 3" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_2.png" alt="Bookdrop multi-shipment allocation 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_3.png" alt="Bookdrop multi-shipment allocation 3" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -112,7 +137,7 @@
           <h3 class="detail-title">Preventing Over-allocation (Single to Multiple)</h3>
           <p class="paragraph">Adding a new address requires first freeing up quantity from the primary address, preventing negative stock errors. Deleting a destination auto-redistributes its items back to unallocated stock, and the system disables deletion once only one address remains, preventing accidental zero-destination orders.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-5.png" alt="Bookdrop preventing over-allocation" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-5.png" alt="Bookdrop preventing over-allocation" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -120,7 +145,7 @@
           <h3 class="detail-title">Smart Redistribution (Multiple to Single)</h3>
           <p class="paragraph">Deleting a destination automatically redistributes those items to the unlocated items. The system smartly disables the deletion capability once only one address remains, preventing accidental zero-destination orders.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-6.png" alt="Bookdrop smart redistribution" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-6.png" alt="Bookdrop smart redistribution" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -130,7 +155,7 @@
           <h3 class="detail-title">Restructuring the Product Architecture</h3>
           <p class="paragraph">The legacy Product Detail page crammed eight operational forms into one endless scroll, forcing admins to hunt for specific data and slowing down routine work. I reorganized it into a categorized tab system, grouping related data so admins only see what they need at any given moment.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-7.png" alt="Bookdrop restructured product architecture" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-7.png" alt="Bookdrop restructured product architecture" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -138,7 +163,7 @@
           <h3 class="detail-title">Consolidating the Core (Product Tab)</h3>
           <p class="paragraph">The default tab houses front-end facing data. I merged redundant sections like &ldquo;Product Information&rdquo; and &ldquo;Product Organization&rdquo; into one cohesive form covering metadata, imagery, pricing, and sales channel configuration, so marketing or content admins can work without logistical distractions.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-8.png" alt="Bookdrop consolidated product tab" />
+        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-8.png" alt="Bookdrop consolidated product tab" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -147,8 +172,8 @@
           <p class="paragraph">Heavy supply-chain data now lives in its own dedicated &ldquo;Manufacturer&rdquo; and &ldquo;Supplier&rdquo; tabs. An admin fixing a typo in a book&rsquo;s description no longer scrolls past print-cost calculations or supplier lead-time matrices, cutting the risk of accidental edits to unrelated fields.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_1.png" alt="Bookdrop manufacturer tab" />
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_2.png" alt="Bookdrop supplier tab" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_1.png" alt="Bookdrop manufacturer tab" loading="lazy" decoding="async" />
+          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_2.png" alt="Bookdrop supplier tab" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -170,8 +195,8 @@
     <div class="footer-detail__bar">
       <div class="footer-detail__links">
         <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
-        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
-        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
       </div>
       <p class="paragraph">&copy;2026</p>
     </div>

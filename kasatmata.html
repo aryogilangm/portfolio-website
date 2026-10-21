@@ -3,8 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // Theme: light by default; the navbar toggle persists the choice in localStorage.
+    (function () {
+      var theme = "light";
+      try { theme = localStorage.getItem("theme") === "dark" ? "dark" : "light"; } catch (e) {}
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <title>Kasatmata — Aryo Gilang Maudyansa</title>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <meta name="description" content="A redesign for Kasatmata after the brand relocated and expanded, built to properly showcase the creative work it relies on to sell." />
+  <link rel="canonical" href="https://aryogilang.com/kasatmata.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aryogilang.com/kasatmata.html" />
+  <meta property="og:title" content="Kasatmata — Aryo Gilang Maudyansa" />
+  <meta property="og:description" content="A redesign for Kasatmata after the brand relocated and expanded, built to properly showcase the creative work it relies on to sell." />
+  <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Kasatmata — Aryo Gilang Maudyansa" />
+  <meta name="twitter:description" content="A redesign for Kasatmata after the brand relocated and expanded, built to properly showcase the creative work it relies on to sell." />
+  <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -12,18 +33,22 @@
 </head>
 <body>
 
-  <nav class="navbar navbar--transparent">
+  <nav class="navbar navbar--transparent-desktop">
     <div class="navbar__inner">
       <a href="works.html" class="navbar__title">ALL WORKS</a>
+      <div class="theme-toggle" role="group" aria-label="Color theme">
+        <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
+        <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
+      </div>
     </div>
   </nav>
 
-  <main class="detail-page">
+  <main class="detail-page detail-page--asset-clear">
 
     <section class="detail-section detail-section--tight">
       <header class="detail-hero">
         <div class="detail-hero__top">
-          <p class="title">Kasatmata</p>
+          <h1 class="title">Kasatmata</h1>
         </div>
         <div class="detail-hero__text">
           <p class="paragraph">After relocating stores and expanding their services, Kasatmata found their existing website no longer matched who they&rsquo;d become. The old design lacked visual appeal and offered limited functionality, and it couldn&rsquo;t showcase the creative work the brand relied on to sell. The owner put it simply: the site wasn&rsquo;t strong enough to represent them online anymore.</p>
@@ -33,15 +58,15 @@
     </section>
 
     <section class="detail-section detail-section--gallery">
-      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-1.png" alt="Kasatmata website 1" />
+      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-1.png" alt="Kasatmata website 1" width="2720" height="1496" />
       <div class="detail-image-grid detail-image-grid--gallery">
-        <img class="detail-image" src="assets/images/kasatmata-detail-page/img-2_1.png" alt="Kasatmata website 2" />
-        <img class="detail-image" src="assets/images/kasatmata-detail-page/img-2_2.png" alt="Kasatmata website 3" />
+        <img class="detail-image" src="assets/images/kasatmata-detail-page/img-2_1.png" alt="Kasatmata website 2" width="1320" height="1496" loading="lazy" decoding="async" />
+        <img class="detail-image" src="assets/images/kasatmata-detail-page/img-2_2.png" alt="Kasatmata website 3" width="1320" height="1496" loading="lazy" decoding="async" />
       </div>
-      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-3.png" alt="Kasatmata website 4" />
-      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-4.png" alt="Kasatmata website 5" />
-      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-5.png" alt="Kasatmata website 6" />
-      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-6.png" alt="Kasatmata website 7" />
+      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-3.png" alt="Kasatmata website 4" width="2720" height="1496" loading="lazy" decoding="async" />
+      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-4.png" alt="Kasatmata website 5" width="2720" height="1496" loading="lazy" decoding="async" />
+      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-5.png" alt="Kasatmata website 6" width="2720" height="1496" loading="lazy" decoding="async" />
+      <img class="detail-image" src="assets/images/kasatmata-detail-page/img-6.png" alt="Kasatmata website 7" width="2720" height="1496" loading="lazy" decoding="async" />
     </section>
 
   </main>
@@ -54,8 +79,8 @@
     <div class="footer-detail__bar">
       <div class="footer-detail__links">
         <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
-        <a href="#" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
-        <a href="#" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
       </div>
       <p class="paragraph">&copy;2026</p>
     </div>

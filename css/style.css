@@ -66,7 +66,8 @@
   --neutral-70: #757575;
   --neutral-80: #616161;
   --neutral-90: #404040;
-  --neutral-100: #0a0a0a;
+  --neutral-100: #111110;
+  --neutral-110: #0a0a0a;
 
   --primary-main: #0030bf;
   --primary-hover: #00207f;
@@ -75,21 +76,29 @@
   --primary-border: #ced7f2;
   --primary-focused: #d1dcf5;
 
+  /* primitive colors — dark variants */
+  --primary-dark-main: #3e7bf9;
+  --primary-dark-surface: #0e162c;
+  --primary-dark-border: #192544;
+  --primary-dark-hover: #9bbdff;
+  --primary-dark-pressed: #bbd5ff;
+  --primary-dark-focused: #15203c;
+
   /* semantic colors */
   --color-bg: var(--neutral-10);
   --color-paragraph: var(--neutral-70);
-  --color-paragraph-highlight: var(--neutral-100);
+  --color-paragraph-highlight: var(--neutral-110);
   --color-text: var(--neutral-70);
   --color-headline: var(--primary-main);
-  --color-subheadline: var(--neutral-100);
+  --color-subheadline: var(--neutral-110);
   --color-stroke: var(--neutral-30);
 
-  --color-card-title: var(--neutral-100);
+  --color-card-title: var(--neutral-110);
   --color-card-subtitle: var(--neutral-70);
   --color-card-title-hover: var(--primary-main);
 
   --color-navbar-bg: var(--neutral-10);
-  --color-navbar-text: var(--neutral-100);
+  --color-navbar-text: var(--neutral-110);
 
   --color-link-default: var(--neutral-70);
   --color-link-hover: var(--primary-main);
@@ -98,12 +107,33 @@
   --color-button-bg: var(--neutral-10);
   --color-button-stroke: var(--neutral-30);
   --color-button-text: var(--neutral-70);
-  --color-button-text-pressed: var(--neutral-100);
+  --color-button-text-pressed: var(--neutral-110);
 
-  --color-list-content-idle-closed: var(--neutral-100);
+  --color-list-content-idle-closed: var(--neutral-110);
   --color-list-content-tab-idle-closed: var(--primary-main);
   --color-list-content-idle-expand: var(--neutral-60);
-  --color-list-content-active-expand: var(--neutral-100);
+  --color-list-content-active-expand: var(--neutral-110);
+
+  --color-button-live-bg: var(--neutral-30);
+  --color-button-live-text: var(--neutral-110);
+
+  /* background behind exported assets (screenshots, interactive frames).
+     Same in both themes: the exported assets are shared, not per theme. */
+  --color-asset-bg: #f0f0f0;
+
+  /* hardcoded article figures (built from Figma frames, not PNG) */
+  --fig-bg: #ffffff;
+  --fig-bg-terminal: #fbfaf6;
+  --fig-chip-bg: #f5f5f5;
+  --fig-text: #000000;
+  --fig-pill-text: #757575;
+  --fig-arrow: #0030bf;
+  --fig-swatch-edge: transparent;
+
+  --color-tab-switcher-bg: var(--neutral-10);
+  --color-tab-switcher-button-bg: var(--neutral-110);
+  --color-tab-switcher-text-active: var(--neutral-10);
+  --color-tab-switcher-text-idle: var(--neutral-70);
 
   /* spacing scale */
   --space-4: 4px;
@@ -128,6 +158,62 @@
 
   /* container gutter — overridden per breakpoint below */
   --gutter: var(--space-40);
+}
+
+/* ===== Dark mode (Figma "tokens" collection, mode "Dark") =====
+   Only semantic tokens are remapped. Enabled per page by setting
+   data-theme="dark" on <html> — rolled out site-wide, toggle lives in
+   the navbar on every page. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: var(--neutral-100);
+  --color-paragraph: var(--neutral-50);
+  --color-paragraph-highlight: var(--neutral-10);
+  --color-text: var(--neutral-50);
+  --color-headline: var(--primary-dark-main);
+  --color-subheadline: var(--neutral-10);
+  --color-stroke: var(--neutral-80);
+
+  --color-card-title: var(--neutral-10);
+  --color-card-subtitle: var(--neutral-70);
+  --color-card-title-hover: var(--primary-dark-main);
+
+  --color-navbar-bg: var(--neutral-100);
+  --color-navbar-text: var(--neutral-10);
+
+  --color-link-default: var(--neutral-50);
+  --color-link-hover: var(--primary-dark-main);
+  --color-link-pressed: var(--primary-dark-main);
+
+  --color-button-bg: var(--neutral-100);
+  --color-button-stroke: var(--neutral-80);
+  --color-button-text: var(--neutral-50);
+  --color-button-text-pressed: var(--neutral-60);
+
+  --color-list-content-idle-closed: var(--neutral-10);
+  --color-list-content-tab-idle-closed: var(--neutral-10);
+  --color-list-content-idle-expand: var(--neutral-60);
+  --color-list-content-active-expand: var(--neutral-10);
+
+  /* Figma's Dark value is neutral/30 bg + neutral/10 text (~1.2:1, unreadable);
+     neutral/90 bg keeps the filled pill and gives ~10:1. Update the Figma token to match. */
+  --color-button-live-bg: var(--neutral-90);
+  --color-button-live-text: var(--neutral-10);
+
+  /* article figures: #1E1F23 frame from the asset bg; the rest are derived */
+  --fig-bg: #1e1f23;
+  --fig-bg-terminal: #fbfaf6; /* terminal frame keeps its Figma color */
+  --fig-chip-bg: #2c2d33;
+  --fig-text: #ffffff;
+  --fig-pill-text: #c2c2c2;
+  --fig-arrow: var(--primary-dark-main);
+  --fig-swatch-edge: rgb(255 255 255 / 0.12);
+
+  --color-tab-switcher-bg: var(--neutral-100);
+  --color-tab-switcher-button-bg: var(--neutral-10);
+  --color-tab-switcher-text-active: var(--neutral-110);
+  --color-tab-switcher-text-idle: var(--neutral-30);
 }
 
 /* ===== Reset ===== */
@@ -200,7 +286,7 @@ body.is-leaving {
     transition: none !important;
   }
 
-  .iteration-demo__thumb,
+  .iteration-demo__overlay,
   .iteration-demo__tab,
   .iteration-demo__panel,
   .iteration-demo__nav,
@@ -296,6 +382,130 @@ a.navbar__title:hover {
   color: var(--color-headline);
 }
 
+/* Navbars with the theme toggle (Figma nav-bar "home-page" / "all-works"):
+   toggle pinned right, row fixed at Figma's 62px. */
+.navbar__inner:has(.theme-toggle) {
+  display: flex;
+  align-items: center;
+  height: 62px;
+  padding-block: 0;
+}
+
+.navbar__inner .theme-toggle {
+  margin-left: auto;
+}
+
+/* Transparent without stroke on desktop only; tablet/mobile keep the
+   filled bar with its stroke. */
+@media (min-width: 1280px) {
+  .navbar--transparent-desktop {
+    background: transparent;
+    border-bottom: none;
+  }
+}
+
+/* Home variant: no title, no bottom border. */
+.navbar--home {
+  border-bottom: none;
+}
+
+/* ===== Theme toggle (Figma segmented-button/tab-swithcer, icon type) ===== */
+.theme-toggle {
+  position: relative;
+  display: flex;
+  /* Figma's 1px stroke sits inside the 4px padding: 3px + 1px border = 72x40 */
+  padding: 3px;
+  background: var(--color-tab-switcher-bg);
+  border: 1px solid var(--color-stroke);
+  border-radius: 100px;
+  /* theme-transition: own layer, stays above the page wipe so the pill slide is visible */
+  view-transition-name: theme-toggle;
+}
+
+/* Sliding active pill behind the two icon buttons */
+.theme-toggle::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 32px;
+  height: 32px;
+  background: var(--color-tab-switcher-button-bg);
+  border-radius: 60px;
+  will-change: transform;
+  transition: transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root[data-theme="dark"] .theme-toggle::before {
+  transform: translateX(32px);
+}
+
+.theme-toggle__button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 60px;
+  background: none;
+  color: var(--color-tab-switcher-text-idle);
+  cursor: pointer;
+  transition: color 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 32px visual size stays (Figma spec); the tap target doesn't. The two
+   buttons sit flush against each other with no gap, so the shared inner
+   edge only gets 3px (split evenly, no overlap) while the free edges get
+   the full 6px toward 44px. */
+.theme-toggle__button::before {
+  content: "";
+  position: absolute;
+  inset: -6px -3px;
+}
+
+.theme-toggle__button[aria-pressed="true"] {
+  color: var(--color-tab-switcher-text-active);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle__button[aria-pressed="false"]:hover {
+    color: var(--color-tab-switcher-button-bg);
+  }
+}
+
+.theme-toggle__button:focus-visible {
+  outline: 2px solid var(--color-link-hover);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle::before,
+  .theme-toggle__button {
+    transition: none;
+  }
+}
+
+/* theme-transition: the animation itself runs from themeTransition() in
+   js/main.js (WAAPI);
+   disable the UA's default cross-fade so only the clip-path wipe shows. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* The toggle's new state is live, so its own CSS transitions run during the wipe */
+::view-transition-old(theme-toggle) {
+  display: none;
+}
+
+::view-transition-new(theme-toggle) {
+  animation: none;
+}
+
 /* ===== Layout container ===== */
 /* .container is home (index.html) only — works.html uses its own
    .works-container instead, so these home-specific spacing overrides
@@ -376,6 +586,13 @@ a.navbar__title:hover {
   object-fit: cover;
   background: var(--neutral-30);
   border-radius: 4px;
+}
+
+/* Only shows briefly while the thumbnail loads (or if it fails to), but a
+   light-grey box on a dark page reads as broken, so it still needs a dark
+   counterpart. */
+:root[data-theme="dark"] .work-card__thumb {
+  background: var(--neutral-90);
 }
 
 .work-card__thumb--placeholder {
@@ -507,6 +724,24 @@ a.navbar__title:hover {
   margin-top: var(--space-4);
 }
 
+/* Pages whose exported assets use E3E5EB as their background (ESS). The fill
+   behind .detail-image must equal the asset bg or the rounded corners show a
+   fringe. Same value in both themes. */
+.detail-page--asset-e3e5eb {
+  --color-asset-bg: #e3e5eb;
+}
+
+/* ZNTRAL assets use E8EAF0 as their background. */
+.detail-page--asset-e8eaf0 {
+  --color-asset-bg: #e8eaf0;
+}
+
+/* Full-bleed assets with their own mixed backgrounds (Kasatmata): no fill, so
+   the rounded corners never show a fringe of a different color. */
+.detail-page--asset-clear {
+  --color-asset-bg: transparent;
+}
+
 /* ===== Footer ===== */
 .footer-main {
   background: var(--color-bg);
@@ -521,6 +756,12 @@ a.navbar__title:hover {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-8);
+}
+
+/* Ticks every second (see updateClock in main.js) — tabular figures so the
+   digits don't jiggle the surrounding text width as they change. */
+#live-clock {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ===== Detail page (project case study) ===== */
@@ -587,6 +828,15 @@ a.navbar__title:hover {
   }
 }
 
+/* Gallery pages (Kasatmata, ZNTRAL): single images keep their own proportions
+   instead of the fixed 840/491 crop. The width/height attributes on each <img>
+   reserve the space before it loads. */
+.detail-section.detail-section--gallery > img.detail-image {
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
 .detail-subgroup {
   display: flex;
   flex-direction: column;
@@ -615,7 +865,7 @@ a.navbar__title:hover {
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
-  background: var(--neutral-30);
+  background: var(--color-button-live-bg);
   border-radius: 34px;
   padding: var(--space-8) var(--space-12);
   font-family: var(--font-body);
@@ -623,7 +873,7 @@ a.navbar__title:hover {
   font-weight: 500;
   line-height: 21px;
   letter-spacing: 0.5px;
-  color: var(--neutral-100);
+  color: var(--color-button-live-text);
 }
 
 /* Text-only block (Figma "section-headline": h2/h3 + paragraph, no
@@ -674,14 +924,17 @@ a.navbar__title:hover {
   font-weight: 400;
   line-height: 27px;
   letter-spacing: 0.7px;
-  color: var(--neutral-100);
+  color: var(--color-subheadline);
 }
 
 .detail-image {
   width: 100%;
+  height: auto; /* keeps width/height attributes as a ratio hint only */
   aspect-ratio: 840 / 491;
   object-fit: cover;
-  background: var(--neutral-30);
+  /* Must match the asset's own background: the rounded corner anti-aliases
+     the image over this fill, so a lighter fill shows as a light fringe. */
+  background: var(--color-asset-bg);
   border-radius: 6px;
 }
 
@@ -694,20 +947,156 @@ a.navbar__title:hover {
   gap: var(--space-12);
 }
 
-/* Reserved slot for the before/after content-nav iteration demo — real
-   interactive build comes later. Matches the other image blocks' ratio
-   so the section doesn't jump once it's filled in. */
-.article-figure__placeholder {
+/* ===== Hardcoded article figures =====
+   Rebuilt from the Figma "img-*" frames (840x491) as live HTML so they follow
+   the theme. Everything is positioned in Figma units: --u is 1/840 of the
+   frame width, so the figure scales as one piece at every breakpoint.
+   Colors come from the --fig-* tokens (dark frame is #1E1F23). Aptos Mono
+   (the Figma font) is not on the web, so a system monospace stands in. */
+.fig {
+  position: relative;
   width: 100%;
   aspect-ratio: 840 / 491;
   border-radius: 6px;
-  border: 1px dashed var(--color-stroke);
+  overflow: hidden;
+  background: var(--fig-bg);
+  container-type: inline-size;
+}
+
+.fig--terminal {
+  background: var(--fig-bg-terminal);
+}
+
+.fig__canvas {
+  --u: calc(100cqw / 840);
+  position: absolute;
+  inset: 0;
+}
+
+.fig__at {
+  position: absolute;
+  left: calc(var(--u) * var(--x, 0));
+  top: calc(var(--u) * var(--y, 0));
+  width: calc(var(--u) * var(--w, 0));
+  height: calc(var(--u) * var(--h, 0));
+}
+
+.fig__img {
+  display: block;
+  object-fit: cover;
+}
+
+.fig__img--card {
+  border-radius: calc(var(--u) * 4);
+}
+
+.fig__pill {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--neutral-60);
+  border-radius: 100px;
+  background: var(--fig-chip-bg);
+  color: var(--fig-pill-text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: calc(var(--u) * 12);
+  line-height: calc(var(--u) * 18);
+  letter-spacing: calc(var(--u) * 0.5);
+  white-space: nowrap;
+}
+
+.fig__text {
+  height: auto;
+  white-space: nowrap;
+  color: var(--fig-text);
+}
+
+.fig__card-title,
+.fig__card-sub {
+  font-family: var(--font-body);
+  font-size: calc(var(--u) * 16);
+  line-height: calc(var(--u) * 24);
+  letter-spacing: calc(var(--u) * 0.7);
+}
+
+.fig__card-title {
+  color: var(--color-card-title);
+}
+
+.fig__card-sub {
+  color: var(--color-card-subtitle);
+}
+
+.fig__mono10,
+.fig__chip {
+  font-family: ui-monospace, "SF Mono", "Aptos Mono", Menlo, Consolas, monospace;
+  letter-spacing: calc(var(--u) * 0.5);
+}
+
+.fig__mono10 {
+  font-size: calc(var(--u) * 10);
+  line-height: calc(var(--u) * 14);
+}
+
+.fig__sw50 {
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 1px var(--fig-swatch-edge);
+}
+
+/* Token mapping rows (img-2): chip, arrow, chip */
+.fig__row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 12);
+}
+
+.fig__chip {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 6);
+  height: calc(var(--u) * 28);
+  padding: calc(var(--u) * 2) calc(var(--u) * 4);
+  border-radius: calc(var(--u) * 4);
+  background: var(--fig-chip-bg);
+  color: var(--fig-text);
+  font-size: calc(var(--u) * 16);
+  line-height: calc(var(--u) * 24);
+  white-space: nowrap;
+}
+
+.fig__swatch {
+  box-sizing: border-box;
+  flex: none;
+  width: calc(var(--u) * 16);
+  height: calc(var(--u) * 16);
+  box-shadow: inset 0 0 0 1px var(--fig-swatch-edge);
+}
+
+.fig__swatch--dot {
+  border-radius: 50%;
+}
+
+.fig__swatch--sq {
+  border-radius: calc(var(--u) * 4);
+}
+
+.fig__arrow {
+  position: relative;
+  flex: 1;
+  height: max(1px, calc(var(--u) * 1));
+  background: var(--fig-arrow);
+}
+
+.fig__arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: calc(var(--u) * 5);
+  height: calc(var(--u) * 5);
+  border-top: max(1px, calc(var(--u) * 1)) solid var(--fig-arrow);
+  border-right: max(1px, calc(var(--u) * 1)) solid var(--fig-arrow);
+  transform: translateY(-50%) rotate(45deg);
+  transform-origin: center;
 }
 
 /* ============================================================
@@ -720,7 +1109,7 @@ a.navbar__title:hover {
    staggered per-item fade), same tokens and easing as the real
    .content-nav.
 
-   Fills the same slot as .article-figure__placeholder, so on desktop
+   Matches the article's other image blocks, so on desktop
    it keeps that 840/491 ratio. On mobile it drops the ratio and
    stacks taller instead — the demo's own content is fixed-height
    (not proportional to width like a photo), so forcing the wide
@@ -743,6 +1132,13 @@ a.navbar__title:hover {
   flex-direction: column;
 }
 
+/* Dark: the frame uses the dark asset bg and, like .stepper-demo, no stroke
+   (the stroke is only for white-bg interactive assets). */
+:root[data-theme="dark"] .iteration-demo {
+  background: #1e1f23;
+  border-color: transparent;
+}
+
 
 .iteration-demo__switcher-row {
   flex: 0 0 auto;
@@ -751,51 +1147,73 @@ a.navbar__title:hover {
   padding-top: var(--space-24);
 }
 
+/* Segmented tab-switcher, same spec as .stepper-demo (components.md § 10):
+   wrapper padding 4 + 2px gap + 1px stroke, tabs locked at 28px with 12px
+   horizontal padding, no min-width. The active pill is an overlay holding
+   a copy of the labels, clipped to the active tab (main.js sets clip-path). */
 .iteration-demo__switcher {
   position: relative;
   display: inline-flex;
-  background: var(--neutral-10);
-  border: 1px solid var(--neutral-30);
+  gap: 2px;
+  background: var(--color-tab-switcher-bg);
+  border: 1px solid var(--color-stroke);
   border-radius: 100px;
   padding: var(--space-4);
 }
 
-.iteration-demo__thumb {
+.iteration-demo__overlay {
   position: absolute;
-  top: var(--space-4);
-  left: var(--space-4);
-  width: 80px;
-  height: 34px;
-  background: var(--neutral-100);
-  border-radius: 100px;
-  transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
+  inset: var(--space-4);
+  display: flex;
+  gap: 2px;
+  background: var(--color-tab-switcher-button-bg);
+  color: var(--color-tab-switcher-text-active);
+  pointer-events: none;
+  user-select: none;
+  clip-path: inset(0 0 0 0 round 60px);
+  transition: clip-path 320ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.iteration-demo__switcher[data-active="after"] .iteration-demo__thumb {
-  transform: translateX(80px);
+.iteration-demo__overlay span,
+.iteration-demo__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 0;
+  height: 28px;
+  padding: 0 var(--space-12);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
+  white-space: nowrap;
 }
 
 .iteration-demo__tab {
   position: relative;
-  z-index: 1;
   appearance: none;
   border: none;
+  border-radius: 60px;
   background: none;
-  width: 80px;
-  padding: var(--space-8) 0;
-  border-radius: 100px;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  text-align: center;
-  color: var(--neutral-60);
+  color: var(--color-tab-switcher-text-idle);
   cursor: pointer;
-  transition: color 200ms ease;
+  transition: color 200ms ease, scale 150ms ease-out;
 }
 
 .iteration-demo__tab.is-active {
-  color: var(--neutral-10);
+  color: transparent;
+}
+
+.iteration-demo__tab:active {
+  scale: 0.96;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .iteration-demo__tab:not(.is-active):hover {
+    color: var(--color-tab-switcher-button-bg);
+  }
 }
 
 /* The 840/491 ratio lives on the STAGE, not the whole component —
@@ -1513,7 +1931,7 @@ a.navbar__title:hover {
   display: flex;
   flex-direction: column;
   container-type: inline-size;
-  background: #f2f3f7;
+  background: var(--color-asset-bg);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -1528,9 +1946,10 @@ a.navbar__title:hover {
 .stepper-demo__tabs {
   position: relative;
   display: flex;
+  gap: 2px;
   padding: var(--space-4);
-  background: var(--neutral-10);
-  border: 1px solid var(--neutral-30);
+  background: var(--color-tab-switcher-bg);
+  border: 1px solid var(--color-stroke);
   border-radius: 100px;
 }
 
@@ -1538,24 +1957,35 @@ a.navbar__title:hover {
   position: absolute;
   inset: var(--space-4);
   display: flex;
-  background: var(--neutral-100);
-  color: var(--neutral-10);
+  gap: 2px;
+  background: var(--color-tab-switcher-button-bg);
+  color: var(--color-tab-switcher-text-active);
   pointer-events: none;
   user-select: none;
   clip-path: inset(0 0 0 0 round 60px);
   transition: clip-path 280ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+/* Tinggi DIKUNCI (28px) + flex-center, bukan dari padding+line-height —
+   padding cuma horizontal. Line-height rapat (1x) & letter-spacing normal,
+   menyimpang sengaja dari token tipografi "Paragraph/12/Regular" (0.5px/18px)
+   yang dipakai di tempat lain di situs — ini yang bikin pill terasa kecil &
+   rapi (dicontek dari aiforui.dev/learn/prototyping-interfaces?variant=ledger),
+   bukan cuma soal min-width. Lihat components.md § 10. */
 .stepper-demo__overlay span,
 .stepper-demo__tab {
-  min-width: 80px;
-  padding: var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 0;
+  height: 28px;
+  padding: 0 var(--space-12);
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0.5px;
-  text-align: center;
+  line-height: 1;
+  letter-spacing: normal;
   white-space: nowrap;
 }
 
@@ -1565,7 +1995,7 @@ a.navbar__title:hover {
   border: 0;
   border-radius: 60px;
   background: none;
-  color: var(--neutral-70);
+  color: var(--color-tab-switcher-text-idle);
   cursor: pointer;
   transition: color 150ms ease, scale 150ms ease-out;
 }
@@ -1580,7 +2010,7 @@ a.navbar__title:hover {
 
 @media (hover: hover) and (pointer: fine) {
   .stepper-demo__tab[aria-selected="false"]:hover {
-    color: var(--neutral-100);
+    color: var(--color-tab-switcher-button-bg);
   }
 }
 
