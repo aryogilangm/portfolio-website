@@ -399,3 +399,113 @@ function initStepperDemos() {
 }
 
 initStepperDemos();
+
+// Deep-dive before/after demo (bookdrop.html, "Restructuring the Product
+// Architecture"): a Before/After toggle (legacy page vs. the redesigned
+// tab system) plus, inside After, Product/Manufacturer/Supplier tabs —
+// switched by clicking the real tab row drawn INSIDE the asset itself
+// (see .deep-dive-demo__hotspot in style.css for the Figma-sourced
+// coordinates), not by a separate tab nav. Reuses the .stepper-demo__tabs
+// pill markup/classes for the Before/After toggle itself.
+function initDeepDiveDemo() {
+  const demo = document.querySelector(".deep-dive-demo");
+  if (!demo) return;
+
+  const toggleBar = demo.querySelector(".deep-dive-demo__toggle .stepper-demo__tabs");
+  const toggleTabs = Array.from(toggleBar.querySelectorAll(".stepper-demo__tab"));
+  const toggleOverlay = toggleBar.querySelector(".stepper-demo__overlay");
+  const panelBefore = demo.querySelector('.deep-dive-demo__panel[data-panel="before"]');
+  const panelAfter = demo.querySelector('.deep-dive-demo__panel[data-panel="after"]');
+  const shots = Array.from(panelAfter.querySelectorAll(".deep-dive-demo__shot"));
+  const hotspots = Array.from(demo.querySelectorAll(".deep-dive-demo__hotspot"));
+
+  const movePill = (overlay, tabs, i) => {
+    const tab = tabs[i];
+    const pad = parseFloat(getComputedStyle(overlay).left) || 4;
+    const left = tab.offsetLeft - pad;
+    const right = overlay.offsetWidth - left - tab.offsetWidth;
+    overlay.style.clipPath = `inset(0 ${right}px 0 ${left}px round 60px)`;
+  };
+  const snapPill = (overlay, tabs, i) => {
+    overlay.style.transition = "none";
+    movePill(overlay, tabs, i);
+    requestAnimationFrame(() => {
+      overlay.style.transition = "";
+    });
+  };
+
+  const resetScroll = (panel) => {
+    const vp = panel.querySelector(".deep-dive-demo__viewport");
+    if (vp) vp.scrollTop = 0;
+  };
+
+  const selectPanel = (name, focus) => {
+    const toBefore = name === "before";
+    toggleTabs.forEach((tab, i) => {
+      const active = tab.dataset.panel === name;
+      tab.setAttribute("aria-selected", active);
+      tab.tabIndex = active ? 0 : -1;
+      if (active) movePill(toggleOverlay, toggleTabs, i);
+    });
+    panelBefore.classList.toggle("is-active", toBefore);
+    panelAfter.classList.toggle("is-active", !toBefore);
+    resetScroll(toBefore ? panelBefore : panelAfter);
+    if (focus) toggleTabs.find((tab) => tab.dataset.panel === name)?.focus();
+  };
+
+  toggleTabs.forEach((tab) => {
+    tab.addEventListener("click", () => selectPanel(tab.dataset.panel));
+    tab.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        selectPanel(tab.dataset.panel === "before" ? "after" : "before", true);
+      }
+    });
+  });
+  snapPill(toggleOverlay, toggleTabs, 0);
+
+  // Redesign tabs (Product/Manufacturer/Supplier) — selected only via the
+  // in-image hotspots; see style.css for why there's no external tablist.
+  const selectTab = (name) => {
+    shots.forEach((shot) => {
+      const active = shot.dataset.tab === name;
+      if (active) {
+        // Clear any display:none a PREVIOUS deactivation left as an
+        // inline style (inline style beats the .is-active CSS rule
+        // otherwise), then let CSS show it — in flow immediately so it
+        // can define the viewport's scroll height right away and the
+        // enter fade can start this frame.
+        shot.style.display = "";
+        shot.classList.add("is-active");
+      } else if (shot.classList.contains("is-active")) {
+        // Let the exit opacity transition play first, THEN pull it out
+        // of layout (display:none). Pulling it out immediately would
+        // cut the fade short; leaving it in flow (even at opacity:0)
+        // is the scroll-bleed bug this fixes (see style.css) — an
+        // out-of-flow shot still counts toward the viewport's
+        // scrollable overflow at opacity:0, so switching to a shorter
+        // tab let you scroll past its real content into blank space.
+        shot.classList.remove("is-active");
+        const exitMs = parseFloat(getComputedStyle(shot).transitionDuration) * 1000 || 160;
+        setTimeout(() => {
+          if (!shot.classList.contains("is-active")) shot.style.display = "none";
+        }, exitMs);
+      }
+    });
+    resetScroll(panelAfter);
+  };
+
+  hotspots.forEach((hotspot) => {
+    hotspot.addEventListener("click", () => selectTab(hotspot.dataset.tab));
+  });
+
+  document.fonts?.ready.then(() => {
+    const activeToggle = toggleTabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true");
+    snapPill(toggleOverlay, toggleTabs, activeToggle);
+  });
+  window.addEventListener("resize", () => {
+    const activeToggle = toggleTabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true");
+    snapPill(toggleOverlay, toggleTabs, activeToggle);
+  });
+}
+
+initDeepDiveDemo();

@@ -483,6 +483,37 @@ Semua interactive asset pakai struktur & ukuran yang sama dengan `.iteration-dem
 
 ---
 
+## 11. `deep-dive-demo` — LIVE di [bookdrop.html](bookdrop.html), section "Restructuring the Product Architecture"
+
+**Apa yang diganti:** section ini tadinya punya 3 sub-blok teks dengan 4 gambar statis (`img-7.png`, `img-8.png`, `img-9_1.png`, `img-9_2.png`). Sekarang cuma 1 interactive terpasang — di blok teks PERTAMA ("Restructuring the Product Architecture", pengantar keseluruhan) — dan 2 sub-blok lain ("Consolidating the Core (Product Tab)", "Decoupling Logistics (Manufacturer & Supplier Tabs)") jadi teks saja tanpa gambar sendiri, karena kontennya sudah terwakili lewat tab di interactive yang sama. Gambar statis lama (`img-7/8/9_*.png`) sudah tidak dipakai di mana pun tapi belum dihapus dari `assets/`.
+
+**Dibangun di `explore/bookdrop-before-after.html`** lewat banyak iterasi (lihat riwayat chat), lalu di-promote ke production (CSS → `css/style.css`, JS → `js/main.js` sebagai `initDeepDiveDemo()`, file prototype-nya sudah dihapus sesuai konvensi "tear down before shipping").
+
+### Struktur
+Satu kontrol gabungan: toggle Before/After di atas (reuse class `.stepper-demo__tabs`/`__tab`/`__overlay` apa adanya — bukan duplikat baru, supaya otomatis dapat token warna dark-mode yang sudah ada), gap 16px, lalu area konten (`.deep-dive-demo__body`, tinggi fix 491px) di bawahnya. Card luar (`.deep-dive-demo`) padding 24px rata ke-4 sisi, **height: fit-content** (bukan angka terpisah — dihitung dari toggle + gap + body, supaya tidak perlu disinkronkan manual tiap kali salah satu berubah). Dua kali sempat dicoba jadi 2 section terpisah dengan toggle melayang nge-overlap frame — dua-duanya dibalik lagi ke versi gabungan ini atas permintaan user.
+
+- **Before:** 1 gambar (`interactive-2-legacy.svg`, legacy satu halaman scroll panjang, natural 1440×2401).
+- **After:** 3 gambar ditumpuk (`interactive-2-redesign-{product,manufacturer,supplier}.svg`, natural 1440×{1658,1001,1000}), default aktif **Product** (bukan Manufacturer) — dipilih supaya urutan baca cocok sama sub-section teks pertama ("Consolidating the Core (Product Tab)") yang ada tepat di bawahnya di halaman.
+
+### Pindah tab After: lewat gambar itu sendiri, bukan tab nav terpisah
+`.deep-dive-demo__hotspot` — tombol transparan diposisikan tepat di atas baris tab "Product / Manufacturer / Supplier" yang SUDAH digambar di dalam asset-nya sendiri. Koordinat (`x:268-373/373-483/483-588, y:200-233` di frame 1440px, dikonversi ke `cqw`) diambil LANGSUNG dari node tree Figma (`get_node` pada Tab Group di `interactive-2-redesign-product` & `-manufacturer`, keduanya resolve ke posisi absolut yang sama persis), bukan ditaksir dari screenshot — percobaan pertama pakai taksir visual meleset ~100px dan bikin highlight hover nyasar jauh dari tab aslinya.
+
+- **Tanpa visual cue saat hover** (dihapus atas permintaan user — "nanti aku kasih notes aja"). Fokus-visible outline tetap ada (itu keharusan aksesibilitas keyboard, bukan dekorasi).
+- **Tanpa tab nav eksternal.** Sempat ada (reuse `.stepper-demo__tabs` lagi, di atas frame), dihapus atas permintaan user supaya user fokus ke konten. **Konsekuensi yang belum diselesaikan:** keyboard/screen-reader user sekarang TIDAK PUNYA jalan untuk pindah ke tab Product/Supplier — cuma klik mouse di gambar yang berfungsi. Ini gap aksesibilitas nyata, sengaja dibiarkan kelihatan di sini (bukan didiamkan diam-diam) sampai user memutuskan mau ditambal gimana (opsi: elemen visually-hidden tapi screen-reader-accessible, tanpa mengembalikan pill visual).
+
+### Bug scroll-bleed (ditemukan & diperbaiki)
+Ketiga shot After ditumpuk `position: absolute` di satu `.deep-dive-demo__viewport` yang sama. Shot non-aktif cuma `opacity:0` saja ternyata TETAP ikut dihitung browser ke `scrollHeight` parent-nya (elemen `position:absolute` tetap masuk hitungan scrollable-overflow milik ancestor yang jadi positioning context-nya, walau opacity 0) — jadi pas Manufacturer/Supplier (natural ~1000px) aktif, user masih bisa scroll sejauh tinggi Product (1658px), lewat ujung gambar asli ke background kosong. Fix: shot non-aktif di-`display:none` (bukan cuma opacity), tapi DITUNDA sampai animasi fade-keluar (160ms) selesai dulu via `setTimeout` di JS, supaya transisi tetap mulus sebelum benar-benar dikeluarkan dari layout.
+
+### Edge treatment pada gambar
+`.deep-dive-demo__shot` dapat `box-shadow: inset ...` tipis (bukan `outline`) — **inset**, bukan shadow ke luar seperti biasa, karena `.deep-dive-demo__body` wajib `overflow:hidden` buat mekanisme scroll-dan-crop-nya, jadi shadow yang mengarah keluar langsung ke-clip habis di garis yang sama (invisible, bukan subtle). Dark mode: collapse jadi 1 ring putih tipis (`rgb(255 255 255 / 0.1)`) sesuai prinsip emil-surfaces, bukan shadow hitam yang sama dipertahankan. Radius gambar (`border-radius: 6px`) disamakan dengan parent-nya (gap 0 di antara keduanya) — sempat lupa di-set, bikin outline/shadow kepotong persegi di sudut alih-alih ikut melengkung.
+
+### Gotcha lain
+- **`scroll-behavior: smooth` site-wide** bikin `scrollIntoView()` biasa (tanpa `behavior:'auto'`/`'instant'`) tidak langsung akurat untuk automated testing — posisi elemen baru benar setelah animasi smooth-scroll selesai, bukan di frame yang sama saat dipanggil.
+- **Lebar sekarang ikut sistem gutter asli situs** (40/100/300px di breakpoint 768/1280, kolom desktop dibatasi 840px) — bukan lagi lebar prototype sendiri, otomatis benar karena komponennya ditaruh langsung di dalam `.detail-block--media` yang sudah pakai sistem itu.
+- **Tinggi 491px FIXED di semua breakpoint, belum diverifikasi ulang di mobile pada halaman production ini.** Di viewport 375px: lebar frame 295px (gutter 40px), tapi gambar After cuma terlihat ~172–412px (tergantung tab) di dalam box 491px — ada ruang kosong di bawah gambar yang terasa kurang disengaja. Ini limitation lama yang terbawa dari eksplorasi, belum ada keputusan dari user soal fix-nya (opsi: tinggi ikut mengecil per breakpoint, atau `object-fit: cover` supaya penuh dengan crop).
+
+---
+
 ## Ringkasan token warna yang dipakai lintas component
 
 Semua warna di atas berasal dari `design.md` (design tokens). Yang paling sering dipakai:

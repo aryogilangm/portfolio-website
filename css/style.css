@@ -2066,3 +2066,209 @@ a.navbar__title:hover {
     transition: none;
   }
 }
+
+/* ============================================================
+   Interactive asset: deep-dive-demo (bookdrop.html, "Restructuring the
+   Product Architecture"). Replaces 4 static screenshots (legacy +
+   Product/Manufacturer/Supplier tabs) with one component: a Before/After
+   toggle (legacy single long page vs. the redesigned tab system) and,
+   inside After, the real Product/Manufacturer/Supplier tabs — switched
+   either by clicking the exact tab row drawn INSIDE the redesign asset
+   itself (hotspots, Figma-sourced coordinates), or by the plain
+   Before/After toggle for the top-level comparison. No external tab
+   nav for Product/Manufacturer/Supplier: removed during exploration in
+   favor of the in-image hotspots (keyboard/screen-reader users
+   currently can't reach Product/Supplier — see the note below the
+   hotspot rules).
+
+   Built in explore/bookdrop-before-after.html across many iterations;
+   this is the promoted, decided version. Structure: ONE card (toggle
+   at top, 16px gap, content below, 24px padding on all sides, height
+   fit-content) — not two separate boxes, and not a floating pill
+   overlapping the frame (both tried and reversed during exploration).
+   ============================================================ */
+.deep-dive-demo {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  background: var(--color-asset-bg);
+  border-radius: 6px;
+}
+
+/* Dark: like .iteration-demo and .stepper-demo, the asset-bg token has
+   no dark value of its own, so the frame gets an explicit dark bg and
+   drops its (already-absent) stroke. */
+:root[data-theme="dark"] .deep-dive-demo {
+  background: #1e1f23;
+}
+
+.deep-dive-demo__toggle {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Fixed height, not aspect-ratio: Before (legacy, single long page) and
+   After (3 tabs, differing natural heights) show wildly different
+   content, so the box itself stays one constant size — only how much
+   needs scrolling changes. Not yet re-verified at the mobile breakpoint
+   against this real page's gutter width; flagged for a follow-up pass. */
+.deep-dive-demo__body {
+  position: relative;
+  width: 100%;
+  height: 491px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.deep-dive-demo__panel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 160ms ease-in;
+}
+.deep-dive-demo__panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Scrollable viewport: fixed height (inherited from the body), content
+   taller than it scrolls. Scroll-shadow mask (top/bottom fade) is pure
+   CSS — no scroll listener — using the background-attachment:local
+   trick, so it costs nothing and never desyncs from the real scroll
+   position. */
+.deep-dive-demo__viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  container-type: inline-size;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background:
+    linear-gradient(var(--color-bg) 30%, rgb(0 0 0 / 0)),
+    linear-gradient(rgb(0 0 0 / 0), var(--color-bg) 70%) 0 100%,
+    radial-gradient(farthest-side at 50% 0, rgb(0 0 0 / 0.14), rgb(0 0 0 / 0)),
+    radial-gradient(farthest-side at 50% 100%, rgb(0 0 0 / 0.14), rgb(0 0 0 / 0)) 0 100%;
+  background-repeat: no-repeat;
+  background-color: var(--color-bg);
+  background-size: 100% 36px, 100% 36px, 100% 12px, 100% 12px;
+  background-attachment: local, local, scroll, scroll;
+}
+.deep-dive-demo__viewport::-webkit-scrollbar {
+  width: 8px;
+}
+.deep-dive-demo__viewport::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 0.2);
+  border-radius: 4px;
+}
+
+.deep-dive-demo__shot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  /* Matches .deep-dive-demo__body's own radius (6px) — the image sits
+     flush against that parent (no gap), so per "inner radius = outer
+     radius − padding" the inner radius is the outer radius unchanged.
+     Without this the image's own box stayed square-cornered and its
+     outline/shadow got sliced off abruptly at the parent's rounded
+     clip instead of following the curve. */
+  border-radius: 6px;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  /* Soft inset shadow (emil-surfaces "image outline", adapted): a true
+     outer box-shadow is invisible here — .deep-dive-demo__body needs
+     overflow:hidden for the scroll-and-crop mechanism, and the image's
+     box always meets or exceeds that parent's bounds, so anything cast
+     outward gets clipped at the same edge. Inset renders inside the
+     clipped box instead. Chosen over a plain outline after comparing
+     both live during exploration. */
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06), inset 0 1px 4px rgb(0 0 0 / 0.05);
+  transition: opacity 160ms ease-in;
+}
+.deep-dive-demo__shot.is-active {
+  position: relative; /* once active, it defines the scroll height */
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+:root[data-theme="dark"] .deep-dive-demo__shot {
+  /* Collapses to a single low-opacity white ring in dark mode, per
+     emil-surfaces — a stacked light-mode shadow doesn't read against a
+     dark surface. */
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+/* display:none (not just opacity:0) on the inactive shots is
+   load-bearing: After stacks 3 differently-tall images (manufacturer/
+   supplier ~1001px natural, product 1658px) absolutely inside ONE
+   shared scrollable viewport. An out-of-flow (position:absolute)
+   descendant still counts toward its positioned ancestor's scrollable
+   overflow even at opacity:0 — so with only opacity toggling, switching
+   to the shorter Manufacturer/Supplier still let you scroll as far as
+   Product's height, past the real image into blank background.
+   display:none removes a shot from layout entirely; JS (initDeepDiveDemo)
+   delays setting it until the exit fade finishes, so the crossfade
+   itself isn't cut short. */
+
+/* ---- hotspots: real click targets positioned directly over the
+   "Product / Manufacturer / Supplier" tab row drawn INSIDE the redesign
+   asset itself. Coordinates are exact, pulled from the Figma node tree
+   (Tab Group inside interactive-2-redesign-product and -manufacturer;
+   both independently resolved to the same absolute position —
+   x:268-373/373-483/483-588, y:200-233 — in the 1440-wide frame), not
+   eyeballed off a screenshot. Converted to cqw via (px / 1440) * 100.
+   One shared set of coordinates lines up correctly no matter which tab
+   is showing, since every redesign asset shares natural width 1440 and
+   the same header chrome height above the tab row. They live INSIDE the
+   scrolling content (not pinned chrome), so they scroll away with the
+   image exactly like the real tab row does.
+
+   No hover tint and no external tablist — clicking the image itself is
+   the ONLY way to switch tabs. That means keyboard/screen-reader users
+   currently can't reach Product or Supplier; a real gap, kept visible
+   here rather than silently shipped, not yet resolved. */
+.deep-dive-demo__hotspots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+.deep-dive-demo__hotspot {
+  position: absolute;
+  top: 13.89cqw;
+  height: 2.29cqw;
+  min-height: 28px;
+  appearance: none;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.deep-dive-demo__hotspot:focus-visible {
+  outline: 2px solid var(--color-headline);
+  outline-offset: 1px;
+}
+.deep-dive-demo__hotspot[data-tab="product"] { left: 18.61cqw; width: 7.29cqw; }
+.deep-dive-demo__hotspot[data-tab="manufacturer"] { left: 25.90cqw; width: 7.64cqw; }
+.deep-dive-demo__hotspot[data-tab="supplier"] { left: 33.54cqw; width: 7.29cqw; }
+
+@media (prefers-reduced-motion: reduce) {
+  .deep-dive-demo__panel,
+  .deep-dive-demo__shot {
+    transition: none;
+  }
+}
