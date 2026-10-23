@@ -2096,6 +2096,11 @@ a.navbar__title:hover {
   padding: var(--space-24);
   background: var(--color-asset-bg);
   border-radius: 6px;
+  /* Lets .deep-dive-demo__body's height scale in cqw off THIS element's
+     own content width, so the 491px figure (tuned for the ~840px
+     desktop column) holds the same proportion at every breakpoint —
+     see the height rule below. */
+  container-type: inline-size;
 }
 
 /* Dark: like .iteration-demo and .stepper-demo, the asset-bg token has
@@ -2111,15 +2116,22 @@ a.navbar__title:hover {
   justify-content: center;
 }
 
-/* Fixed height, not aspect-ratio: Before (legacy, single long page) and
-   After (3 tabs, differing natural heights) show wildly different
-   content, so the box itself stays one constant size — only how much
-   needs scrolling changes. Not yet re-verified at the mobile breakpoint
-   against this real page's gutter width; flagged for a follow-up pass. */
+/* Height is PROPORTIONAL (cqw), not aspect-ratio and not a flat px:
+   Before (legacy, single long page) and After (3 tabs, differing
+   natural heights) show wildly different content, so the box still
+   needs to stay one constant size at a given width — only how much
+   needs scrolling changes, same reasoning as before. But a flat
+   491px (tuned for the ~840px desktop column) stopped matching once
+   the component got narrower at tablet: Manufacturer/Supplier's
+   redesign images are short enough that at tablet width they rendered
+   shorter than 491px, leaving blank space below the image instead of
+   a scroll area. calc(100cqw * 491 / 840) keeps the SAME 491:840
+   proportion the number was originally tuned at, at every breakpoint —
+   requires container-type:inline-size on the parent .deep-dive-demo. */
 .deep-dive-demo__body {
   position: relative;
   width: 100%;
-  height: 491px;
+  height: calc(100cqw * 491 / 840);
   overflow: hidden;
   border-radius: 6px;
 }
