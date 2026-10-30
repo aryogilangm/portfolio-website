@@ -2147,8 +2147,9 @@ dialog.image-lightbox[open]::backdrop {
     width: auto;
     /* Without an explicit gap, width:auto + space-between has no free
        space to distribute and the links render flush against each
-       other — this fixes that, matching Figma's 32px. */
-    gap: var(--space-32);
+       other — this fixes that. 24px, not Figma's 32px: too wide in
+       practice once actually rendered at full size. */
+    gap: var(--space-24);
   }
 }
 
