@@ -486,9 +486,23 @@ a.navbar__title:hover {
   }
 }
 
-/* Home variant: no title, no bottom border. */
-.navbar--home {
-  border-bottom: none;
+/* Home variant: no title. Border stays at mobile/tablet now that this
+   navbar hides/shows there too (see .navbar--transparent-desktop above
+   and the hidden-state override below) — a border is what tells users
+   it's a distinct bar and not just page content, same as every other
+   page's navbar already does at these widths. Desktop keeps no border,
+   matching the transparent-overlay look used there. */
+@media (min-width: 1280px) {
+  .navbar--home {
+    border-bottom: none;
+  }
+
+  /* Index page's navbar only hides/shows at mobile/tablet, where it can
+     cover content underneath; desktop has room and stays persistent,
+     like before. */
+  .navbar--home.navbar--hidden {
+    transform: none;
+  }
 }
 
 /* ===== Theme toggle (Figma segmented-button/tab-swithcer, icon type) ===== */
@@ -1851,8 +1865,10 @@ dialog.image-lightbox[open]::backdrop {
        into this hug-width via position:absolute (see .content-nav__list). */
     /* Same hide-on-scroll-down / show-on-scroll-up behavior as .navbar
        (identical transition value, on purpose — see initContentNav's
-       scroll handler in main.js, which mirrors initNavbarScroll's). */
-    transition: transform 1s ease;
+       scroll handler in main.js, which mirrors initNavbarScroll's). Kept
+       in sync with .navbar's own transition by hand since they're two
+       separate rules -- re-check this if that one changes again. */
+    transition: transform 900ms cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .content-nav.content-nav--hidden {
