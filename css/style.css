@@ -415,7 +415,30 @@ body.is-leaving {
   z-index: 10;
   background: var(--color-navbar-bg);
   border-bottom: 1px solid var(--color-stroke);
-  transition: transform 1s ease;
+  /* Decided from /proto/navbar-reveal: 900ms, not the original flat 1s
+     (felt sluggish) or a snappy ~220ms (felt abrupt on a reveal this
+     size). cubic-bezier(0.32, 0.72, 0, 1) over plain "ease" — strong
+     ease-out, matches the curve used elsewhere on this site's enters. */
+  transition: transform 900ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar {
+    transition: none;
+  }
+}
+
+/* Hover reveal (injected by initNavbarScroll() in main.js, desktop
+   pointer only — see the (hover: hover) gate there): a second way to
+   bring the hidden navbar back besides scrolling up. Sits above normal
+   content but below .content-nav (z-index: 20). */
+.navbar-hotzone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  z-index: 9;
 }
 
 .navbar--transparent {

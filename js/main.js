@@ -39,6 +39,20 @@ function initNavbarScroll() {
 
     lastScrollY = currentScrollY;
   });
+
+  // Second way to bring a hidden navbar back, besides scrolling up —
+  // decided from /proto/navbar-reveal after the plain scroll-up-only
+  // behavior tested as too easy to miss. Desktop pointer only: touch has
+  // no hover, and scrolling up is already the only (and sufficient) way
+  // to get the navbar back there.
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const hotzone = document.createElement("div");
+    hotzone.className = "navbar-hotzone";
+    document.body.appendChild(hotzone);
+    hotzone.addEventListener("mouseenter", () => {
+      navbar.classList.remove("navbar--hidden");
+    });
+  }
 }
 
 initNavbarScroll();
