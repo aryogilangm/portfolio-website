@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/works/booksmart", "destination": "/booksmart.html" },
+    { "source": "/works/bookdrop", "destination": "/bookdrop.html" },
+    { "source": "/works/werk-ess", "destination": "/werk-ess.html" },
+    { "source": "/works/werk-mobile-apps", "destination": "/werk-mobile-apps.html" },
+    { "source": "/works/werk-crm", "destination": "/werk-crm.html" },
+    { "source": "/works/werk-personnel-management", "destination": "/werk-personnel-management.html" },
+    { "source": "/works/atopia-space", "destination": "/atopia-space.html" },
+    { "source": "/works/kasatmata", "destination": "/kasatmata.html" },
+    { "source": "/works/zntral", "destination": "/zntral.html" }
+  ]
+}

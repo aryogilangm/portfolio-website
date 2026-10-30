@@ -151,6 +151,7 @@
   --space-80: 80px;
   --space-100: 100px;
   --space-300: 300px;
+  --space-360: 360px;
 
   /* typography */
   --font-heading: "Nohemi", "Geist", -apple-system, sans-serif;
@@ -158,6 +159,10 @@
 
   /* container gutter — overridden per breakpoint below */
   --gutter: var(--space-40);
+
+  /* detail-page content column width (index.html's own column uses a
+     separate .container max-width + --gutter combo, not this variable) */
+  --detail-content-width: 720px;
 }
 
 /* ===== Dark mode (Figma "tokens" collection, mode "Dark") =====
@@ -246,6 +251,8 @@ body {
   background: var(--color-bg);
   font-family: var(--font-body);
   color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===== Page transition (quiet fade) ===== */
@@ -367,6 +374,16 @@ body.is-leaving {
 
 .navbar__inner {
   padding: var(--space-16) var(--space-40);
+}
+
+/* Desktop: edge padding matches .content-nav's own left offset below
+   (both 32px) so the navbar and the "List of content" trigger align to
+   the same invisible edge instead of two different gutter values. */
+@media (min-width: 1280px) {
+  .navbar__inner {
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
 }
 
 .navbar__title {
@@ -532,7 +549,7 @@ a.navbar__title:hover {
 }
 
 .about {
-  max-width: 840px;
+  max-width: 720px;
 }
 
 .about__text {
@@ -566,7 +583,7 @@ a.navbar__title:hover {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-24);
-  max-width: 840px;
+  max-width: 720px;
   margin-bottom: var(--space-32);
 }
 
@@ -676,7 +693,7 @@ a.navbar__title:hover {
 .selected-works__cta {
   display: flex;
   justify-content: center;
-  max-width: 840px;
+  max-width: 720px;
 }
 
 /* ===== Experiments (home page, links out to article-* pages) ===== */
@@ -698,7 +715,7 @@ a.navbar__title:hover {
   display: flex;
   flex-direction: column;
   gap: var(--space-24);
-  max-width: 840px;
+  max-width: 720px;
 }
 
 .experiment-card__title {
@@ -724,8 +741,9 @@ a.navbar__title:hover {
   margin-top: var(--space-4);
 }
 
-/* Pages whose exported assets use E3E5EB as their background (ESS). The fill
-   behind .detail-image must equal the asset bg or the rounded corners show a
+/* Pages whose exported assets use E3E5EB as their background (the Werk
+   suite: ESS, CRM, Personnel Management, Mobile App). The fill behind
+   .detail-image must equal the asset bg or the rounded corners show a
    fringe. Same value in both themes. */
 .detail-page--asset-e3e5eb {
   --color-asset-bg: #e3e5eb;
@@ -756,6 +774,13 @@ a.navbar__title:hover {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-8);
+}
+
+/* Index page only (identified by .navbar--home, which works.html doesn't
+   use) — keeps the footer aligned with the narrower 720px reading column
+   above it without narrowing works.html's own wider footer. */
+body:has(.navbar--home) .footer-main__inner {
+  max-width: 720px;
 }
 
 /* Ticks every second (see updateClock in main.js) — tabular figures so the
@@ -796,7 +821,6 @@ a.navbar__title:hover {
 
 .detail-section--outro {
   border-bottom: none;
-  padding-top: var(--space-48);
 }
 
 /* Article variant (long-form writing, e.g. article-agentic-ai.html):
@@ -877,18 +901,36 @@ a.navbar__title:hover {
 }
 
 /* Text-only block (Figma "section-headline": h2/h3 + paragraph, no
-   image — section intros and "Outcome"). 12px gap between title and
-   paragraph, confirmed by re-measuring several section-headline and
-   Outcome frames in Figma after the spacing cleanup. */
+   image — section intros and "Outcome"). 8px gap between title and
+   paragraph. */
 .detail-block {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
+  gap: var(--space-8);
+}
+
+/* Exception: a plain .detail-block (no --media modifier, no title) that
+   wraps just a paragraph directly followed by an image — same 16px
+   mobile / 24px tablet+ gap as .detail-block--media, since this is a
+   paragraph-to-image pairing, not the title-to-paragraph pairing the
+   base 8px gap above is for. initImageLightbox() in main.js wraps every
+   .detail-image in .detail-image-wrap, so that's the direct child to
+   match now, not the <img> itself. */
+.detail-block:has(> img),
+.detail-block:has(> .detail-image-wrap) {
+  gap: var(--space-16);
+}
+
+@media (min-width: 768px) {
+  .detail-block:has(> img),
+  .detail-block:has(> .detail-image-wrap) {
+    gap: var(--space-24);
+  }
 }
 
 /* Text-plus-image block (Figma "section-detail": a "headline" h3+p
    pair immediately followed by one or more images/grids). Needs a
-   nested wrapper because the title-to-paragraph gap (4px) and the
+   nested wrapper because the title-to-paragraph gap (8px) and the
    text-to-image gap (16px mobile / 24px tablet+) are two different
    values — a flat gap on one flex container can't produce both.
    Compounded with .detail-block for specificity (same reasoning as
@@ -896,16 +938,7 @@ a.navbar__title:hover {
 .detail-block__text {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-}
-
-/* Exception: Bookdrop's "Restructuring the Product Architecture" block
-   opens its content-section directly (no separate non-image
-   section-headline before it) and is meant to read as that section's
-   headline despite having an image — so its title-to-paragraph gap
-   stays 12px (the section-headline value) instead of the usual 4px. */
-.detail-block__text.detail-block__text--section-headline {
-  gap: var(--space-12);
+  gap: var(--space-8);
 }
 
 .detail-block.detail-block--media {
@@ -927,6 +960,32 @@ a.navbar__title:hover {
   color: var(--color-subheadline);
 }
 
+/* section-detail's own title (h3, sub-block headings) is one step down
+   from section-headline's h2 — 16px/24px matches the same pairing
+   .paragraph already uses at this size, keeping the vertical rhythm
+   consistent instead of inheriting h2's 27px line-height at a smaller
+   font-size. */
+h3.detail-title {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* Geist titles instead of Nohemi — decided after comparing both live on
+   Bookdrop, now rolled out to every project case-study page (not
+   article-agentic-ai.html, which isn't a "detail page" in this sense and
+   keeps Nohemi). Section-headline (h2) needs medium weight to still read
+   as a title now that it shares Geist with body text; section-detail
+   (h3) stays regular since its color already separates it from
+   .paragraph. */
+.detail-page--geist-titles h2.detail-title {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.detail-page--geist-titles h3.detail-title {
+  font-family: var(--font-body);
+}
+
 .detail-image {
   width: 100%;
   height: auto; /* keeps width/height attributes as a ratio hint only */
@@ -936,6 +995,166 @@ a.navbar__title:hover {
      the image over this fill, so a lighter fill shows as a light fringe. */
   background: var(--color-asset-bg);
   border-radius: 6px;
+}
+
+/* ===== Image lightbox (zoom) =====
+   .detail-image-wrap / .detail-image-zoom are injected by
+   initImageLightbox() in main.js around every .detail-image — see that
+   function for why this is pure progressive enhancement over existing
+   markup. */
+.detail-image-wrap {
+  position: relative;
+  display: block;
+}
+
+.detail-image-zoom {
+  position: absolute;
+  top: var(--space-12);
+  right: var(--space-12);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  cursor: pointer;
+  transition: background 150ms ease, scale 150ms ease-out;
+}
+
+/* Visible circle stays 32×32 per spec; this invisible pseudo-element
+   extends the actual hit area to the 44×44 touch-target floor without
+   growing the icon on screen. */
+.detail-image-zoom::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .detail-image-zoom:hover {
+    background: rgba(0, 0, 0, 0.65);
+  }
+}
+
+.detail-image-zoom:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.detail-image-zoom:active {
+  scale: 0.94;
+}
+
+dialog.image-lightbox {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  max-width: 92vw;
+  max-height: 92vh;
+  border: none;
+  padding: 0;
+  background: transparent;
+  opacity: 0;
+  scale: 0.96;
+  transition:
+    opacity 150ms cubic-bezier(0.4, 0, 1, 1),
+    scale 150ms cubic-bezier(0.4, 0, 1, 1),
+    overlay 150ms allow-discrete,
+    display 150ms allow-discrete;
+}
+
+dialog.image-lightbox[open] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity 220ms cubic-bezier(0.32, 0.72, 0, 1),
+    scale 220ms cubic-bezier(0.32, 0.72, 0, 1),
+    overlay 220ms allow-discrete,
+    display 220ms allow-discrete;
+}
+
+@starting-style {
+  dialog.image-lightbox[open] {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+dialog.image-lightbox::backdrop {
+  background: rgba(0, 0, 0, 0);
+  transition: background 150ms cubic-bezier(0.4, 0, 1, 1), overlay 150ms allow-discrete, display 150ms allow-discrete;
+}
+
+dialog.image-lightbox[open]::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+  transition: background 220ms ease, overlay 220ms allow-discrete, display 220ms allow-discrete;
+}
+
+@starting-style {
+  dialog.image-lightbox[open]::backdrop {
+    background: rgba(0, 0, 0, 0);
+  }
+}
+
+.image-lightbox__img {
+  display: block;
+  max-width: 92vw;
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  border-radius: 6px;
+}
+
+.image-lightbox__close {
+  position: fixed;
+  top: var(--space-24);
+  right: var(--space-24);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  cursor: pointer;
+  transition: background 150ms ease, scale 150ms ease-out;
+}
+
+.image-lightbox__close::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-lightbox__close:hover {
+    background: rgba(0, 0, 0, 0.65);
+  }
+}
+
+.image-lightbox__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.image-lightbox__close:active {
+  scale: 0.94;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.image-lightbox,
+  dialog.image-lightbox[open],
+  dialog.image-lightbox::backdrop,
+  dialog.image-lightbox[open]::backdrop {
+    transition: none;
+  }
 }
 
 /* Article image + caption pair — the exported PNGs (article-agentic_AI/)
@@ -1125,26 +1344,33 @@ a.navbar__title:hover {
   position: relative;
   width: 100%;
   border-radius: 6px;
-  border: 1px solid var(--color-stroke);
   background: var(--neutral-10);
+  /* Alpha black, not solid neutral-40 (components.md's earlier asset-stroke
+     token) — on the white card bg it reads lighter than neutral-40 and
+     recedes per emil-design-foundations' Color §1, instead of sitting on
+     top of the surface. Light mode only: the card's own bg already
+     contrasts enough against the page in dark mode. */
+  border: 1px solid rgba(0, 0, 0, 0.06);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* Dark: the frame uses the dark asset bg and, like .stepper-demo, no stroke
-   (the stroke is only for white-bg interactive assets). */
+/* Dark: the frame uses the dark asset bg, same as .stepper-demo,
+   .deep-dive-demo, and .detail-pages-demo. No stroke on any asset —
+   the asset's own background already contrasts enough against the
+   page, a border just adds visual weight. */
 :root[data-theme="dark"] .iteration-demo {
   background: #1e1f23;
   border-color: transparent;
 }
 
 
+/* Retired in favor of .native-select at every breakpoint — see the
+   .native-select-row reveal rule. Kept in the DOM/CSS since main.js's
+   state machine still targets it; just never shown. */
 .iteration-demo__switcher-row {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  padding-top: var(--space-24);
+  display: none;
 }
 
 /* Segmented tab-switcher, same spec as .stepper-demo (components.md § 10):
@@ -1238,6 +1464,11 @@ a.navbar__title:hover {
   }
 }
 
+/* Instant, not crossfade — every switch here goes through .native-select
+   now (the pill toggle above is retired/hidden at every breakpoint), and
+   native-select changes should feel instant, not animated. Crossfade is
+   reserved for the screenshot-to-screenshot swaps (.deep-dive-demo,
+   where the pill/hotspots still drive it on desktop/tablet). */
 .iteration-demo__panel {
   position: absolute;
   inset: 0;
@@ -1245,16 +1476,12 @@ a.navbar__title:hover {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: scale(0.98);
   pointer-events: none;
-  transition: opacity 180ms cubic-bezier(0.32, 0.72, 0, 1), transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .iteration-demo__panel.is-active {
   opacity: 1;
-  transform: scale(1);
   pointer-events: auto;
-  transition: opacity 260ms cubic-bezier(0.32, 0.72, 0, 1), transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 /* Explicit width here (rather than only on .iteration-demo__nav-list)
@@ -1665,7 +1892,7 @@ a.navbar__title:hover {
 @media (min-width: 1280px) {
   .content-nav {
     top: 50%;
-    left: var(--space-24);
+    left: var(--space-32);
     transform: translateY(-50%);
   }
 }
@@ -1785,26 +2012,27 @@ a.navbar__title:hover {
   }
 }
 
-/* ===== Footer detail (project pages) ===== */
+/* ===== Footer detail (project pages) =====
+   Single row (email left, Linkedin/Dribbble/Upwork/copyright right) at
+   tablet+, stacking to email-then-links at mobile — re-measured against
+   Figma's footer-detail component set (desktop/tab/mobile variants):
+   720px content column (max-width: var(--detail-content-width), same as
+   the rest of the detail page), 24px padding on every side at every
+   breakpoint, no separate "Email" label anymore since the link text is
+   already self-descriptive. */
 .footer-detail {
   background: var(--color-bg);
   border-top: 1px solid var(--color-stroke);
-  padding-top: var(--space-40);
 }
 
-.footer-detail__email {
-  max-width: 840px;
+.footer-detail__inner {
+  max-width: var(--detail-content-width);
   margin: 0 auto;
-  padding: 0 var(--gutter);
-  text-align: center;
+  padding: var(--space-24);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-8);
-}
-
-.footer-detail__label {
-  color: var(--color-paragraph);
+  gap: var(--space-32);
 }
 
 .link--large {
@@ -1812,43 +2040,24 @@ a.navbar__title:hover {
   line-height: 27px;
 }
 
-.footer-detail__bar {
-  /* Fixed padding/margin here, NOT the --gutter scale used by the rest
-     of the page (300/100/40) — re-measured against Figma after the
-     spacing cleanup: horizontal padding is 20px mobile / 40px tablet+,
-     and the gap above the bar is 24px mobile / 32px tablet+. */
-  margin-top: var(--space-24);
-  max-width: 840px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: var(--space-24) var(--space-20);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-24);
-}
-
 .footer-detail__links {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-32);
+  justify-content: space-between;
   flex-wrap: wrap;
+  row-gap: var(--space-16);
 }
 
-/* Tablet and up: links + copyright become one horizontal row */
+/* Tablet and up: email + links share one row instead of stacking */
 @media (min-width: 768px) {
-  .footer-detail__bar {
+  .footer-detail__inner {
     flex-direction: row;
-    justify-content: center;
-    gap: var(--space-32);
-    margin-top: var(--space-32);
-    padding-left: var(--space-40);
-    padding-right: var(--space-40);
+    justify-content: space-between;
   }
 
   .footer-detail__links {
-    display: contents;
+    width: auto;
   }
 }
 
@@ -1865,7 +2074,7 @@ a.navbar__title:hover {
     gap: var(--space-56);
   }
 
-  .detail-section:not(.detail-section--tight):not(.detail-section--outro) {
+  .detail-section:not(.detail-section--tight) {
     padding-top: var(--space-80);
   }
 
@@ -1891,16 +2100,26 @@ a.navbar__title:hover {
     --gutter: var(--space-300);
   }
 
-  /* Figma's desktop frame is exactly 1440px (300px gutter + 840px
-     content + 300px gutter). .detail-page has no max-width anymore
+  /* Index page only (.navbar--home, which works.html doesn't use):
+     720px content needs 360px gutters to fill the 1440px frame exactly
+     (360 + 720 + 360), instead of the 300px gutter leaving the content
+     column off-center with unused space on the right. */
+  body:has(.navbar--home) {
+    --gutter: var(--space-360);
+  }
+
+  /* Figma's desktop frame is exactly 1440px (360px gutter + 720px
+     content + 360px gutter). .detail-page has no max-width anymore
      (so section backgrounds/borders reach the real screen edges on
-     wider monitors), so the 840px content column is instead capped
-     here directly: padding grows past 300px once the viewport clears
-     1440px, keeping content centered at a fixed 840px instead of
-     stretching wider and wider. */
+     wider monitors), so the 720px content column is instead capped
+     here directly: padding grows past 360px once the viewport clears
+     1440px, keeping content centered at a fixed 720px instead of
+     stretching wider and wider. --gutter (300px) only matters as a
+     floor below 1280px — the calc() below produces 360px on its own
+     at exactly 1440px, so no per-page override is needed here. */
   .detail-section {
-    padding-left: max(var(--gutter), calc((100% - 840px) / 2));
-    padding-right: max(var(--gutter), calc((100% - 840px) / 2));
+    padding-left: max(var(--gutter), calc((100% - var(--detail-content-width)) / 2));
+    padding-right: max(var(--gutter), calc((100% - var(--detail-content-width)) / 2));
   }
 }
 
@@ -1908,39 +2127,59 @@ a.navbar__title:hover {
 /* ============================================================
    Interactive asset: stepper-demo (booksmart.html, "3-Step Checkout
    Stepper"). Pill tab-switcher (Step 1/2/3) that cross-fades the
-   matching checkout screenshot. Frame follows the same standard as
-   .iteration-demo (switcher row on top, stage below at 840/491 from
-   768px up; ratio released on mobile), but keeps the Figma bg
-   (#f2f3f7) and has NO frame stroke — stroke is only for interactive
-   assets with a white bg.
+   matching checkout screenshot; one native <select> takes over below
+   768px (see the shared .native-select* rules). Keeps the Figma bg
+   (--color-asset-bg) and has NO frame stroke — stroke is only for
+   interactive assets with a white bg.
 
    The active-tab pill is a black overlay holding a white copy of the
    labels, clipped to the active tab with clip-path ... round. Do NOT
    widen a pill with scaleX(): it stretches border-radius into an oval.
 
-   Container-type lives on the frame (not the stage) because on mobile
-   the stage sizes ITSELF in cqw, and a container's own cqw resolves
-   against an ancestor container, not itself. Screenshot geometry is
-   in cqw (1cqw = 8.4px at 840). Screenshots are 1147x804 exports
-   incl. drop-shadow padding, scaled x1.138 and left to bleed off the
-   frame's bottom edge like the Figma design. All three exports must
-   share size + start y, or switching steps visibly jumps.
-   ============================================================ */
+   Sizing decision (replaces an earlier fixed-ratio cqw stage): the
+   asset just fills its parent — the padded card — at the image's own
+   natural aspect ratio. One mechanism at every breakpoint: only the
+   .is-active shot stays in flow (display:block, the others
+   display:none), so the card's height is always exactly "row + gap +
+   whichever image is currently showing". No stage aspect-ratio, no
+   cqw math, no separate mobile height formula.
+
+   Padding is asymmetric on purpose — 0 at the bottom, 24px elsewhere
+   (16px on mobile, below) — so the screenshot reads as emerging from
+   the bottom edge of the card rather than sitting inside it on all 4
+   sides. Screenshots are 1147×804 exports with a transparent margin
+   baked into the PNG itself (not CSS — see .stepper-demo__shot
+   below), scaled up slightly to crop that margin away so the padding
+   value above is the ONLY inset source, not padding plus leftover
+   PNG whitespace stacked on top of each other. ============================================================ */
 .stepper-demo {
   width: 100%;
   display: flex;
   flex-direction: column;
-  container-type: inline-size;
+  gap: var(--space-16);
+  padding: var(--space-24) var(--space-24) 0;
   background: var(--color-asset-bg);
   border-radius: 6px;
   overflow: hidden;
 }
+/* --color-asset-bg has no dark value of its own ("exported assets are
+   shared, not per theme") — same hardcoded #1e1f23 .deep-dive-demo and
+   .detail-pages-demo already use, so every asset card goes dark the
+   same way site-wide. FIXED — this used to only apply inside the
+   max-width:767px block below, so the card stayed light-mode-colored
+   on desktop/tablet in dark mode while the other two interactives
+   didn't; unscoped here now so all breakpoints match. */
+:root[data-theme="dark"] .stepper-demo {
+  background: #1e1f23;
+}
 
+/* The segmented pill toggle is retired in favor of .native-select at
+   every breakpoint (desktop/tablet used to show this, mobile the
+   select below) — same control everywhere, one less pattern on the
+   page. Kept in the DOM/CSS rather than deleted since the state
+   machine (select()) still targets it; just never shown. */
 .stepper-demo__row {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  padding-top: var(--space-24);
+  display: none;
 }
 
 .stepper-demo__tabs {
@@ -1963,7 +2202,12 @@ a.navbar__title:hover {
   pointer-events: none;
   user-select: none;
   clip-path: inset(0 0 0 0 round 60px);
-  transition: clip-path 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  /* 180ms — matched to .deep-dive-demo__panel's enter duration (its only
+     remaining live consumer with a visible pill; .stepper-demo's own
+     toggle is select-only now) so the pill-slide and the content
+     crossfade it triggers finish together instead of the pill trailing
+     ~100ms behind. Was 280ms. */
+  transition: clip-path 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 /* Tinggi DIKUNCI (28px) + flex-center, bukan dari padding+line-height —
@@ -1997,7 +2241,14 @@ a.navbar__title:hover {
   background: none;
   color: var(--color-tab-switcher-text-idle);
   cursor: pointer;
-  transition: color 150ms ease, scale 150ms ease-out;
+  /* 180ms — matched to the pill-slide (.stepper-demo__overlay) and the
+     content enter-fade (.deep-dive-demo__panel.is-active) it's paired
+     with on every click, so all three land on the same frame instead of
+     settling ~30ms apart. Was 150ms: individually smooth, but one more
+     untied duration in a single click that already fires 7 animations
+     across what's now down to two durations (140ms exit, 180ms
+     everything arriving). */
+  transition: color 180ms ease, scale 180ms ease-out;
 }
 
 .stepper-demo__tab[aria-selected="true"] {
@@ -2014,19 +2265,46 @@ a.navbar__title:hover {
   }
 }
 
+/* Owns the crop clip AND the card's visible radius — NOT the <img>
+   itself (no shadow anymore; removed per request, see components.md
+   §10). overflow:hidden here clips at exactly the padded content-box
+   boundary (the stage carries no padding of its own), so the crop
+   below stays contained inside the content area instead of eating
+   into .stepper-demo's own padding. border-radius lives here rather
+   than on the image because a plain rectangular clip boundary would
+   square off the top two corners regardless of the image's own
+   radius — the clip shape has to be rounded too.
+
+   aspect-ratio: 840/620 is a fixed crop window, not a fit-to-content
+   box — decided from explore/booksmart-compact-crop.html ("Balanced"),
+   picked over a tighter or looser ratio because it shows the full
+   "Shipping Information" section plus Order Summary and crops right
+   before the footer, the most content a "preview, not the whole page"
+   framing can show without starting to look like there's nothing left
+   to scroll to. Bottom corners are square (0), top stay 6px — on
+   purpose, not an oversight: a rounded bottom edge reads as "this is
+   where the content ends"; a square one reads as "this continues
+   past the crop", which is the honest signal here now that the image
+   is a full-page screenshot being deliberately truncated. */
 .stepper-demo__stage {
   position: relative;
-  aspect-ratio: 840 / 491;
+  width: 100%;
   overflow: hidden;
+  border-radius: 6px 6px 0 0;
+  aspect-ratio: 840 / 620;
 }
 
 .stepper-demo__shots {
-  position: absolute;
-  top: 3.98cqw;
-  left: 11.17cqw;
-  width: 77.73cqw;
+  position: relative;
+  width: 100%;
 }
 
+/* Absolute, not in-flow (stage has a fixed aspect-ratio, so stacking
+   every shot doesn't jump the container's height) — stays absolute even
+   without a transition so an inactive shot can't push stray layout
+   height. Instant, not crossfade: every step switch here goes through
+   .native-select now (the pill above is retired/hidden at every
+   breakpoint), and native-select changes should feel instant. */
 .stepper-demo__shot {
   position: absolute;
   top: 0;
@@ -2034,28 +2312,24 @@ a.navbar__title:hover {
   width: 100%;
   height: auto;
   opacity: 0;
-  /* exit matches body.is-leaving */
-  transition: opacity 160ms ease-in;
   pointer-events: none;
   user-select: none;
 }
-
-/* enter matches page-fade-in: opacity only, 220ms ease-out */
 .stepper-demo__shot.is-active {
   opacity: 1;
-  transition: opacity 220ms ease-out;
+  pointer-events: auto;
 }
-
 @media (max-width: 767px) {
-  .stepper-demo__stage {
-    aspect-ratio: auto;
-    height: calc(16px + 65cqw);
+  .stepper-demo {
+    padding: var(--space-16) var(--space-16) 0;
   }
-
-  .stepper-demo__shots {
-    top: calc(16px - 1.236cqw);
-    left: 2.77cqw;
-    width: 94.5cqw;
+  /* Top radius only — bottom stays 0 here too (not "4px 4px 4px 4px"):
+     the square-bottom reasoning (signals "cropped, keeps going below
+     the fold" rather than "content ends here") still applies at this
+     breakpoint, this is just a smaller top radius to match the card's
+     tighter 16px padding at mobile vs. 24px on desktop/tablet. */
+  .stepper-demo__stage {
+    border-radius: 4px 4px 0 0;
   }
 }
 
@@ -2104,8 +2378,7 @@ a.navbar__title:hover {
 }
 
 /* Dark: like .iteration-demo and .stepper-demo, the asset-bg token has
-   no dark value of its own, so the frame gets an explicit dark bg and
-   drops its (already-absent) stroke. */
+   no dark value of its own, so the frame gets an explicit dark bg. */
 :root[data-theme="dark"] .deep-dive-demo {
   background: #1e1f23;
 }
@@ -2120,20 +2393,27 @@ a.navbar__title:hover {
    Before (legacy, single long page) and After (3 tabs, differing
    natural heights) show wildly different content, so the box still
    needs to stay one constant size at a given width — only how much
-   needs scrolling changes, same reasoning as before. But a flat
-   491px (tuned for the ~840px desktop column) stopped matching once
-   the component got narrower at tablet: Manufacturer/Supplier's
-   redesign images are short enough that at tablet width they rendered
-   shorter than 491px, leaving blank space below the image instead of
-   a scroll area. calc(100cqw * 491 / 840) keeps the SAME 491:840
-   proportion the number was originally tuned at, at every breakpoint —
-   requires container-type:inline-size on the parent .deep-dive-demo. */
+   needs scrolling changes. Ratio is 1001:1440 — Manufacturer and
+   Supplier's own natural size (1440×1001 and 1440×1000, SVG width/
+   height attrs; 1001 picked over 1000 so Supplier isn't the one that
+   gets clipped — the 1px difference between the two is invisible
+   either way). Matching the shortest pair exactly means THEY fill the
+   frame edge to edge with no leftover white space and no scroll needed,
+   while Before (2401 tall) and Product (1658 tall) — already built to
+   scroll within this frame — just scroll a little more. Previously
+   matched to .detail-pages-demo (2048:2880) for size parity between the
+   two screenshot-UI cards, but that left Manufacturer/Supplier short of
+   the frame with blank space below — fitting this component's own
+   shortest content takes priority over matching the other card's size.
+   Proportional cqw (not a flat px) still matters so the ratio holds at
+   both desktop and tablet; requires container-type:inline-size on the
+   parent .deep-dive-demo. */
 .deep-dive-demo__body {
   position: relative;
   width: 100%;
-  height: calc(100cqw * 491 / 840);
+  height: calc(100cqw * 1001 / 1440);
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .deep-dive-demo__panel {
@@ -2142,13 +2422,25 @@ a.navbar__title:hover {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 160ms ease-in;
+  /* 120ms, no delay: the outgoing screenshot clears fast and first. */
+  transition: opacity 120ms ease-in;
 }
 .deep-dive-demo__panel.is-active {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 150ms cubic-bezier(0.32, 0.72, 0, 1);
+  /* Delayed 80ms so the enter starts only once the exit (120ms, no
+     delay, above) is most of the way through, instead of both running
+     at full strength at once. Two busy, dissimilar dashboard
+     screenshots cross-dissolved in lockstep ghost on top of each other
+     at the 50% mark — reads as harsh/stuttery even at a clean 60fps,
+     since it's a content problem (double-exposure of two unrelated
+     busy screenshots), not a frame problem. Staggering it into a quick
+     fade-out-then-fade-in keeps the "no hard cut" softness of a
+     crossfade without the overlap. The pill/tab below stay undelayed,
+     synced to each other instead — they're small, single-color UI
+     chrome, not full screenshots, so overlap was never the issue there. */
+  transition: opacity 160ms cubic-bezier(0.32, 0.72, 0, 1) 80ms;
 }
 
 /* Scrollable viewport: fixed height (inherited from the body), content
@@ -2187,13 +2479,13 @@ a.navbar__title:hover {
   left: 0;
   width: 100%;
   height: auto;
-  /* Matches .deep-dive-demo__body's own radius (6px) — the image sits
+  /* Matches .deep-dive-demo__body's own radius (4px) — the image sits
      flush against that parent (no gap), so per "inner radius = outer
      radius − padding" the inner radius is the outer radius unchanged.
      Without this the image's own box stayed square-cornered and its
      outline/shadow got sliced off abruptly at the parent's rounded
      clip instead of following the curve. */
-  border-radius: 6px;
+  border-radius: 4px;
   display: none;
   opacity: 0;
   pointer-events: none;
@@ -2204,22 +2496,47 @@ a.navbar__title:hover {
      box always meets or exceeds that parent's bounds, so anything cast
      outward gets clipped at the same edge. Inset renders inside the
      clipped box instead. Chosen over a plain outline after comparing
-     both live during exploration. */
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06), inset 0 1px 4px rgb(0 0 0 / 0.05);
-  transition: opacity 160ms ease-in;
+     both live during exploration. Single soft blur layer only — no
+     hairline inset on top of it. */
+  box-shadow: inset 0 1px 4px rgb(0 0 0 / 0.05);
+  /* display stays in the transition (allow-discrete): going TO
+     display:none, the UA holds the previous "block" value for the full
+     opacity transition and only applies "none" once it finishes, so the
+     outgoing shot stays painted and genuinely fades instead of vanishing
+     the instant the class flips (plain display:none can't be
+     transitioned at all — that was the old bug). display:none is still
+     the end state, load-bearing for the same reason it always was: an
+     out-of-flow shot still counts toward the scrollable viewport's
+     overflow at opacity:0, so only fully removing it from layout (not
+     just fading it) keeps a shorter tab from leaving blank scroll space
+     the height of a taller one. 120ms, no delay — the outgoing shot
+     clears fast and first, same reasoning as .deep-dive-demo__panel. */
+  transition: opacity 120ms ease-in, display 120ms allow-discrete;
 }
 .deep-dive-demo__shot.is-active {
   position: relative; /* once active, it defines the scroll height */
   display: block;
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 150ms cubic-bezier(0.32, 0.72, 0, 1);
+  /* 80ms delay on BOTH opacity and display (kept together so display
+     only flips to block, and the shot only starts rendering, once the
+     delay ends) — same fade-out-then-fade-in stagger as
+     .deep-dive-demo__panel, for the same reason: two full, dissimilar
+     screenshots cross-dissolving at full strength together is a harsh
+     double-exposure regardless of frame rate, not just a timing nit. */
+  transition: opacity 160ms cubic-bezier(0.32, 0.72, 0, 1) 80ms, display 160ms allow-discrete 80ms;
+  /* Without this, the browser has no "before" frame to interpolate
+     opacity from the instant display leaves none — @starting-style
+     supplies it so the enter crossfade actually ramps 0→1 instead of
+     just appearing at full opacity. */
+  @starting-style {
+    opacity: 0;
+  }
 }
 :root[data-theme="dark"] .deep-dive-demo__shot {
-  /* Collapses to a single low-opacity white ring in dark mode, per
-     emil-surfaces — a stacked light-mode shadow doesn't read against a
-     dark surface. */
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  /* Same single soft-blur layer as the light shadow, recolored for a
+     dark surface — a black shadow is just invisible against it. */
+  box-shadow: inset 0 1px 4px rgb(255 255 255 / 0.06);
 }
 
 /* display:none (not just opacity:0) on the inactive shots is
@@ -2278,9 +2595,300 @@ a.navbar__title:hover {
 .deep-dive-demo__hotspot[data-tab="manufacturer"] { left: 25.90cqw; width: 7.64cqw; }
 .deep-dive-demo__hotspot[data-tab="supplier"] { left: 33.54cqw; width: 7.29cqw; }
 
+/* ============================================================
+   Interactive asset: detail-pages-demo (bookdrop.html, "Deep-Dive
+   Detail Pages"). Replaces 5 static screenshots (Today's Order, Total
+   Revenue, and the 3 leaderboards) with one component: a single
+   native <select> switching between all 5, at every breakpoint — no
+   toggle pill, no in-image hotspots. Matches .deep-dive-demo's card
+   visuals exactly (background, padding per breakpoint, radius, image
+   shadow) since it's the same "asset card" family; the only real
+   difference is the control, select from the start because 5 flat
+   options don't fit a pill the way a 2-way Before/After toggle does.
+
+   Sizing reuses .stepper-demo's LATER mechanism (only the .is-active
+   shot stays in flow, driving the card's auto height), not
+   .deep-dive-demo's older fixed-cqw-height scroll-and-crop viewport —
+   these are flat dashboard screenshots with no Before/After pairing
+   to crossfade between differently-shaped states, so the simpler
+   mechanism applies cleanly with no scroll-bleed class of bug to
+   guard against. */
+.detail-pages-demo {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  background: var(--color-asset-bg);
+  border-radius: 6px;
+}
+:root[data-theme="dark"] .detail-pages-demo {
+  background: #1e1f23;
+}
+
+/* Own row class, not a reuse of .native-select-row — that class is
+   display:none by default and only flips to flex below 767px (both
+   .deep-dive-demo and .stepper-demo keep a toggle/pill for desktop,
+   select is the mobile fallback there). This component has no
+   toggle/pill at any breakpoint, so its row needs to stay visible
+   everywhere; only the shared .native-select-wrap/.native-select/
+   .native-select-icon box-model classes are reused. */
+.detail-pages-demo__control {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.detail-pages-demo__stage {
+  position: relative;
+  width: 100%;
+}
+
+/* position:absolute on the inactive shots purely so they can't add
+   stray layout height; .is-active switches to relative so the one
+   actually shown drives the card's auto height. Instant, not crossfade —
+   this is a native-select-only control (5 options, no pill at any
+   breakpoint), and native-select changes should feel instant. */
+.detail-pages-demo__shot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: auto;
+  /* 4px, matching .deep-dive-demo__shot/__body exactly, not this
+     card's own 6px — same "shadow instead of outline" rationale, see
+     below, picked for one consistent asset-image radius site-wide. */
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  /* Same inset shadow as .deep-dive-demo__shot (light/dark pair) —
+     outer shadow would clip against this card's overflow, inset
+     renders inside the box instead. */
+  box-shadow: inset 0 1px 4px rgb(0 0 0 / 0.05);
+}
+.detail-pages-demo__shot.is-active {
+  position: relative; /* once active, it defines the card's auto height */
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+:root[data-theme="dark"] .detail-pages-demo__shot {
+  box-shadow: inset 0 1px 4px rgb(255 255 255 / 0.06);
+}
+
+@media (max-width: 767px) {
+  .detail-pages-demo {
+    padding: var(--space-16);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-pages-demo__shot {
+    transition: none;
+  }
+}
+
+/* ---- native-select: SHARED mobile control, used by both
+   .deep-dive-demo (bookdrop.html) and .stepper-demo (booksmart.html).
+   The in-image hotspots / toggle pill that both components use on
+   desktop/tablet measure out to an 18×28px tap target on mobile — well
+   under the 44×44 touch minimum. Below 767px both replace their
+   desktop input with real <select> elements calling the SAME state
+   functions the desktop toggle/hotspots call (selectPanel()/selectTab()
+   for deep-dive-demo, select() for stepper-demo) — one state machine,
+   two input methods, not a parallel mobile implementation.
+
+   Box model (padding, radius, chevron) is the literal shadcn/Figma
+   native-select spec, promoted from explore/bookdrop-mobile-select.html
+   after comparing it against a 44px touch-target override — the
+   override was rejected (see that file's decision history); natural
+   height here (padding + line-height + border) runs under 44px, a
+   known, accepted tradeoff, not an oversight. First built for
+   deep-dive-demo, reused as-is for stepper-demo rather than duplicated —
+   fix it once here, both components get the fix. */
+.native-select-row {
+  display: none;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+.native-select-wrap {
+  position: relative;
+  width: fit-content;
+}
+.native-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  min-width: 0;
+  padding: 4px 32px 4px 8px;
+  border: 1px solid var(--neutral-30);
+  border-radius: 6px;
+  background: var(--neutral-10);
+  font: 400 14px/20px var(--font-body);
+  letter-spacing: 0.5px;
+  color: var(--neutral-110);
+  cursor: pointer;
+  /* width: sized to the SELECTED option's text in JS (see
+     sizeNativeSelectToSelection() in main.js) — a native <select> with no
+     explicit width sizes itself to its widest option, not whichever one
+     is currently chosen, so without this every selection would render at
+     the longest label's width. Transitioned here so switching between a
+     short and long label resizes the box instead of snapping. */
+  transition: border-color 150ms ease, background-color 150ms ease, width 150ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .native-select {
+    transition: border-color 150ms ease, background-color 150ms ease;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .native-select:hover {
+    border-color: var(--neutral-70);
+  }
+}
+/* Border itself swaps to --color-headline on focus, not just the
+   outline — matches the shadcn "pressed" variant. outline-offset:-2px
+   keeps the ring fully INSIDE the select's own border-box regardless
+   of the second select's wrapper overflow:hidden (needed for its
+   show/hide width animation below). */
+.native-select:focus-visible {
+  border-color: var(--color-headline);
+  outline: 2px solid var(--color-headline);
+  outline-offset: -2px;
+}
+.native-select-icon {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--neutral-70);
+}
+:root[data-theme="dark"] .native-select {
+  background: #2a2b2f;
+  border-color: #3a3b3f;
+  color: var(--neutral-10);
+}
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="dark"] .native-select:hover {
+    border-color: #4a4b50;
+  }
+}
+
+/* Second select in a pair (e.g. deep-dive-demo's Product/Manufacturer/
+   Supplier): animates in/out via opacity+width so the first select
+   doesn't jump sideways instantly. */
+.native-select-slot {
+  overflow: hidden;
+  transition: opacity 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.native-select-slot[hidden] {
+  display: block;
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Shared reveal: hides .native-select-row by default (desktop/tablet
+   keep their own toggle/hotspot input) and shows it only below 767px —
+   one rule here instead of repeating it in each component's own mobile
+   block below. .deep-dive-demo (Restructuring the Product Architecture)
+   is the only remaining component on this pattern; .stepper-demo and
+   .iteration-demo override below to show their select at every
+   breakpoint instead, since their toggle is retired entirely. */
+@media (max-width: 767px) {
+  .native-select-row {
+    display: flex;
+  }
+}
+
+.stepper-demo .native-select-row,
+.iteration-demo .native-select-row {
+  display: flex;
+}
+
+/* Unlike .stepper-demo, .iteration-demo has no padding of its own on the
+   frame (its content positions itself per-panel), so the select needs
+   its own — same --space-24 value stepper-demo gets for free from its
+   container, so the two line up visually. */
+.iteration-demo .native-select-row {
+  padding: var(--space-24) var(--space-24) 0;
+}
+
+@media (max-width: 767px) {
+  .deep-dive-demo {
+    padding: var(--space-16);
+  }
+  .deep-dive-demo__toggle {
+    display: none;
+  }
+  /* The scroll-and-crop mechanism below (fixed cqw height, overflow
+     hidden, gradient scroll mask) exists to let one card hold images of
+     very different natural heights at a fixed desktop/tablet height.
+     On a phone that's a nested scroll box inside a page that already
+     scrolls — exactly the interaction this mobile redesign exists to
+     remove. The card instead flows to whatever height the current
+     image needs. */
+  .deep-dive-demo__body {
+    height: auto;
+    overflow: visible;
+  }
+  /* position:absolute;inset:0 is what stacks Before/After for the
+     desktop crossfade; a position:static panel puts the active one
+     back in normal flow so its content (and the now-auto-height shot
+     inside it — already position:relative when .is-active, see above)
+     can define .deep-dive-demo__body's auto height. */
+  .deep-dive-demo__panel {
+    position: static;
+    display: none;
+    transition: none;
+  }
+  .deep-dive-demo__panel.is-active {
+    display: block;
+    transition: none;
+  }
+  /* height:100% has nothing definite to resolve against once the body
+     above is auto-height, so it's made explicit; the scroll-shadow
+     gradient mask and overflow-y:auto are both part of the scroll
+     mechanism being dropped on mobile. */
+  .deep-dive-demo__viewport {
+    height: auto;
+    overflow: visible;
+    background: none;
+  }
+  /* Tiny, keyboard/screen-reader-unreachable tap targets — replaced by
+     the real <select> above, not worth keeping even as a fallback. */
+  .deep-dive-demo__hotspots {
+    display: none;
+  }
+  /* Both switches below 768px go through .native-select (the view select
+     above, and the Product/Manufacturer/Supplier select revealed once
+     "After" is picked) — native-select changes are instant, not
+     crossfade, same rule as .iteration-demo/.stepper-demo/
+     .detail-pages-demo. The desktop/tablet crossfade above (pill +
+     in-image hotspots) is unaffected by this block. Both the base and
+     .is-active selector need overriding here — .is-active has higher
+     specificity than a bare override, so leaving it out means the
+     desktop .is-active rule's transition keeps winning even inside this
+     media query. */
+  .deep-dive-demo__shot,
+  .deep-dive-demo__shot.is-active {
+    transition: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .deep-dive-demo__panel,
-  .deep-dive-demo__shot {
+  .deep-dive-demo__shot,
+  .deep-dive-demo__tab-select {
     transition: none;
   }
 }

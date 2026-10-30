@@ -271,17 +271,35 @@ function initInteractionDemo() {
     });
   };
 
+  const select = (target) => {
+    const tab = Array.from(tabs).find((t) => t.dataset.target === target);
+    if (!tab) return;
+    tabs.forEach((t) => t.classList.remove("is-active"));
+    tab.classList.add("is-active");
+    switcher.dataset.active = target;
+    movePill(tab);
+    panels.forEach((panel) =>
+      panel.classList.toggle("is-active", panel.dataset.panel === target)
+    );
+  };
+
   tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      tabs.forEach((t) => t.classList.remove("is-active"));
-      tab.classList.add("is-active");
-      switcher.dataset.active = tab.dataset.target;
-      movePill(tab);
-      panels.forEach((panel) =>
-        panel.classList.toggle("is-active", panel.dataset.panel === tab.dataset.target)
-      );
-    });
+    tab.addEventListener("click", () => select(tab.dataset.target));
   });
+
+  const mobileSelect = demo.querySelector(".native-select");
+  if (mobileSelect) {
+    mobileSelect.addEventListener("change", () => {
+      select(mobileSelect.value);
+      sizeNativeSelectToSelection(mobileSelect);
+    });
+    const syncMobileSelect = () => {
+      mobileSelect.value = switcher.dataset.active;
+      sizeNativeSelectToSelection(mobileSelect);
+    };
+    syncMobileSelect();
+    window.addEventListener("resize", syncMobileSelect);
+  }
 
   snap();
   document.fonts?.ready.then(snap);
@@ -343,7 +361,39 @@ function initInteractionDemo() {
   window.addEventListener("resize", updateBeforeShift);
 }
 
-initInteractionDemo();
+// Shared by every .native-select (stepper-demo, deep-dive-demo,
+// detail-pages-demo): a native <select> with no explicit width sizes
+// itself to its WIDEST <option>, not the one currently chosen — so
+// picking a short label still renders in a box wide enough for the
+// longest option in the list. Canvas text measurement reads the
+// selected option's rendered width without forcing a layout reflow,
+// then that width (plus padding/border — box-sizing:border-box, see
+// style.css reset) becomes the select's own inline width. Called on
+// init and after every value change; see .native-select's `width`
+// transition in style.css for the resize itself.
+let nativeSelectMeasureCtx = null;
+function sizeNativeSelectToSelection(select) {
+  if (!select) return;
+  if (!nativeSelectMeasureCtx) {
+    nativeSelectMeasureCtx = document.createElement("canvas").getContext("2d");
+  }
+  const option = select.options[select.selectedIndex];
+  if (!option) return;
+
+  const cs = getComputedStyle(select);
+  nativeSelectMeasureCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const letterSpacing = parseFloat(cs.letterSpacing) || 0;
+  const textWidth =
+    nativeSelectMeasureCtx.measureText(option.text).width +
+    letterSpacing * Math.max(option.text.length - 1, 0);
+  const boxExtra =
+    parseFloat(cs.paddingLeft) +
+    parseFloat(cs.paddingRight) +
+    parseFloat(cs.borderLeftWidth) +
+    parseFloat(cs.borderRightWidth);
+
+  select.style.width = `${Math.ceil(textWidth + boxExtra)}px`;
+}
 
 // Stepper demo (booksmart.html): pill tab-switcher that cross-fades checkout
 // screenshots. The pill is a clipped overlay (see .stepper-demo in style.css);
@@ -393,12 +443,33 @@ function initStepperDemos() {
       });
     });
 
+    // Mobile-only control (<768px, see style.css): one native <select>
+    // replacing the pill, which a tap target this small has no room for
+    // on a phone. Calls the exact same select() the pill calls — one
+    // state machine, two input methods. Steps are selected by index
+    // here (not a data-panel/data-tab string, unlike deep-dive-demo),
+    // matching select()'s own signature.
+    const mobileSelect = demo.querySelector(".native-select");
+    if (mobileSelect) {
+      mobileSelect.addEventListener("change", () => {
+        select(Number(mobileSelect.value));
+        sizeNativeSelectToSelection(mobileSelect);
+      });
+      const syncMobileSelect = () => {
+        mobileSelect.value = String(current);
+        sizeNativeSelectToSelection(mobileSelect);
+      };
+      syncMobileSelect();
+      window.addEventListener("resize", syncMobileSelect);
+    }
+
     snap();
     document.fonts?.ready.then(snap);
   });
 }
 
 initStepperDemos();
+initInteractionDemo();
 
 // Deep-dive before/after demo (bookdrop.html, "Restructuring the Product
 // Architecture"): a Before/After toggle (legacy page vs. the redesigned
@@ -465,31 +536,13 @@ function initDeepDiveDemo() {
 
   // Redesign tabs (Product/Manufacturer/Supplier) — selected only via the
   // in-image hotspots; see style.css for why there's no external tablist.
+  // The exit-fade-then-remove-from-layout sequencing (so a shorter tab
+  // doesn't inherit a taller one's scroll height) is handled natively by
+  // CSS now (display + allow-discrete/@starting-style on
+  // .deep-dive-demo__shot) — no JS timing needed here.
   const selectTab = (name) => {
     shots.forEach((shot) => {
-      const active = shot.dataset.tab === name;
-      if (active) {
-        // Clear any display:none a PREVIOUS deactivation left as an
-        // inline style (inline style beats the .is-active CSS rule
-        // otherwise), then let CSS show it — in flow immediately so it
-        // can define the viewport's scroll height right away and the
-        // enter fade can start this frame.
-        shot.style.display = "";
-        shot.classList.add("is-active");
-      } else if (shot.classList.contains("is-active")) {
-        // Let the exit opacity transition play first, THEN pull it out
-        // of layout (display:none). Pulling it out immediately would
-        // cut the fade short; leaving it in flow (even at opacity:0)
-        // is the scroll-bleed bug this fixes (see style.css) — an
-        // out-of-flow shot still counts toward the viewport's
-        // scrollable overflow at opacity:0, so switching to a shorter
-        // tab let you scroll past its real content into blank space.
-        shot.classList.remove("is-active");
-        const exitMs = parseFloat(getComputedStyle(shot).transitionDuration) * 1000 || 160;
-        setTimeout(() => {
-          if (!shot.classList.contains("is-active")) shot.style.display = "none";
-        }, exitMs);
-      }
+      shot.classList.toggle("is-active", shot.dataset.tab === name);
     });
     resetScroll(panelAfter);
   };
@@ -498,6 +551,45 @@ function initDeepDiveDemo() {
     hotspot.addEventListener("click", () => selectTab(hotspot.dataset.tab));
   });
 
+  // Mobile-only controls (<768px, see style.css): two real <select>s
+  // replacing the toggle pill and in-image hotspots, which measure out
+  // to an 18×28px tap target at that width. Both call the exact same
+  // selectPanel()/selectTab() the desktop toggle and hotspots call —
+  // one state machine, two input methods.
+  const mobileViewSelect = demo.querySelector('.native-select[data-role="view"]');
+  const mobileTabSelectWrap = demo.querySelector(".native-select-slot");
+  const mobileTabSelect = demo.querySelector('.native-select[data-role="tab"]');
+
+  // Keeps the mobile selects' values honest if the viewport crosses the
+  // 768px breakpoint after a desktop interaction (resize, tablet
+  // rotation) — without this, switching to mobile width could show
+  // "Before / Product" selected while the image on screen is still
+  // whatever the desktop toggle/hotspot last picked.
+  const syncMobileControls = () => {
+    if (!mobileViewSelect) return;
+    const activeToggle = toggleTabs.find((tab) => tab.getAttribute("aria-selected") === "true");
+    const panelName = activeToggle ? activeToggle.dataset.panel : "before";
+    mobileViewSelect.value = panelName;
+    sizeNativeSelectToSelection(mobileViewSelect);
+    mobileTabSelectWrap.hidden = panelName !== "after";
+    const activeShot = shots.find((shot) => shot.classList.contains("is-active"));
+    if (activeShot) mobileTabSelect.value = activeShot.dataset.tab;
+    sizeNativeSelectToSelection(mobileTabSelect);
+  };
+
+  if (mobileViewSelect && mobileTabSelect) {
+    mobileViewSelect.addEventListener("change", () => {
+      mobileTabSelectWrap.hidden = mobileViewSelect.value !== "after";
+      selectPanel(mobileViewSelect.value);
+      sizeNativeSelectToSelection(mobileViewSelect);
+    });
+    mobileTabSelect.addEventListener("change", () => {
+      selectTab(mobileTabSelect.value);
+      sizeNativeSelectToSelection(mobileTabSelect);
+    });
+    syncMobileControls();
+  }
+
   document.fonts?.ready.then(() => {
     const activeToggle = toggleTabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true");
     snapPill(toggleOverlay, toggleTabs, activeToggle);
@@ -505,7 +597,106 @@ function initDeepDiveDemo() {
   window.addEventListener("resize", () => {
     const activeToggle = toggleTabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true");
     snapPill(toggleOverlay, toggleTabs, activeToggle);
+    syncMobileControls();
   });
 }
 
 initDeepDiveDemo();
+
+// Deep-dive detail pages demo (bookdrop.html, "Deep-Dive Detail Pages"):
+// one native <select> switching between 5 flat dashboard screenshots —
+// no toggle, no pairing, so the state machine is just "set .is-active
+// on the shot whose data-page matches the select's value".
+function initDetailPagesDemo() {
+  const demo = document.querySelector(".detail-pages-demo");
+  if (!demo) return;
+
+  const select = demo.querySelector(".native-select");
+  const shots = Array.from(demo.querySelectorAll(".detail-pages-demo__shot"));
+
+  const selectPage = (page) => {
+    shots.forEach((shot) => {
+      shot.classList.toggle("is-active", shot.dataset.page === page);
+    });
+  };
+
+  sizeNativeSelectToSelection(select);
+  select.addEventListener("change", () => {
+    selectPage(select.value);
+    sizeNativeSelectToSelection(select);
+  });
+}
+
+initDetailPagesDemo();
+
+// Canvas text measurement above falls back to the browser's default font
+// metrics if Geist hasn't finished loading yet when each init function
+// above runs — re-measuring once it's ready corrects any select sized
+// off the fallback font in the meantime.
+document.fonts?.ready.then(() => {
+  document.querySelectorAll(".native-select").forEach(sizeNativeSelectToSelection);
+});
+
+// Lightbox for static detail-page screenshots (.detail-image): wraps each
+// image with a zoom button and reuses one shared <dialog> per page. Pure
+// progressive enhancement over existing markup, so it applies to every
+// detail page's .detail-image elements with no HTML changes.
+
+// Bootstrap Icons "arrows-angle-expand" / "arrows-angle-contract" — same
+// icons used for this control in Figma (node 256:21461 / 256:21210).
+const ICON_ARROWS_ANGLE_EXPAND = `<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707"/></svg>`;
+const ICON_ARROWS_ANGLE_CONTRACT = `<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707M15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707"/></svg>`;
+
+function initImageLightbox() {
+  const images = Array.from(document.querySelectorAll(".detail-image"));
+  if (!images.length) return;
+
+  const dialog = document.createElement("dialog");
+  dialog.className = "image-lightbox";
+  dialog.innerHTML = `
+    <button type="button" class="image-lightbox__close" aria-label="Close image">
+      ${ICON_ARROWS_ANGLE_CONTRACT}
+    </button>
+    <img class="image-lightbox__img" alt="" />
+  `;
+  document.body.appendChild(dialog);
+
+  const lightboxImg = dialog.querySelector(".image-lightbox__img");
+  const closeBtn = dialog.querySelector(".image-lightbox__close");
+  let trigger = null;
+
+  closeBtn.addEventListener("click", () => dialog.close());
+
+  // Clicking the backdrop lands a click event on <dialog> itself (the
+  // image inside has its own box, so a click on it never reaches here).
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  dialog.addEventListener("close", () => {
+    trigger?.focus();
+  });
+
+  images.forEach((image) => {
+    const wrap = document.createElement("div");
+    wrap.className = "detail-image-wrap";
+    image.replaceWith(wrap);
+    wrap.appendChild(image);
+
+    const zoomBtn = document.createElement("button");
+    zoomBtn.type = "button";
+    zoomBtn.className = "detail-image-zoom";
+    zoomBtn.setAttribute("aria-label", "Zoom image");
+    zoomBtn.innerHTML = ICON_ARROWS_ANGLE_EXPAND;
+    wrap.appendChild(zoomBtn);
+
+    zoomBtn.addEventListener("click", () => {
+      trigger = zoomBtn;
+      lightboxImg.src = image.currentSrc || image.src;
+      lightboxImg.alt = image.alt;
+      dialog.showModal();
+    });
+  });
+}
+
+initImageLightbox();

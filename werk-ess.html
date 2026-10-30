@@ -13,9 +13,9 @@
   </script>
   <title>Werk: Employee Self Service (ESS) — Aryo Gilang Maudyansa</title>
   <meta name="description" content="Werk: Employee Self Service (ESS), an HRIS tool built so employees can handle requests without the complexity most ESS tools ship with." />
-  <link rel="canonical" href="https://aryogilang.com/werk-ess.html" />
+  <link rel="canonical" href="https://aryogilang.com/works/werk-ess" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://aryogilang.com/werk-ess.html" />
+  <meta property="og:url" content="https://aryogilang.com/works/werk-ess" />
   <meta property="og:title" content="Werk: Employee Self Service (ESS) — Aryo Gilang Maudyansa" />
   <meta property="og:description" content="Werk: Employee Self Service (ESS), an HRIS tool built so employees can handle requests without the complexity most ESS tools ship with." />
   <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
@@ -23,19 +23,29 @@
   <meta name="twitter:title" content="Werk: Employee Self Service (ESS) — Aryo Gilang Maudyansa" />
   <meta name="twitter:description" content="Werk: Employee Self Service (ESS), an HRIS tool built so employees can handle requests without the complexity most ESS tools ship with." />
   <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
-  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/marketing/favicon-512.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "@aiforui/lapse": "/node_modules/@aiforui/lapse/dist/index.mjs",
+      "@aiforui/lapse/panel": "/node_modules/@aiforui/lapse/dist/panel.mjs",
+      "@aiforui/lapse/install": "/node_modules/@aiforui/lapse/dist/install.mjs"
+    }
+  }
+  </script>
+  <script type="module" src="/js/lapse-dev.js"></script>
 </head>
 <body>
 
   <nav class="navbar navbar--transparent-desktop">
     <div class="navbar__inner">
-      <a href="works.html" class="navbar__title">ALL WORKS</a>
+      <a href="/works.html" class="navbar__title">ALL WORKS</a>
       <div class="theme-toggle" role="group" aria-label="Color theme">
         <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
         <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
@@ -53,7 +63,7 @@
     </ul>
   </nav>
 
-  <main class="detail-page detail-page--asset-e3e5eb">
+  <main class="detail-page detail-page--geist-titles detail-page--asset-e3e5eb">
 
     <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
@@ -78,7 +88,7 @@
           <h3 class="detail-title">Dual-Purpose Attendance Tracker (Dashboard)</h3>
           <p class="paragraph">I built an adaptive dashboard widget: standard employees see only their own attendance, but managers unlock an expanded view showing their subordinates&rsquo; daily status (present, on leave, sick, absent) in real time the moment they log in.</p>
         </div>
-        <img class="detail-image" src="assets/images/ess-detail-page/img-1.png" alt="ESS dual-purpose attendance tracker dashboard widget" />
+        <img class="detail-image" src="/assets/images/ess-detail-page/img-1.png" alt="ESS dual-purpose attendance tracker dashboard widget" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -86,7 +96,7 @@
           <h3 class="detail-title">Dedicated Team Directory</h3>
           <p class="paragraph">I created a &ldquo;Team Page&rdquo; visible only to users with subordinates, structured to surface operational context at a glance: job titles, start dates, work/leave groups, and current status.</p>
         </div>
-        <img class="detail-image" src="assets/images/ess-detail-page/img-2.png" alt="ESS dedicated team directory" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/ess-detail-page/img-2.png" alt="ESS dedicated team directory" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -95,10 +105,10 @@
           <p class="paragraph">To avoid overloading managers with information, clicking into a subordinate opens a tabbed layout that breaks their detailed records into four distinct operational areas.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/ess-detail-page/img-3_1.png" alt="ESS segmented employee profile tab 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/ess-detail-page/img-3_2.png" alt="ESS segmented employee profile tab 2" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/ess-detail-page/img-3_3.png" alt="ESS segmented employee profile tab 3" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/ess-detail-page/img-3_4.png" alt="ESS segmented employee profile tab 4" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/ess-detail-page/img-3_1.png" alt="ESS segmented employee profile tab 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/ess-detail-page/img-3_2.png" alt="ESS segmented employee profile tab 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/ess-detail-page/img-3_3.png" alt="ESS segmented employee profile tab 3" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/ess-detail-page/img-3_4.png" alt="ESS segmented employee profile tab 4" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -114,7 +124,7 @@
           <h3 class="detail-title">Attendance &amp; Correction Hub</h3>
           <p class="paragraph">I built a space for employees to monitor their daily attendance logs, with a correction workflow for discrepancies like a missed clock-in, letting users track the exact status (Approved, Rejected, Pending) of their revision. Since Werk is modular, clients can toggle this feature off if it doesn&rsquo;t fit their policy.</p>
         </div>
-        <img class="detail-image" src="assets/images/ess-detail-page/img-4.png" alt="ESS attendance and correction hub" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/ess-detail-page/img-4.png" alt="ESS attendance and correction hub" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -123,8 +133,8 @@
           <p class="paragraph">I designed a simple interface for viewing historical overtime logs and submitting new requests dynamically, replacing manual timesheets.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/ess-detail-page/img-5_1.png" alt="ESS overtime processing 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/ess-detail-page/img-5_2.png" alt="ESS overtime processing 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/ess-detail-page/img-5_1.png" alt="ESS overtime processing 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/ess-detail-page/img-5_2.png" alt="ESS overtime processing 2" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -133,7 +143,7 @@
           <h3 class="detail-title">Leave Management &amp; Balances</h3>
           <p class="paragraph">To reduce dependency on HR, I placed remaining leave balance at the top of the page, letting employees instantly check eligibility before entering the streamlined request flow.</p>
         </div>
-        <img class="detail-image" src="assets/images/ess-detail-page/img-6.png" alt="ESS leave management and balances" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/ess-detail-page/img-6.png" alt="ESS leave management and balances" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -147,20 +157,17 @@
   </main>
 
   <footer class="footer-detail">
-    <div class="footer-detail__email">
-      <p class="paragraph footer-detail__label">Email</p>
+    <div class="footer-detail__inner">
       <a href="mailto:aryo.maudyansa@gmail.com" class="link link--large">aryo.maudyansa@gmail.com</a>
-    </div>
-    <div class="footer-detail__bar">
       <div class="footer-detail__links">
         <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
         <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
         <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <p class="paragraph">&copy;2026</p>
       </div>
-      <p class="paragraph">&copy;2026</p>
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>

@@ -13,9 +13,9 @@
   </script>
   <title>Atopia Space — Aryo Gilang Maudyansa</title>
   <meta name="description" content="Atopia Space lets artists build and publish immersive 3D/VR exhibitions without touching a game engine or hiring a game developer." />
-  <link rel="canonical" href="https://aryogilang.com/atopia-space.html" />
+  <link rel="canonical" href="https://aryogilang.com/works/atopia-space" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://aryogilang.com/atopia-space.html" />
+  <meta property="og:url" content="https://aryogilang.com/works/atopia-space" />
   <meta property="og:title" content="Atopia Space — Aryo Gilang Maudyansa" />
   <meta property="og:description" content="Atopia Space lets artists build and publish immersive 3D/VR exhibitions without touching a game engine or hiring a game developer." />
   <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
@@ -23,19 +23,29 @@
   <meta name="twitter:title" content="Atopia Space — Aryo Gilang Maudyansa" />
   <meta name="twitter:description" content="Atopia Space lets artists build and publish immersive 3D/VR exhibitions without touching a game engine or hiring a game developer." />
   <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
-  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/marketing/favicon-512.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "@aiforui/lapse": "/node_modules/@aiforui/lapse/dist/index.mjs",
+      "@aiforui/lapse/panel": "/node_modules/@aiforui/lapse/dist/panel.mjs",
+      "@aiforui/lapse/install": "/node_modules/@aiforui/lapse/dist/install.mjs"
+    }
+  }
+  </script>
+  <script type="module" src="/js/lapse-dev.js"></script>
 </head>
 <body>
 
   <nav class="navbar navbar--transparent-desktop">
     <div class="navbar__inner">
-      <a href="works.html" class="navbar__title">ALL WORKS</a>
+      <a href="/works.html" class="navbar__title">ALL WORKS</a>
       <div class="theme-toggle" role="group" aria-label="Color theme">
         <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
         <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
@@ -54,7 +64,7 @@
     </ul>
   </nav>
 
-  <main class="detail-page">
+  <main class="detail-page detail-page--geist-titles">
 
     <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
@@ -79,7 +89,7 @@
           <h3 class="detail-title">Contextual Modals &amp; Inline Trimming</h3>
           <p class="paragraph">Instead of sending creators to a separate media management page, clicking any artwork triggers an immediate contextual modal. Through &ldquo;Add Media,&rdquo; users attach audio or video directly to the object and use inline trimming tools to select playback segments, no external editing software needed.</p>
         </div>
-        <img class="detail-image" src="assets/images/atopia-space-detail-page/img-1.png" alt="Atopia Space contextual modals and inline trimming" />
+        <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-1.png" alt="Atopia Space contextual modals and inline trimming" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -87,7 +97,7 @@
           <h3 class="detail-title">Proximity vs. Manual Interaction Triggers</h3>
           <p class="paragraph">Spatial trigger controls are built directly into the media properties. Creators choose whether media plays manually on interaction, or auto-plays within a set radius as the visitor approaches the artwork in VR.</p>
         </div>
-        <img class="detail-image" src="assets/images/atopia-space-detail-page/img-2.png" alt="Atopia Space proximity vs manual interaction triggers" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-2.png" alt="Atopia Space proximity vs manual interaction triggers" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -102,10 +112,10 @@
           <h3 class="detail-title">Unified Asset Library &amp; Inline Verification</h3>
           <p class="paragraph">Adding an audio sphere opens a universal quick-add menu that pulls from a side-panel Asset Library, retaining previously used files for reuse instead of forcing a new upload every time. Inline playback lets users preview a track&rsquo;s atmosphere before committing it to the space.</p>
         </div>
-        <img class="detail-image" src="assets/images/atopia-space-detail-page/img-3_1.png" alt="Atopia Space unified asset library and inline verification" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-3_1.png" alt="Atopia Space unified asset library and inline verification" loading="lazy" decoding="async" />
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/atopia-space-detail-page/img-3_2.png" alt="Atopia Space unified asset library grid 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/atopia-space-detail-page/img-3_3.png" alt="Atopia Space unified asset library grid 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-3_2.png" alt="Atopia Space unified asset library grid 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-3_3.png" alt="Atopia Space unified asset library grid 2" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -114,7 +124,7 @@
           <h3 class="detail-title">Simplifying 3D Acoustics</h3>
           <p class="paragraph">Translating 3D sound physics into a 2D interface is complex, so I abstracted it into a focused configuration modal: creators set default volume and define the spatial activation range (how close a visitor must be to trigger the audio) through simple range inputs and visual boundaries, no audio engineering knowledge required.</p>
         </div>
-        <img class="detail-image" src="assets/images/atopia-space-detail-page/img-4.png" alt="Atopia Space simplifying 3D acoustics" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-4.png" alt="Atopia Space simplifying 3D acoustics" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -129,10 +139,10 @@
           <h3 class="detail-title">Progressive POI Configuration</h3>
           <p class="paragraph">Adding a POI uses the same mental model as adding audio: the unified quick-add menu, format selection, and the same reused asset library, keeping the learning curve low as creators populate the space.</p>
         </div>
-        <img class="detail-image" src="assets/images/atopia-space-detail-page/img-5_1.png" alt="Atopia Space progressive POI configuration" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-5_1.png" alt="Atopia Space progressive POI configuration" loading="lazy" decoding="async" />
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/atopia-space-detail-page/img-5_2.png" alt="Atopia Space progressive POI configuration grid 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/atopia-space-detail-page/img-5_3.png" alt="Atopia Space progressive POI configuration grid 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-5_2.png" alt="Atopia Space progressive POI configuration grid 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-5_3.png" alt="Atopia Space progressive POI configuration grid 2" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -142,8 +152,8 @@
           <p class="paragraph">A POI functions as a full informational plaque, capturing titles and descriptions alongside its primary asset. To prevent visual clutter from dozens of individual markers, I built an &ldquo;Asset Stacking&rdquo; architecture that lets multiple assets of the same type group under one POI location, keeping the gallery clean while laying groundwork for future mixed-media clustering.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/atopia-space-detail-page/img-6_1.png" alt="Atopia Space rich metadata and asset stacking 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/atopia-space-detail-page/img-6_2.png" alt="Atopia Space rich metadata and asset stacking 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-6_1.png" alt="Atopia Space rich metadata and asset stacking 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/atopia-space-detail-page/img-6_2.png" alt="Atopia Space rich metadata and asset stacking 2" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -158,20 +168,17 @@
   </main>
 
   <footer class="footer-detail">
-    <div class="footer-detail__email">
-      <p class="paragraph footer-detail__label">Email</p>
+    <div class="footer-detail__inner">
       <a href="mailto:aryo.maudyansa@gmail.com" class="link link--large">aryo.maudyansa@gmail.com</a>
-    </div>
-    <div class="footer-detail__bar">
       <div class="footer-detail__links">
         <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
         <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
         <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <p class="paragraph">&copy;2026</p>
       </div>
-      <p class="paragraph">&copy;2026</p>
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>
