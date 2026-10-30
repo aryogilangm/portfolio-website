@@ -45,12 +45,18 @@ function initNavbarScroll() {
   // behavior tested as too easy to miss. Desktop pointer only: touch has
   // no hover, and scrolling up is already the only (and sufficient) way
   // to get the navbar back there.
+  //
+  // A mousemove threshold, not a positioned hotzone element: an actual
+  // full-width div here (tried first, then caught in a ship-check sweep)
+  // sits in front of whatever's scrolled underneath it and swallows
+  // clicks on real content the instant the navbar is hidden — this way
+  // there's nothing in the DOM to block anything.
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    const hotzone = document.createElement("div");
-    hotzone.className = "navbar-hotzone";
-    document.body.appendChild(hotzone);
-    hotzone.addEventListener("mouseenter", () => {
-      navbar.classList.remove("navbar--hidden");
+    const HOTZONE_HEIGHT = 24;
+    window.addEventListener("mousemove", (event) => {
+      if (event.clientY <= HOTZONE_HEIGHT) {
+        navbar.classList.remove("navbar--hidden");
+      }
     });
   }
 }
