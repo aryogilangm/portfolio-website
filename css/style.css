@@ -353,6 +353,42 @@ body.is-leaving {
   color: var(--color-link-pressed);
 }
 
+/* ===== Skip link =====
+   First focusable element on every page. Off-screen until it receives
+   keyboard focus (tabbing from the address bar), so it's silent for
+   mouse/touch users but gives keyboard users a way past the navbar +
+   content-nav jump list straight to <main> instead of tabbing through
+   both every single page. */
+.skip-link {
+  position: fixed;
+  top: var(--space-8);
+  left: var(--space-8);
+  z-index: 100;
+  transform: translateY(-150%);
+  background: var(--color-bg);
+  color: var(--color-headline);
+  border: 1px solid var(--color-stroke);
+  border-radius: 6px;
+  padding: var(--space-8) var(--space-16);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 150ms ease-out;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--color-headline);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 /* ===== Navbar ===== */
 .navbar {
   position: sticky;
@@ -2730,7 +2766,9 @@ dialog.image-lightbox[open]::backdrop {
   border: 1px solid var(--neutral-30);
   border-radius: 6px;
   background: var(--neutral-10);
-  font: 400 14px/20px var(--font-body);
+  /* 16px, not 14px — a <select> is a real form control, and anything
+     under 16px makes iOS Safari zoom in on focus and never zoom back out. */
+  font: 400 16px/24px var(--font-body);
   letter-spacing: 0.5px;
   color: var(--neutral-110);
   cursor: pointer;
