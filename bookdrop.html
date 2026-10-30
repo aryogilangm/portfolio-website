@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <script>
     // Theme: light by default; the navbar toggle persists the choice in localStorage.
     (function () {
@@ -13,9 +13,9 @@
   </script>
   <title>Bookdrop — Aryo Gilang Maudyansa</title>
   <meta name="description" content="Bookdrop runs Booksmart's regional e-commerce back-office, from order fulfillment to multi-destination distributor logistics." />
-  <link rel="canonical" href="https://aryogilang.com/bookdrop.html" />
+  <link rel="canonical" href="https://aryogilang.com/works/bookdrop" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://aryogilang.com/bookdrop.html" />
+  <meta property="og:url" content="https://aryogilang.com/works/bookdrop" />
   <meta property="og:title" content="Bookdrop — Aryo Gilang Maudyansa" />
   <meta property="og:description" content="Bookdrop runs Booksmart's regional e-commerce back-office, from order fulfillment to multi-destination distributor logistics." />
   <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
@@ -23,19 +23,29 @@
   <meta name="twitter:title" content="Bookdrop — Aryo Gilang Maudyansa" />
   <meta name="twitter:description" content="Bookdrop runs Booksmart's regional e-commerce back-office, from order fulfillment to multi-destination distributor logistics." />
   <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
-  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/marketing/favicon-512.png" />
+  <link rel="preload" href="/assets/fonts/geist/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/geist/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "@aiforui/lapse": "/node_modules/@aiforui/lapse/dist/index.mjs",
+      "@aiforui/lapse/panel": "/node_modules/@aiforui/lapse/dist/panel.mjs",
+      "@aiforui/lapse/install": "/node_modules/@aiforui/lapse/dist/install.mjs"
+    }
+  }
+  </script>
+  <script type="module" src="/js/lapse-dev.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <nav class="navbar navbar--transparent-desktop">
     <div class="navbar__inner">
-      <a href="works.html" class="navbar__title">ALL WORKS</a>
+      <a href="/works.html" class="navbar__title">ALL WORKS</a>
       <div class="theme-toggle" role="group" aria-label="Color theme">
         <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
         <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
@@ -55,7 +65,7 @@
     </ul>
   </nav>
 
-  <main class="detail-page">
+  <main id="main-content" tabindex="-1" class="detail-page detail-page--geist-titles">
 
     <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
@@ -80,19 +90,37 @@
           <h3 class="detail-title">Strategic Performance Leaderboards</h3>
           <p class="paragraph">I added four new widgets: Top Supplier Leaderboard, Top Selling Product Leaderboard, Top Sales Channel Leaderboard, and Revenue by Country, surfacing the strongest revenue streams and supply chain performers at a glance to directly inform strategic decisions.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-1.png" alt="Bookdrop strategic performance leaderboards widget" />
+        <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-1.png" alt="Bookdrop strategic performance leaderboards widget" />
       </div>
 
-      <div class="detail-image-grid">
-        <div class="detail-image-grid__text">
+      <div class="detail-block detail-block--media">
+        <div class="detail-block__text">
           <h3 class="detail-title">Deep-Dive Detail Pages</h3>
           <p class="paragraph">For metrics that need more depth, I built dedicated detail pages for Today&rsquo;s Orders, Total Revenue, and all three leaderboards. Admins see high-level numbers on the dashboard and click through for the full operational breakdown, without cluttering the main view.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_1.png" alt="Bookdrop deep-dive detail page 1" loading="lazy" decoding="async" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_2.png" alt="Bookdrop deep-dive detail page 2" loading="lazy" decoding="async" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_3.png" alt="Bookdrop deep-dive detail page 3" loading="lazy" decoding="async" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_4.png" alt="Bookdrop deep-dive detail page 4" loading="lazy" decoding="async" />
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-2_5.png" alt="Bookdrop deep-dive detail page 5" loading="lazy" decoding="async" />
+
+        <div class="detail-pages-demo">
+          <div class="detail-pages-demo__control">
+            <div class="native-select-wrap">
+              <select class="native-select" aria-label="Detail page">
+                <option value="todays-order" selected>Today&rsquo;s Order</option>
+                <option value="total-revenue">Total Revenue</option>
+                <option value="top-selling-product">Top Selling Product Leaderboard</option>
+                <option value="top-supplier">Top Supplier Leaderboard</option>
+                <option value="top-sales-channel">Top Sales Channel Leaderboard</option>
+              </select>
+              <svg class="native-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </div>
+          </div>
+
+          <div class="detail-pages-demo__stage">
+            <img class="detail-pages-demo__shot is-active" data-page="todays-order" src="/assets/images/bookdrop-detail-page/interactive/deep-dive-detail-pages/interactive-todays%20order.png" alt="Bookdrop Today&rsquo;s Order deep-dive detail page" loading="lazy" decoding="async" />
+            <img class="detail-pages-demo__shot" data-page="total-revenue" src="/assets/images/bookdrop-detail-page/interactive/deep-dive-detail-pages/interactive-revenue.png" alt="Bookdrop Total Revenue deep-dive detail page" loading="lazy" decoding="async" />
+            <img class="detail-pages-demo__shot" data-page="top-selling-product" src="/assets/images/bookdrop-detail-page/interactive/deep-dive-detail-pages/interactive-leaderboard-selling%20product.png" alt="Bookdrop Top Selling Product Leaderboard deep-dive detail page" loading="lazy" decoding="async" />
+            <img class="detail-pages-demo__shot" data-page="top-supplier" src="/assets/images/bookdrop-detail-page/interactive/deep-dive-detail-pages/interactive-leaderboard-supplier.png" alt="Bookdrop Top Supplier Leaderboard deep-dive detail page" loading="lazy" decoding="async" />
+            <img class="detail-pages-demo__shot" data-page="top-sales-channel" src="/assets/images/bookdrop-detail-page/interactive/deep-dive-detail-pages/interactive-leaderboard-sales%20channel.png" alt="Bookdrop Top Sales Channel Leaderboard deep-dive detail page" loading="lazy" decoding="async" />
+          </div>
+        </div>
       </div>
     </section>
 
@@ -108,8 +136,8 @@
           <p class="paragraph">A .xls upload feature (ISBN, Title, Quantity) instantly populates the product list for massive B2B orders, turning tedious manual entry into a one-click process.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_1.png" alt="Bookdrop bulk entry upload 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-3_2.png" alt="Bookdrop bulk entry upload 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-3_1.png" alt="Bookdrop bulk entry upload 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-3_2.png" alt="Bookdrop bulk entry upload 2" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -118,10 +146,10 @@
           <h3 class="detail-title">Dynamic Multi-Shipment Allocation</h3>
           <p class="paragraph">I overhauled the shipping flow so admins can add multiple addresses within one order and use a visual allocation interface to distribute quantities across destinations, like splitting 200 books across 3 regional branches smoothly.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_1.png" alt="Bookdrop multi-shipment allocation overview" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-4_1.png" alt="Bookdrop multi-shipment allocation overview" loading="lazy" decoding="async" />
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_2.png" alt="Bookdrop multi-shipment allocation 2" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-4_3.png" alt="Bookdrop multi-shipment allocation 3" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-4_2.png" alt="Bookdrop multi-shipment allocation 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-4_3.png" alt="Bookdrop multi-shipment allocation 3" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -137,7 +165,7 @@
           <h3 class="detail-title">Preventing Over-allocation (Single to Multiple)</h3>
           <p class="paragraph">Adding a new address requires first freeing up quantity from the primary address, preventing negative stock errors. Deleting a destination auto-redistributes its items back to unallocated stock, and the system disables deletion once only one address remains, preventing accidental zero-destination orders.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-5.png" alt="Bookdrop preventing over-allocation" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-5.png" alt="Bookdrop preventing over-allocation" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -145,17 +173,69 @@
           <h3 class="detail-title">Smart Redistribution (Multiple to Single)</h3>
           <p class="paragraph">Deleting a destination automatically redistributes those items to the unlocated items. The system smartly disables the deletion capability once only one address remains, preventing accidental zero-destination orders.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-6.png" alt="Bookdrop smart redistribution" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/bookdrop-detail-page/img-6.png" alt="Bookdrop smart redistribution" loading="lazy" decoding="async" />
       </div>
     </section>
 
     <section id="restructuring-product-architecture" class="detail-section">
-      <div class="detail-block detail-block--media">
-        <div class="detail-block__text detail-block__text--section-headline">
-          <h3 class="detail-title">Restructuring the Product Architecture</h3>
-          <p class="paragraph">The legacy Product Detail page crammed eight operational forms into one endless scroll, forcing admins to hunt for specific data and slowing down routine work. I reorganized it into a categorized tab system, grouping related data so admins only see what they need at any given moment.</p>
+      <div class="detail-block">
+        <h2 class="detail-title">Restructuring the Product Architecture</h2>
+        <p class="paragraph">The legacy Product Detail page crammed eight operational forms into one endless scroll, forcing admins to hunt for specific data and slowing down routine work. I reorganized it into a categorized tab system, grouping related data so admins only see what they need at any given moment.</p>
+      </div>
+
+      <div class="article-figure">
+        <div class="deep-dive-demo">
+          <div class="deep-dive-demo__toggle">
+            <div class="stepper-demo__tabs" role="tablist" aria-label="Before or after redesign">
+              <button type="button" class="stepper-demo__tab" role="tab" aria-selected="true" data-panel="before">Before</button>
+              <button type="button" class="stepper-demo__tab" role="tab" aria-selected="false" tabindex="-1" data-panel="after">After</button>
+              <div class="stepper-demo__overlay" aria-hidden="true"><span>Before</span><span>After</span></div>
+            </div>
+          </div>
+
+          <div class="native-select-row">
+            <div class="native-select-wrap">
+              <select class="native-select" data-role="view" aria-label="View">
+                <option value="before" selected>Before</option>
+                <option value="after">After</option>
+              </select>
+              <svg class="native-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </div>
+            <div class="native-select-slot" hidden>
+              <div class="native-select-wrap">
+                <select class="native-select" data-role="tab" aria-label="Tab">
+                  <option value="product" selected>Product</option>
+                  <option value="manufacturer">Manufacturer</option>
+                  <option value="supplier">Supplier</option>
+                </select>
+                <svg class="native-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="deep-dive-demo__body">
+            <div class="deep-dive-demo__panel is-active" data-panel="before">
+              <div class="deep-dive-demo__viewport">
+                <img class="deep-dive-demo__shot is-active" src="/assets/images/bookdrop-detail-page/interactive/restructuring-the-product-architecture/interactive-2-legacy.svg" alt="Bookdrop legacy Product Detail page, eight operational forms on one long scrolling page" loading="lazy" decoding="async" />
+              </div>
+            </div>
+
+            <div class="deep-dive-demo__panel" data-panel="after">
+              <div class="deep-dive-demo__viewport">
+                <img class="deep-dive-demo__shot is-active" data-tab="product" src="/assets/images/bookdrop-detail-page/interactive/restructuring-the-product-architecture/interactive-2-redesign-product.svg" alt="Bookdrop redesigned Product Detail page, Product tab" loading="lazy" decoding="async" />
+                <img class="deep-dive-demo__shot" data-tab="manufacturer" src="/assets/images/bookdrop-detail-page/interactive/restructuring-the-product-architecture/interactive-2-redesign-manufacturer.svg" alt="Bookdrop redesigned Product Detail page, Manufacturer tab" loading="lazy" decoding="async" />
+                <img class="deep-dive-demo__shot" data-tab="supplier" src="/assets/images/bookdrop-detail-page/interactive/restructuring-the-product-architecture/interactive-2-redesign-supplier.svg" alt="Bookdrop redesigned Product Detail page, Supplier tab" loading="lazy" decoding="async" />
+                <div class="deep-dive-demo__hotspots">
+                  <button type="button" class="deep-dive-demo__hotspot" data-tab="product" aria-label="Switch to Product tab"></button>
+                  <button type="button" class="deep-dive-demo__hotspot" data-tab="manufacturer" aria-label="Switch to Manufacturer tab"></button>
+                  <button type="button" class="deep-dive-demo__hotspot" data-tab="supplier" aria-label="Switch to Supplier tab"></button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-7.png" alt="Bookdrop restructured product architecture" loading="lazy" decoding="async" />
+
+        <p class="caption">On the &ldquo;After&rdquo; tab, click Product, Manufacturer, or Supplier to switch between them.</p>
       </div>
 
       <div class="detail-block detail-block--media">
@@ -163,17 +243,12 @@
           <h3 class="detail-title">Consolidating the Core (Product Tab)</h3>
           <p class="paragraph">The default tab houses front-end facing data. I merged redundant sections like &ldquo;Product Information&rdquo; and &ldquo;Product Organization&rdquo; into one cohesive form covering metadata, imagery, pricing, and sales channel configuration, so marketing or content admins can work without logistical distractions.</p>
         </div>
-        <img class="detail-image" src="assets/images/bookdrop-detail-page/img-8.png" alt="Bookdrop consolidated product tab" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-block detail-block--media">
         <div class="detail-block__text">
           <h3 class="detail-title">Decoupling Logistics (Manufacturer &amp; Supplier Tabs)</h3>
           <p class="paragraph">Heavy supply-chain data now lives in its own dedicated &ldquo;Manufacturer&rdquo; and &ldquo;Supplier&rdquo; tabs. An admin fixing a typo in a book&rsquo;s description no longer scrolls past print-cost calculations or supplier lead-time matrices, cutting the risk of accidental edits to unrelated fields.</p>
-        </div>
-        <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_1.png" alt="Bookdrop manufacturer tab" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/bookdrop-detail-page/img-9_2.png" alt="Bookdrop supplier tab" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -188,20 +263,17 @@
   </main>
 
   <footer class="footer-detail">
-    <div class="footer-detail__email">
-      <p class="paragraph footer-detail__label">Email</p>
+    <div class="footer-detail__inner">
       <a href="mailto:aryo.maudyansa@gmail.com" class="link link--large">aryo.maudyansa@gmail.com</a>
-    </div>
-    <div class="footer-detail__bar">
       <div class="footer-detail__links">
         <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
         <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
         <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <p class="paragraph">&copy;2026</p>
       </div>
-      <p class="paragraph">&copy;2026</p>
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>

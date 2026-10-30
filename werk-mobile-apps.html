@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <script>
     // Theme: light by default; the navbar toggle persists the choice in localStorage.
     (function () {
@@ -13,9 +13,9 @@
   </script>
   <title>Werk: Mobile App — Aryo Gilang Maudyansa</title>
   <meta name="description" content="Werk: Mobile App brings Employee Self Service to the field, clock-ins, leave requests, and approvals in a few taps, no desktop required." />
-  <link rel="canonical" href="https://aryogilang.com/werk-mobile-apps.html" />
+  <link rel="canonical" href="https://aryogilang.com/works/werk-mobile-apps" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://aryogilang.com/werk-mobile-apps.html" />
+  <meta property="og:url" content="https://aryogilang.com/works/werk-mobile-apps" />
   <meta property="og:title" content="Werk: Mobile App — Aryo Gilang Maudyansa" />
   <meta property="og:description" content="Werk: Mobile App brings Employee Self Service to the field, clock-ins, leave requests, and approvals in a few taps, no desktop required." />
   <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
@@ -23,19 +23,29 @@
   <meta name="twitter:title" content="Werk: Mobile App — Aryo Gilang Maudyansa" />
   <meta name="twitter:description" content="Werk: Mobile App brings Employee Self Service to the field, clock-ins, leave requests, and approvals in a few taps, no desktop required." />
   <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
-  <link rel="icon" type="image/png" sizes="64x64" href="assets/marketing/favicon-64.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/marketing/favicon-180.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/marketing/favicon-512.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/marketing/favicon-512.png" />
+  <link rel="preload" href="/assets/fonts/geist/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/geist/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "@aiforui/lapse": "/node_modules/@aiforui/lapse/dist/index.mjs",
+      "@aiforui/lapse/panel": "/node_modules/@aiforui/lapse/dist/panel.mjs",
+      "@aiforui/lapse/install": "/node_modules/@aiforui/lapse/dist/install.mjs"
+    }
+  }
+  </script>
+  <script type="module" src="/js/lapse-dev.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
   <nav class="navbar navbar--transparent-desktop">
     <div class="navbar__inner">
-      <a href="works.html" class="navbar__title">ALL WORKS</a>
+      <a href="/works.html" class="navbar__title">ALL WORKS</a>
       <div class="theme-toggle" role="group" aria-label="Color theme">
         <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
         <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
@@ -54,7 +64,7 @@
     </ul>
   </nav>
 
-  <main class="detail-page detail-page--asset-e3e5eb">
+  <main id="main-content" tabindex="-1" class="detail-page detail-page--geist-titles detail-page--asset-e3e5eb">
 
     <section id="overview" class="detail-section detail-section--tight">
       <header class="detail-hero">
@@ -79,7 +89,7 @@
           <h3 class="detail-title">Frictionless Biometric Clock-In</h3>
           <p class="paragraph">I stripped the check-in process down to its simplest form: employees record attendance via a quick selfie, capturing visual proof and real-time GPS coordinates in one frictionless step, no menus to navigate.</p>
         </div>
-        <img class="detail-image" src="assets/images/mobile-apps-detail-page/img-1.png" alt="Mobile app frictionless biometric clock-in" />
+        <img class="detail-image" src="/assets/images/mobile-apps-detail-page/img-1.png" alt="Mobile app frictionless biometric clock-in" />
       </div>
 
       <div class="detail-block detail-block--media">
@@ -88,8 +98,8 @@
           <p class="paragraph">Remote attendance policies vary drastically between companies, so I designed a dynamic restriction system synced directly with the core HR portal, letting each company configure its own rules without touching the app itself.</p>
         </div>
         <div class="detail-image-grid">
-          <img class="detail-image" src="assets/images/mobile-apps-detail-page/img-2_1.png" alt="Mobile app adaptive geofencing and policy controls 1" loading="lazy" decoding="async" />
-          <img class="detail-image" src="assets/images/mobile-apps-detail-page/img-2_2.png" alt="Mobile app adaptive geofencing and policy controls 2" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/mobile-apps-detail-page/img-2_1.png" alt="Mobile app adaptive geofencing and policy controls 1" loading="lazy" decoding="async" />
+          <img class="detail-image" src="/assets/images/mobile-apps-detail-page/img-2_2.png" alt="Mobile app adaptive geofencing and policy controls 2" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>
@@ -102,7 +112,7 @@
 
       <div class="detail-block">
         <p class="paragraph">To fit real-world scenarios, the attachment modal lets users either &ldquo;Take Photo&rdquo; for instant capture or &ldquo;Upload File&rdquo; for existing documents, adapting to whatever context they&rsquo;re in.</p>
-        <img class="detail-image" src="assets/images/mobile-apps-detail-page/img-3.png" alt="Mobile app leave and proof upload attachment modal" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/mobile-apps-detail-page/img-3.png" alt="Mobile app leave and proof upload attachment modal" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -117,7 +127,7 @@
           <h3 class="detail-title">Dual-Tab Architecture</h3>
           <p class="paragraph">The Approval hub uses a clean two-tab structure to avoid cognitive overload: &ldquo;My Request&rdquo; for the manager&rsquo;s own submissions, and &ldquo;Need Approval&rdquo; for their managerial duties, so users always know exactly which context they&rsquo;re in.</p>
         </div>
-        <img class="detail-image" src="assets/images/mobile-apps-detail-page/img-4.png" alt="Mobile app dual-tab approval hub architecture" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/mobile-apps-detail-page/img-4.png" alt="Mobile app dual-tab approval hub architecture" loading="lazy" decoding="async" />
       </div>
 
       <div class="detail-image-grid">
@@ -125,7 +135,7 @@
           <h3 class="detail-title">Frictionless Review &amp; Action</h3>
           <p class="paragraph">&ldquo;Need Approval&rdquo; functions as a streamlined queue. Managers scan pending requests, tap into one for context (dates, reasons, attached proof), and approve or reject directly in the app, bypassing the desktop portal entirely for routine decisions.</p>
         </div>
-        <img class="detail-image" src="assets/images/mobile-apps-detail-page/img-5.png" alt="Mobile app frictionless review and action queue" loading="lazy" decoding="async" />
+        <img class="detail-image" src="/assets/images/mobile-apps-detail-page/img-5.png" alt="Mobile app frictionless review and action queue" loading="lazy" decoding="async" />
       </div>
     </section>
 
@@ -139,20 +149,17 @@
   </main>
 
   <footer class="footer-detail">
-    <div class="footer-detail__email">
-      <p class="paragraph footer-detail__label">Email</p>
+    <div class="footer-detail__inner">
       <a href="mailto:aryo.maudyansa@gmail.com" class="link link--large">aryo.maudyansa@gmail.com</a>
-    </div>
-    <div class="footer-detail__bar">
       <div class="footer-detail__links">
         <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
         <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
         <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <p class="paragraph">&copy;2026</p>
       </div>
-      <p class="paragraph">&copy;2026</p>
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 </html>
