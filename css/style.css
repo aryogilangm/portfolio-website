@@ -2129,15 +2129,26 @@ dialog.image-lightbox[open]::backdrop {
   row-gap: var(--space-16);
 }
 
-/* Tablet and up: email + links share one row instead of stacking */
+/* Tablet and up: email + links share one row instead of stacking. Figma's
+   tab variant has 0 left/right padding (only top/bottom 24px carries
+   over) — the 720px column centers itself via max-width + margin:auto,
+   same as the rest of the page, instead of an extra padding on top of
+   that. Desktop reads the same way: Figma's apparent 360px padding there
+   is just the 1440px frame's own centering math, not a literal value. */
 @media (min-width: 768px) {
   .footer-detail__inner {
     flex-direction: row;
     justify-content: space-between;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .footer-detail__links {
     width: auto;
+    /* Without an explicit gap, width:auto + space-between has no free
+       space to distribute and the links render flush against each
+       other — this fixes that, matching Figma's 32px. */
+    gap: var(--space-32);
   }
 }
 
