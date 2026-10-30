@@ -54,6 +54,25 @@
   font-display: swap;
 }
 
+/* Self-hosted, not loaded from Google Fonts — only the two weights the
+   site actually uses (400 body text, 500 the handful of medium labels).
+   Self-hosting lets the two files be preloaded directly from <head>,
+   instead of waiting on Google's redirect-then-fetch round trip. */
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/geist/Geist-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/geist/Geist-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ===== Design tokens (from Figma: primitive + semantic variables) ===== */
 :root {
   /* primitive colors */
