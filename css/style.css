@@ -2129,26 +2129,52 @@ dialog.image-lightbox[open]::backdrop {
   row-gap: var(--space-16);
 }
 
-/* Tablet and up: email + links share one row instead of stacking. Figma's
-   tab variant has 0 left/right padding (only top/bottom 24px carries
-   over) — the 720px column centers itself via max-width + margin:auto,
-   same as the rest of the page, instead of an extra padding on top of
-   that. Desktop reads the same way: Figma's apparent 360px padding there
-   is just the 1440px frame's own centering math, not a literal value. */
+/* Tablet and up: email + links share one row instead of stacking. */
 @media (min-width: 768px) {
   .footer-detail__inner {
     flex-direction: row;
     justify-content: space-between;
+  }
+
+  .footer-detail__links {
+    width: auto;
+  }
+}
+
+/* Tablet only: same 100px gutter as the content section above it
+   (.detail-section's own --gutter at this breakpoint), not capped at
+   720px — the content section itself isn't capped until desktop either,
+   so the footer shouldn't be the one place that still is. 16px link
+   gap, not desktop's 24px: at this range's narrow end (768px) the row
+   is 610px at best (Figma's own tablet frame) and down to 568px at the
+   actual breakpoint's low end, and 24px doesn't fit there — measured,
+   not guessed. */
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .footer-detail__inner {
+    max-width: none;
+    padding-left: var(--space-100);
+    padding-right: var(--space-100);
+  }
+
+  .footer-detail__links {
+    gap: var(--space-16);
+  }
+}
+
+/* Desktop: Figma's apparent 360px padding is just the 1440px frame's own
+   centering math (720px content, same system as the rest of the page),
+   not a literal padding value — so no horizontal padding here, only the
+   max-width + margin:auto centering already set on the base rule.
+   Without an explicit gap, width:auto + space-between has no free space
+   to distribute and the links render flush against each other — 24px
+   fixes that (Figma says 32px; too wide once actually rendered). */
+@media (min-width: 1280px) {
+  .footer-detail__inner {
     padding-left: 0;
     padding-right: 0;
   }
 
   .footer-detail__links {
-    width: auto;
-    /* Without an explicit gap, width:auto + space-between has no free
-       space to distribute and the links render flush against each
-       other — this fixes that. 24px, not Figma's 32px: too wide in
-       practice once actually rendered at full size. */
     gap: var(--space-24);
   }
 }
