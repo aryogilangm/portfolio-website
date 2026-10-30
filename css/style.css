@@ -364,8 +364,10 @@ body.is-leaving {
   color: var(--color-link-default);
 }
 
-.link:hover {
-  color: var(--color-link-hover);
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--color-link-hover);
+  }
 }
 
 .link:active {
@@ -460,8 +462,10 @@ body.is-leaving {
   color: var(--color-navbar-text);
 }
 
-a.navbar__title:hover {
-  color: var(--color-headline);
+@media (hover: hover) and (pointer: fine) {
+  a.navbar__title:hover {
+    color: var(--color-headline);
+  }
 }
 
 /* Navbars with the theme toggle (Figma nav-bar "home-page" / "all-works"):
@@ -729,8 +733,10 @@ a.navbar__title:hover {
   margin-top: var(--space-16);
 }
 
-.work-card:hover .work-card__title {
-  color: var(--color-card-title-hover);
+@media (hover: hover) and (pointer: fine) {
+  .work-card:hover .work-card__title {
+    color: var(--color-card-title-hover);
+  }
 }
 
 .work-card__subtitle {
@@ -758,10 +764,12 @@ a.navbar__title:hover {
   transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.button:hover {
-  border-color: var(--color-button-stroke);
-  color: var(--color-button-text);
-  box-shadow: 0 10px 10px -4px rgba(0, 0, 0, 0.1);
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    border-color: var(--color-button-stroke);
+    color: var(--color-button-text);
+    box-shadow: 0 10px 10px -4px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .button:active {
@@ -806,8 +814,10 @@ a.navbar__title:hover {
   color: var(--color-card-title);
 }
 
-.experiment-card:hover .experiment-card__title {
-  color: var(--color-card-title-hover);
+@media (hover: hover) and (pointer: fine) {
+  .experiment-card:hover .experiment-card__title {
+    color: var(--color-card-title-hover);
+  }
 }
 
 .experiment-card__description {
@@ -1877,6 +1887,7 @@ dialog.image-lightbox[open]::backdrop {
 
   .content-nav__label {
     display: inline-block;
+    position: relative;
     width: max-content;
     padding: var(--space-8) var(--space-16);
     background: var(--color-bg);
@@ -1884,6 +1895,15 @@ dialog.image-lightbox[open]::backdrop {
     border-radius: 8px;
     box-shadow: 0 10px 10px -4px rgba(0, 0, 0, 0.1);
     color: var(--color-list-content-tab-idle-closed);
+  }
+
+  /* Visual pill is 39px tall at this padding — invisible hit-area
+     padding instead of growing the pill itself, same trick as
+     .theme-toggle__button::before. */
+  .content-nav__label::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
   }
 
   /* Expanded state shows the list only — no "List of content" header above

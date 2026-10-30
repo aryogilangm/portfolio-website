@@ -27,14 +27,37 @@ function initNavbarScroll() {
 
   let lastScrollY = window.scrollY;
 
+  // .navbar--hidden only moves the bar off-screen with transform — its
+  // links stay in the tab order and keyboard-focusable the whole time,
+  // so a keyboard user can land focus on something they can't see.
+  // inert closes that off; toggled alongside the class everywhere it's
+  // set, not just here, so it can't drift out of sync with it.
+  // The class doesn't always mean visually hidden — .navbar--home
+  // cancels the transform at desktop (see css/style.css) to stay
+  // persistent there. Mirrors that CSS condition directly instead of
+  // reading the live computed transform: the transition takes 900ms, so
+  // checking right after toggling the class would catch it mid-animation
+  // and read the wrong value almost every time.
+  const staysVisibleWhenHidden = () =>
+    navbar.classList.contains("navbar--home") &&
+    window.matchMedia("(min-width: 1280px)").matches;
+
+  const setHidden = (hidden) => {
+    navbar.classList.toggle("navbar--hidden", hidden);
+    // inert closes off tabbing into a navbar that's off-screen — toggled
+    // alongside the class everywhere it's set, not just here, so it
+    // can't drift out of sync with it.
+    navbar.inert = hidden && !staysVisibleWhenHidden();
+  };
+
   window.addEventListener("scroll", () => {
     const currentScrollY = window.scrollY;
     const scrollingDown = currentScrollY > lastScrollY;
 
     if (scrollingDown && currentScrollY > navbar.offsetHeight) {
-      navbar.classList.add("navbar--hidden");
+      setHidden(true);
     } else if (!scrollingDown) {
-      navbar.classList.remove("navbar--hidden");
+      setHidden(false);
     }
 
     lastScrollY = currentScrollY;
@@ -55,7 +78,7 @@ function initNavbarScroll() {
     const HOTZONE_HEIGHT = 24;
     window.addEventListener("mousemove", (event) => {
       if (event.clientY <= HOTZONE_HEIGHT) {
-        navbar.classList.remove("navbar--hidden");
+        setHidden(false);
       }
     });
   }
@@ -193,6 +216,15 @@ function initContentNav() {
     // no-op on desktop.
     let lastScrollY = window.scrollY;
 
+    // Slid off-screen with transform, same as .navbar--hidden — without
+    // inert its trigger button (and, if open, its links) stay tabbable
+    // while invisible. Only goes inert below 1280px, the one breakpoint
+    // where the hide CSS rule actually applies; harmless no-op above it.
+    const setHidden = (hidden) => {
+      nav.classList.toggle("content-nav--hidden", hidden);
+      nav.inert = hidden && window.matchMedia("(max-width: 1279.98px)").matches;
+    };
+
     window.addEventListener(
       "scroll",
       () => {
@@ -202,9 +234,9 @@ function initContentNav() {
         const scrollingDown = currentScrollY > lastScrollY;
 
         if (scrollingDown && currentScrollY > nav.offsetHeight) {
-          nav.classList.add("content-nav--hidden");
+          setHidden(true);
         } else if (!scrollingDown) {
-          nav.classList.remove("content-nav--hidden");
+          setHidden(false);
         }
 
         lastScrollY = currentScrollY;
