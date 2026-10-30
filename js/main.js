@@ -444,7 +444,23 @@ function sizeNativeSelectToSelection(select) {
     parseFloat(cs.borderLeftWidth) +
     parseFloat(cs.borderRightWidth);
 
-  select.style.width = `${Math.ceil(textWidth + boxExtra)}px`;
+  // Clamp to the row container's width (.native-select-wrap's parent —
+  // always .native-select-row / .detail-pages-demo__control /
+  // .native-select-slot, see components.md §12) so a long option on a
+  // narrow card shrinks to fit instead of overflowing it.
+  const wrap = select.parentElement;
+  const container = wrap && wrap.parentElement;
+  const maxAvailable = container ? container.clientWidth : Infinity;
+  const finalWidth = Math.min(Math.ceil(textWidth + boxExtra), maxAvailable);
+
+  select.style.width = `${finalWidth}px`;
+  // .native-select-wrap is `width: fit-content` so it shrink-wraps the
+  // select (needed for the absolutely-positioned chevron icon). But
+  // its intrinsic size doesn't reliably re-measure off a GRANDCHILD's
+  // width changing two levels down through a flex ancestor — it can
+  // stay stuck at a stale (often much smaller) size. Setting it
+  // explicitly here, alongside the select, sidesteps that entirely.
+  if (wrap) wrap.style.width = `${finalWidth}px`;
 }
 
 // Stepper demo (booksmart.html): pill tab-switcher that cross-fades checkout
