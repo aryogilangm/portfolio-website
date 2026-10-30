@@ -1812,7 +1812,9 @@ dialog.image-lightbox[open]::backdrop {
 @media (max-width: 1279.98px) {
   .content-nav {
     left: 50%;
-    bottom: var(--space-24);
+    /* calc(), not a bare env() fallback: on devices with no home-indicator
+       inset, env(...) resolves to 0 and this is just 24px, same as before. */
+    bottom: calc(var(--space-24) + env(safe-area-inset-bottom, 0px));
     transform: translateX(-50%);
     /* No explicit width here on purpose — the pill hugs the label's own
        content width (like the Framer reference's "hug" sizing). The
