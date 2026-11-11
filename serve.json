@@ -8,6 +8,8 @@
     { "source": "/works/werk-personnel-management", "destination": "/werk-personnel-management.html" },
     { "source": "/works/atopia-space", "destination": "/atopia-space.html" },
     { "source": "/works/kasatmata", "destination": "/kasatmata.html" },
-    { "source": "/works/zntral", "destination": "/zntral.html" }
+    { "source": "/works/zntral", "destination": "/zntral.html" },
+    { "source": "/experiments/a-designers-first-attempt-at-directing-agentic-ai", "destination": "/article-agentic-ai.html" },
+    { "source": "/experiments/suroboyo-bus-route-map", "destination": "/suroboyo-bus-route/index.html" }
   ]
 }

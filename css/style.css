@@ -124,6 +124,7 @@
   --color-link-pressed: var(--primary-main);
 
   --color-button-bg: var(--neutral-10);
+  --color-button-bg-pressed: var(--neutral-30);
   --color-button-stroke: var(--neutral-30);
   --color-button-text: var(--neutral-70);
   --color-button-text-pressed: var(--neutral-110);
@@ -211,6 +212,7 @@
   --color-link-pressed: var(--primary-dark-main);
 
   --color-button-bg: var(--neutral-100);
+  --color-button-bg-pressed: var(--neutral-90);
   --color-button-stroke: var(--neutral-80);
   --color-button-text: var(--neutral-50);
   --color-button-text-pressed: var(--neutral-60);
@@ -748,20 +750,23 @@ body.is-leaving {
   color: var(--color-card-subtitle);
 }
 
-/* ===== Button ===== */
+/* ===== Button =====
+   Component "button" di Figma (node 5:264, state=Default/Hover/Pressed, size=large): padding 8px/12px (bukan
+   16px horizontal), hover cuma nambah shadow (warna tetap), pressed dapat bg solid --neutral-30/90 (bukan
+   cuma teks yang berubah warna). */
 .button {
   display: inline-block;
   background: var(--color-button-bg);
   border: 1px solid var(--color-button-stroke);
   border-radius: 8px;
-  padding: var(--space-8) var(--space-16);
+  padding: var(--space-8) var(--space-12);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.7px;
   color: var(--color-button-text);
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -773,6 +778,7 @@ body.is-leaving {
 }
 
 .button:active {
+  background: var(--color-button-bg-pressed);
   border-color: transparent;
   color: var(--color-button-text-pressed);
 }

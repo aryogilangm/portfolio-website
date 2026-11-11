@@ -1,0 +1,15 @@
+{
+  "lineWidth": 4,
+  "wiraWidth": 5,
+  "laneGap": 10,
+  "corridorGap": 4.5,
+  "cornerRadius": 5.5,
+  "stopSize": 8.5,
+  "stopBorder": 1.25,
+  "transitSize": 5,
+  "busSize": 6.5,
+  "busStroke": 1.7000000000000002,
+  "busRadius": 3.1,
+  "labelSize": 0.8500000000000001,
+  "labelGap": 4
+}

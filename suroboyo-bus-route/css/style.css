@@ -1,0 +1,887 @@
+/* Font sama dengan website utama (self-hosted): Geist untuk isi, Nohemi untuk judul. */
+@font-face { font-family: "Geist"; src: url("../fonts/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("../fonts/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Nohemi"; src: url("../fonts/Nohemi-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+
+:root {
+  --bg: #e8f2fb; /* Midday: cerah dan panas */
+  --sky: linear-gradient(180deg, #cfe3f5 0%, #e8f2fb 55%, #ffffff 100%); /* sky to glare */
+  --stop-fill: #ffffff;
+  --stop-stroke: #757575;
+  --stop-ring-fill: #ffffff; /* isi halte biasa */
+  --ink: #757575; /* = --color-paragraph website (light) */
+  --ink-strong: #0a0a0a; /* = --color-paragraph-highlight */
+  --muted: #757575;
+  --card: #ffffff;
+  --border: rgb(0 0 0 / 0.1);
+  --hover: rgb(0 0 0 / 0.05);
+  --accent: #2563eb;
+  /* Tiga lapis (kontak tipis + ambient + penumbra lebar) terasa lebih fisik di web daripada satu bayangan besar. */
+  --shadow: 0 1px 1px rgb(0 0 0 / 0.04), 0 4px 8px -2px rgb(0 0 0 / 0.08), 0 14px 32px -12px rgb(0 0 0 / 0.18);
+  /* Chrome tetap: legenda dan grup kontrol TIDAK ikut retint pagi/siang/sore (hanya dua "tema besar", lihat
+     komentar di :root[data-waktu="malam"]) — didefinisikan sekali di sini, pagi/sore sengaja TIDAK mengganti
+     token ini supaya nilainya tetap sama dengan siang (Midday). Shadow dibuat lebih lembut (blur besar, alfa
+     rendah, tanpa lapis kontak yang tegas) daripada --shadow biasa, khusus permintaan "kurang harsh" di sini. */
+  --chrome-bg: #ffffff;
+  --chrome-border: rgb(0 0 0 / 0.08);
+  --chrome-ink: #0a0a0a;
+  --chrome-muted: #757575;
+  --chrome-hover: rgb(0 0 0 / 0.045);
+  /* Component "button" di Figma (node 5:264, state=pressed): bg solid #ededed, tanpa border, teks/ikon jadi
+     --chrome-ink. Solid (bukan alpha) dengan alasan sama seperti --chrome-* lain: elemen ini duduk langsung di
+     atas halaman, bukan di atas card opak, jadi alpha akan menembuskan warna latar tema (pagi/sore dst). */
+  --chrome-pressed-solid: #ededed;
+  /* Disabled nav-btn duduk langsung di halaman (sama seperti --chrome-pressed-solid) — solid, bukan alpha dari
+     --cb-disabled-* (itu buat checkbox yang duduk di atas card legend yang opak, beda konteks). */
+  --chrome-disabled-solid: #ededed;
+  --chrome-disabled-border: #e0e0e0;
+  --chrome-disabled-text: #9e9e9e;
+  --chrome-shadow: 0 2px 6px rgb(0 0 0 / 0.05), 0 10px 24px -8px rgb(0 0 0 / 0.1);
+  /* Component "CheckBox" di Figma (node 281:14401), warna persis dari sana. Sama 2 "tema besar" dengan --chrome-*
+     di atas: tak berubah antara pagi/siang/sore, hanya diganti di malam (lihat override-nya). */
+  --cb-border: #e0e0e0;
+  --cb-border-hover: #c2c2c2;
+  --cb-bg: #ffffff;
+  --cb-checked-bg: #0030bf;
+  --cb-checked-bg-hover: #00207f;
+  --cb-check: #ffffff;
+  --cb-disabled-bg: #ededed;
+  --cb-disabled-border: #e0e0e0;
+  --cb-disabled-check: #9e9e9e;
+  /* Tooltip shadcn-style (https://ui.shadcn.com/docs/components/base/tooltip): surface-nya SEARAH dengan tema
+     halaman (terang di atas halaman terang, gelap di atas halaman gelap — lihat override di
+     :root[data-waktu="malam"]), sama seperti --chrome-* lain. Border alpha-hitam + shadow berlapis (bukan satu
+     shadow besar) biar terasa fisik/melayang, bukan "ditempel". Sama 2 "tema besar" (tak ikut retint
+     pagi/siang/sore). */
+  --tooltip-default-bg: #ffffff;
+  --tooltip-default-stroke: rgb(0 0 0 / 0.08);
+  --tooltip-default-text: #0a0a0a;
+  --tooltip-default-shadow: 0 1px 2px rgb(0 0 0 / 0.03), 0 6px 12px -4px rgb(0 0 0 / 0.05), 0 16px 28px -12px rgb(0 0 0 / 0.07);
+  --gutter: 32px;
+  --font-body: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: "Nohemi", "Geist", -apple-system, sans-serif;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color-scheme: light;
+}
+
+/* Suasana waktu (js/theme.js memasang <html data-waktu="...">). Bawaan di :root = Midday. */
+:root[data-waktu="pagi"] {
+  /* Early morning (05-09): fajar, biru es sangat pucat. */
+  --bg: #eae6f1;
+  --sky: linear-gradient(180deg, #d9e2f5, #eae6f1 55%, #f8eae2); /* pale, bluer top */
+  --ink: #757575; /* = --color-paragraph website (light) */
+  --ink-strong: #0a0a0a; /* = --color-paragraph-highlight */
+  --muted: #757575;
+  --card: #f6fbfd;
+  --border: rgb(36 53 66 / 0.14);
+  --hover: rgb(36 53 66 / 0.06);
+  --accent: #2f8fb0;
+  --shadow: 0 1px 1px rgb(36 53 66 / 0.05), 0 4px 8px -2px rgb(36 53 66 / 0.1), 0 14px 32px -12px rgb(36 53 66 / 0.22);
+}
+:root[data-waktu="sore"] {
+  /* Afternoon (15-18): matahari terbenam, langit krem aprikot pucat menuju senja. */
+  --bg: #f9e0c8;
+  --sky: linear-gradient(0deg, #edb594 0%, #f4cbaa 25%, #f9e0c8 60%, #fbebd6); /* rust horizon, softer */
+  --ink: #757575; /* = --color-paragraph website (light) */
+  --ink-strong: #0a0a0a; /* = --color-paragraph-highlight */
+  --muted: #757575;
+  --card: #fcf8f4;
+  --border: rgb(90 45 20 / 0.17);
+  --hover: rgb(90 45 20 / 0.07);
+  --accent: #d9733a;
+  --shadow: 0 1px 1px rgb(90 45 20 / 0.06), 0 4px 8px -2px rgb(90 45 20 / 0.12), 0 14px 32px -12px rgb(90 45 20 / 0.26);
+}
+:root[data-waktu="malam"] {
+  /* Night (18-05): langit gelap, hawa dingin; garis rute diredupkan, lampu kota (halte, bus) yang menyala. --bg = #040a1f. */
+  color-scheme: dark;
+  --bg: #040a1f;
+  --sky: #040a1f;
+  --stop-fill: #2d3345; /* isi halte transit */
+  --stop-stroke: #b8bccc; /* bingkai halte transit */
+  --stop-ring-fill: #2d3345; /* isi halte biasa */
+  --ink: #c2c2c2; /* = --color-paragraph website (dark) */
+  --ink-strong: #ffffff; /* = --color-paragraph-highlight */
+  --muted: #9e9e9e;
+  --card: #0b1530;
+  --border: rgb(255 255 255 / 0.12);
+  --hover: rgb(255 255 255 / 0.07);
+  --accent: #6b9bff;
+  --shadow: 0 1px 1px rgb(0 0 0 / 0.3), 0 4px 10px -2px rgb(0 0 0 / 0.45), 0 16px 36px -12px rgb(0 0 0 / 0.6);
+  /* Satu-satunya tempat --chrome-* berubah: "tema besar" hanya light (pagi/siang/sore berbagi nilai :root) dan
+     dark (di sini) — legenda dan grup kontrol tidak pernah retint di antara pagi/siang/sore. */
+  --chrome-bg: #0b1530;
+  --chrome-border: rgb(255 255 255 / 0.1);
+  --chrome-ink: #ffffff;
+  /* Abu-abu netral murni (dulu #9e9e9e) terasa kekuningan/kecoklatan di atas halaman biru tua ini (contrast
+     simultan: mata memberi warna hangat semu ke abu-abu netral yang dikelilingi warna dingin) — digeser sedikit
+     ke biru supaya "setuju" dengan hue halaman, sama seperti --chrome-disabled-text/--cb-disabled-check yang
+     sudah lebih dulu begini. */
+  --chrome-muted: #9aa3ba;
+  --chrome-hover: rgb(255 255 255 / 0.06);
+  /* Figma cuma punya satu set warna (light); #283149 dipilih dengan logika sama seperti --chrome-shadow di
+     malam — mencampur chrome-bg dengan putih (bukan hitam) supaya tetap terlihat "ditekan" di atas kartu gelap. */
+  --chrome-pressed-solid: #283149;
+  /* Sama alasan dengan --chrome-pressed-solid: solid (bukan alpha rendah seperti --cb-disabled-bg) supaya peta
+     di baliknya tidak menembus tombol. Warna sendiri (lebih gelap dari --chrome-pressed-solid, border solid
+     bukan alpha) dipilih manual lewat perbandingan 4 varian — lihat histori sesi. */
+  --chrome-disabled-solid: #141a2e;
+  --chrome-disabled-border: #2e364d;
+  --chrome-disabled-text: #7d859a;
+  --chrome-shadow: 0 2px 6px rgb(0 0 0 / 0.25), 0 10px 28px -8px rgb(0 0 0 / 0.45);
+  /* Figma cuma punya satu set warna (light); versi malam disesuaikan sendiri supaya tetap kontras di kartu gelap
+     --chrome-bg (checked-hover dibikin lebih TERANG, bukan lebih gelap seperti di Figma, karena di sini makin
+     gelap = makin hilang ke background). */
+  --cb-border: rgb(255 255 255 / 0.18);
+  --cb-border-hover: rgb(255 255 255 / 0.32);
+  --cb-bg: transparent;
+  --cb-checked-bg: #3b63ff;
+  --cb-checked-bg-hover: #6684ff;
+  --cb-check: #ffffff;
+  --cb-disabled-bg: rgb(255 255 255 / 0.06);
+  --cb-disabled-border: rgb(255 255 255 / 0.1);
+  --cb-disabled-check: #6b7280;
+  /* Sama arah dengan --chrome-* di tema ini (gelap). Border alpha-putih (bukan solid) tetap dipakai di sini
+     karena itu konvensi border malam yang sudah berlaku di seluruh token --chrome- dan --cb- proyek ini. */
+  --tooltip-default-bg: #0b1530;
+  --tooltip-default-stroke: rgb(255 255 255 / 0.1);
+  --tooltip-default-text: #ffffff;
+  --tooltip-default-shadow: 0 1px 2px rgb(0 0 0 / 0.2), 0 6px 16px -6px rgb(0 0 0 / 0.3), 0 16px 32px -14px rgb(0 0 0 / 0.35);
+}
+
+/* Transisi suasana (js/theme.js, View Transitions): gambar lama diam, gambar baru dibuka di atasnya lewat animasi WAAPI. */
+:root[data-vt]::view-transition-group(*), :root[data-vt]::view-transition-old(*), :root[data-vt]::view-transition-new(*) { animation: none; mix-blend-mode: normal; }
+/* Gaya 'tween' (tanpa View Transitions): semua warna bergeser di tempatnya selama transisi suasana. */
+:root[data-tween=""] *, :root[data-tween=""] *::before, :root[data-tween=""] *::after {
+  transition: color var(--tw-ms) var(--tw-ease), background-color var(--tw-ms) var(--tw-ease), border-color var(--tw-ms) var(--tw-ease),
+    box-shadow var(--tw-ms) var(--tw-ease), fill var(--tw-ms) var(--tw-ease), stroke var(--tw-ms) var(--tw-ease) !important;
+}
+/* Gaya 'tokyo': UI di luar peta ikut bergeser warnanya, dan garis/halte/bus/label di dalam peta hanya fill, stroke, opacity (seperti peta Tokyo). */
+:root[data-tween="tokyo"] body > :not(#map), :root[data-tween="tokyo"] body > :not(#map) * {
+  transition: color var(--tw-ms) var(--tw-ease), background-color var(--tw-ms) var(--tw-ease), border-color var(--tw-ms) var(--tw-ease),
+    box-shadow var(--tw-ms) var(--tw-ease), fill var(--tw-ms) var(--tw-ease), stroke var(--tw-ms) var(--tw-ease) !important;
+}
+:root[data-tween="tokyo"] #map * { transition: fill var(--tw-ms) var(--tw-ease), stroke var(--tw-ms) var(--tw-ease), opacity var(--tw-ms) var(--tw-ease) !important; }
+/* Gaya 'chrome': hanya UI di luar peta yang bergeser; warna di dalam peta langsung berganti. */
+:root[data-tween="chrome"] body > :not(#map), :root[data-tween="chrome"] body > :not(#map) * {
+  transition: color var(--tw-ms) var(--tw-ease), background-color var(--tw-ms) var(--tw-ease), border-color var(--tw-ms) var(--tw-ease),
+    box-shadow var(--tw-ms) var(--tw-ease), fill var(--tw-ms) var(--tw-ease), stroke var(--tw-ms) var(--tw-ease) !important;
+}
+@media (prefers-reduced-motion: reduce) { :root[data-tween] *, :root[data-tween] *::before, :root[data-tween] *::after { transition: none !important; } }
+/* Gaya 'dip': lama memudar ke warna latar baru (bukan putih kanvas), lalu baru muncul. */
+:root[data-vt="dip"]::view-transition { background: var(--bg); }
+/* Gaya 'layers': peta dan kartu jadi lapisan sendiri, sehingga latar bisa memudar terpisah dari mereka. */
+:root[data-vt="layers"] #map { view-transition-name: v-map; }
+:root[data-vt="layers"] .controls { view-transition-name: v-controls; }
+:root[data-vt="layers"] #legend { view-transition-name: v-legend; }
+:root[data-vt="layers"] #stop-info { view-transition-name: v-info; }
+:root[data-vt="layers"] #banner { view-transition-name: v-banner; }
+/* Selama transisi suasana, transisi CSS elemen (stroke halte, opacity label) dimatikan: gambar baru yang langsung tampil jangan ikut menggeser warna. */
+:root[data-vt] *, :root[data-vt] *::before, :root[data-vt] *::after { transition: none !important; }
+:root[data-vt]::view-transition-old(root) { z-index: 1; }
+:root[data-vt]::view-transition-new(root) { z-index: 2; }
+:root[data-vt="soft"]::view-transition-new(root) {
+  mask-image: radial-gradient(circle closest-side, #000 var(--vt-solid, 90%), transparent 100%);
+  mask-repeat: no-repeat;
+}
+@media (prefers-reduced-motion: reduce) { :root[data-vt]::view-transition-group(*), :root[data-vt]::view-transition-old(*), :root[data-vt]::view-transition-new(*) { animation: none !important; } }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--sky, var(--bg));
+  background-attachment: fixed;
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* Peta */
+#map {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+#map.grabbing { cursor: grabbing; }
+/* Mode sunting rute (lab/tampilan): pegangan di #layer-edit, jalur lain dipudarkan */
+#layer-edit { pointer-events: none; }
+#layer-edit .rh { pointer-events: all; touch-action: none; }
+#layer-edit .rh-hit { fill: transparent; }
+#layer-edit .rh-dot { fill: #fff; stroke: var(--c, var(--accent)); stroke-width: 2.5; transition: fill 0.12s ease-out; }
+#layer-edit .rh-corner { cursor: grab; }
+#layer-edit .rh-corner:hover .rh-dot, #layer-edit .rh-corner.drag .rh-dot { fill: var(--c, var(--accent)); }
+#layer-edit .rh-bar { fill: #fff; stroke: var(--c, var(--accent)); stroke-width: 1.5; opacity: 0.9; }
+#layer-edit .rh-seg:hover .rh-bar, #layer-edit .rh-seg.drag .rh-bar { fill: var(--c, var(--accent)); opacity: 1; }
+#layer-edit .rh-preview { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 7 5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+#layer-edit .rh-guide { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.7; vector-effect: non-scaling-stroke; pointer-events: none; }
+#map.route-editing .line { cursor: pointer; }
+#map.route-editing .line.faded { opacity: 0.22; }
+#map.route-editing .stop { cursor: default; }
+/* Mode geser halte (lab/tampilan) */
+#map.editing .stop { cursor: grab; }
+#map.editing .stop.dragging { cursor: grabbing; }
+#map.editing .stop.dragging .stop-ring { stroke: var(--accent); }
+/* 180ms ease-out — sama persis dengan .legend-card (lihat di bawah): redup/terangnya garis koridor di peta dan
+   munculnya kartu koridor di legenda adalah SATU aksi (pilih koridor), jadi harus selesai bersamaan. Dulu peta
+   0.25s vs kartu 0.18s — peta masih "menyusul" 70ms setelah kartunya kelihatan selesai, terasa kurang nyambung. */
+.line { stroke: var(--c); cursor: pointer; transition: opacity 0.18s ease-out; }
+.line.dim { opacity: 0.1; }
+.stop { cursor: pointer; outline: none; transition: opacity 0.18s ease-out; }
+.stop.dim { opacity: 0.12; pointer-events: none; }
+.stop-ring {
+  fill: var(--stop-ring-fill);
+  stroke: var(--c);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: stroke 0.15s, transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .stop:hover .stop-ring { transform: scale(1.35); }
+}
+.stop:focus-visible .stop-ring { transform: scale(1.35); }
+.stop.selected .stop-ring,
+.stop:focus-visible .stop-ring { stroke: var(--accent); }
+.stop-label {
+  font-size: 12px;
+  font-weight: 500;
+  fill: var(--ink);
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none;
+  user-select: none;
+}
+/* Label halte (lapisan sendiri): tersembunyi bawaan; tampil permanen (perm-on) atau saat hover/fokus/dipilih (on). */
+.label-pos { transition: opacity 0.18s ease-out; }
+.label-pos.dim { opacity: 0.12; }
+.label-anim {
+  opacity: 0;
+  transform: scale(0.94);
+  transform-box: fill-box;
+  transition: opacity 100ms ease-in, transform 100ms ease-in; /* keluar: lebih cepat dan lebih tenang */
+  will-change: transform, opacity;
+}
+.label-anim[data-dir="e"] { transform-origin: 0% 50%; }
+.label-anim[data-dir="w"] { transform-origin: 100% 50%; }
+.label-anim[data-dir="n"] { transform-origin: 50% 100%; }
+.label-anim[data-dir="s"] { transform-origin: 50% 0%; }
+.label-anim[data-dir="ne"] { transform-origin: 0% 100%; }
+.label-anim[data-dir="nw"] { transform-origin: 100% 100%; }
+.label-anim[data-dir="se"] { transform-origin: 0% 0%; }
+.label-anim[data-dir="sw"] { transform-origin: 100% 0%; }
+.label-anim.perm-on { opacity: 1; transform: none; }
+.label-anim.on {
+  opacity: 1;
+  transform: scale(1.06);
+  transition: opacity 150ms cubic-bezier(0.32, 0.72, 0, 1), transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.label-anim.on.kbd { transition: none; }
+.label-anim:not(.perm-on).on { transform: none; }
+.bus { pointer-events: none; }
+.bus.off { display: none; }
+/* Lampu bus hanya di Night: lingkar cahaya dan sorot lampu ke depan. */
+.bus-lamp { display: none; }
+:root[data-waktu="malam"] .bus-lamp { display: block; }
+/* Saat transisi suasana (gaya tween) lampu memudar masuk/keluar, bukan muncul atau hilang dalam satu frame. */
+:root[data-tween-night] .bus-lamp { display: block; opacity: 0; transition: opacity var(--tw-ms) var(--tw-ease) !important; }
+:root[data-tween-night][data-waktu="malam"] .bus-lamp { opacity: 1; }
+/* Halte transit: kapsul putih (token stop-fill) berbingkai tipis dengan satu lingkaran berwarna per jalur yang melayaninya. */
+.stop.transit .stop-ring { fill: var(--stop-fill); stroke: var(--stop-stroke); transform: none; }
+.stop-body { transform-box: fill-box; transform-origin: center; transition: transform 150ms cubic-bezier(0.32, 0.72, 0, 1); }
+@media (hover: hover) and (pointer: fine) {
+  .stop.transit:hover .stop-body { transform: scale(1.35); }
+}
+.stop.transit:focus-visible .stop-body { transform: scale(1.35); }
+.stop.transit.selected .stop-ring, .stop.transit:focus-visible .stop-ring { stroke: var(--accent); }
+.stop-dot { pointer-events: none; }
+/* Kartu */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+#banner {
+  position: fixed;
+  top: var(--gutter);
+  left: 50%;
+  translate: -50% 0;
+  max-width: min(520px, calc(100vw - 2 * var(--gutter) - 120px));
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+#banner ul { margin: 6px 0 0; padding-left: 18px; color: var(--ink); }
+#banner[hidden] { display: none; }
+
+/* Pojok kiri atas, gutter sama dengan legend/action button (40px). Component "button" di Figma (node 5:264,
+   state=default/hover/pressed, size=default): warna lewat --chrome-* yang sama dengan legend/kontrol (tak ikut
+   retint pagi/siang/sore). Dua tombol: "Back to home" (ikon panah + teks) dan "See how it was built" (teks saja
+   — ikon globe di component Figma-nya disembunyikan untuk varian ini, sama seperti instance aslinya). */
+.page-nav {
+  position: fixed;
+  top: var(--gutter);
+  left: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--chrome-bg);
+  border: 1px solid var(--chrome-border);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  line-height: 21px;
+  color: var(--chrome-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: box-shadow 0.15s, background-color 0.1s, color 0.1s, border-color 0.1s, transform 0.1s ease-out;
+}
+.nav-btn__icon { width: 16px; height: 16px; flex: none; fill: currentColor; }
+/* Tinggi visual ~33px sedikit di bawah target sentuh 44px; ::before menambah 2px atas-bawah tanpa mengubah
+   tampilan, lebarnya sendiri sudah longgar karena berupa pil teks. */
+.nav-btn::before { content: ""; position: absolute; inset: -2px 0; }
+/* Hover di Figma HANYA menambah shadow — warna bg/teks tetap sama dengan default, beda dari legend/kontrol. */
+@media (hover: hover) and (pointer: fine) {
+  .nav-btn:hover { box-shadow: var(--chrome-shadow); }
+}
+/* Pressed: bg solid, tanpa border, teks/ikon jadi --chrome-ink (persis Figma) + scale 0.96 (konvensi proyek). */
+.nav-btn:active {
+  background: var(--chrome-pressed-solid);
+  border-color: transparent;
+  color: var(--chrome-ink);
+  transform: scale(0.96);
+}
+.nav-btn:focus-visible { outline: 2px solid var(--chrome-ink); outline-offset: 2px; }
+
+/* "See how it was built" sementara nonaktif (studi kasus belum rilis, peta sudah). Pakai --chrome-disabled-*
+   (solid, duduk langsung di halaman) — BUKAN --cb-disabled-* (itu alpha rendah, didesain buat checkbox yang
+   duduk di atas card legend yang opak; dipakai di sini sempat bikin tombolnya tembus pandang ke peta di malam). */
+.nav-btn--disabled {
+  color: var(--chrome-disabled-text);
+  border-color: var(--chrome-disabled-border);
+  background: var(--chrome-disabled-solid);
+  cursor: not-allowed;
+}
+.nav-btn--disabled:hover,
+.nav-btn--disabled:active {
+  box-shadow: none;
+  background: var(--chrome-disabled-solid);
+  border-color: var(--chrome-disabled-border);
+  color: var(--chrome-disabled-text);
+  transform: none;
+}
+
+/* Tooltip gaya shadcn (https://ui.shadcn.com/docs/components/base/tooltip), warna lewat token
+   --tooltip-default-* (lihat :root dan override malam). Copy-nya pendek jadi aman dipusatkan di tengah
+   tombol (nggak perlu logika rata-kiri/kanan khusus layar sempit). Hover digate (hover: hover) seperti tombol
+   lain, focus-within tetap jalan untuk keyboard/sentuh. */
+.nav-btn-tip-wrapper { position: relative; display: inline-flex; }
+.nav-btn-tip {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  z-index: 20;
+  margin-top: 8px;
+  translate: -50% 0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--tooltip-default-stroke);
+  background: var(--tooltip-default-bg);
+  box-shadow: var(--tooltip-default-shadow);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--tooltip-default-text);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+.nav-btn-tip-wrapper:focus-within .nav-btn-tip { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .nav-btn-tip-wrapper:hover .nav-btn-tip { opacity: 1; }
+}
+/* Segitiga kecil (persegi diputar 45°, warna sama dengan tooltip) yang menempel di tepi atasnya. */
+.nav-btn-tip-arrow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: -1;
+  width: 8px;
+  height: 8px;
+  translate: -50% -50%;
+  rotate: 45deg;
+  background: var(--tooltip-default-bg);
+}
+
+/* Kontrol: grup tombol tengah-bawah, tetap (ukuran dan posisi tidak berubah saat zoom peta), tiga sub-grup
+   (suasana waktu / zoom / sesuaikan) dipisah gap, meniru https://muhraufan.com/lab/tokyo-transit-map-app.html.
+   Tak ada tombol putar/jeda lagi di sini (dihapus dari produksi; animasi bus tetap jalan terus). */
+.controls {
+  position: fixed;
+  left: 50%;
+  bottom: max(var(--gutter), env(safe-area-inset-bottom));
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Hanya tampil di mobile (lihat @media max-width:639px) — di dekstop/tab legenda sudah selalu terlihat sebagai
+   panel mengambang, jadi tak butuh pemicu. */
+#legend-toggle-group { display: none; }
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  padding: 4px 8px;
+  /* --chrome-*, bukan --card/--border/--shadow: legenda dan kontrol tidak ikut retint pagi/siang/sore, lihat
+     definisi --chrome-* di :root. */
+  background: var(--chrome-bg);
+  border: 1px solid var(--chrome-border);
+  /* Radius luar = radius tombol (6px) + padding (4px) supaya sudut dalam dan luar konsentris (lihat .card
+     untuk aturan yang sama); Figma memakai 4px rata di sini, lebih kecil dari radius tombolnya sendiri. */
+  border-radius: 10px;
+  box-shadow: var(--chrome-shadow);
+}
+.ctrl-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 6px;
+  color: var(--chrome-muted);
+  transition: transform 0.12s ease-out, background-color 0.15s, color 0.15s;
+}
+/* 32px visuel di bawah target sentuh 44px minimum. Area sentuh diperbesar lewat ::before — vertikal ke 44px (tak
+   ada tetangga). Horizontal dibiarkan 0: gap antar tombol sekarang 0px (tombol bersisian langsung), jadi tak ada
+   celah kosong untuk diperbesar — melebarkan ::before ke sana cuma akan tumpang tindih visual tombol tetangga. */
+.ctrl-btn::before { content: ""; position: absolute; top: -6px; bottom: -6px; left: 0; right: 0; }
+.ctrl-btn:active { transform: scale(0.94); }
+.ctrl-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ctrl-btn:hover { background: var(--chrome-hover); color: var(--chrome-ink); }
+}
+#theme-group .ctrl-btn[data-waktu].is-active { background: var(--chrome-hover); color: var(--chrome-ink); }
+.icon-btn, .close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: transform 0.12s ease-out, background-color 0.15s;
+}
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn svg, .close svg, .chevron {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#play[aria-pressed="true"] .i-play,
+#play[aria-pressed="false"] .i-pause { display: none; }
+#play .i-play { fill: currentColor; }
+@media (hover: hover) {
+  .icon-btn:hover { background: color-mix(in srgb, var(--card), var(--ink) 6%); }
+}
+button:focus-visible, input:focus-visible + .swatch { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Legenda: tumpukan tetap (ukuran dan posisi tidak berubah saat zoom), menempel kiri-bawah. Legenda dasar SELALU
+   paling atas; kartu koridor yang dihighlight muncul DI BAWAHNYA, urut sesuai urutan dipilih (lihat gap 12px,
+   flex-direction normal — bukan column-reverse — supaya urutan DOM = urutan tampil, lihat js/legend.js). */
+#legend {
+  position: fixed;
+  left: var(--gutter);
+  bottom: var(--gutter);
+  width: 220px;
+  max-height: calc(100dvh - 2 * var(--gutter));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+/* Tombol tutup & judul "Active Corridor(s)" hanya berlaku untuk sheet mobile (lihat @media max-width:639px) —
+   di dekstop/tab legenda bukan sheet yang perlu ditutup, jadi disembunyikan di sini. */
+.legend-close, .legend-selected-title, .legend-title-mobile { display: none; }
+/* Radius 12px (desain terbaru) dan warna --chrome-* (tetap, tak ikut retint pagi/siang/sore — lihat :root). */
+.legend-base, .legend-card {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--chrome-bg);
+  border: 1px solid var(--chrome-border);
+  box-shadow: var(--chrome-shadow);
+}
+.legend-title {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--chrome-ink);
+}
+#legend-rows { display: grid; gap: 8px; }
+/* Baris koridor = label (klik di mana saja men-toggle checkbox-nya) tanpa background sendiri — hover/active/
+   checked/disabled semuanya main di checkbox-nya saja (lihat .legend-row__box), bukan di baris. Padding 8px
+   kanan-kiri (sejajar judul lewat 12px .legend-base dikurangi 4px sisa), checkbox didorong ke ujung kanan. */
+.legend-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--chrome-muted);
+  text-align: left;
+  cursor: pointer;
+}
+.legend-row .swatch {
+  flex: none;
+  width: 24px;
+  height: 6px;
+  border-radius: 35px;
+  background: var(--c);
+}
+.legend-row__label { flex: 1; }
+/* Checked = baris ini sedang dihighlight: teks ikut lebih tegas (warna, bukan berat font — lihat prinsip "jangan
+   ganti font-weight saat interaksi"). */
+.legend-row:has(input:checked) .legend-row__label { color: var(--chrome-ink); }
+.legend-row.is-disabled { cursor: not-allowed; }
+.legend-row.is-disabled .legend-row__label { color: var(--chrome-muted); opacity: 0.6; }
+.legend-row input[type="checkbox"] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+/* Checkbox custom, persis spec Figma "CheckBox" (node 281:14401): 18px, radius 2px, border/fill per state lewat
+   --cb-* (lihat :root). Area sentuh diperbesar ke 28px lewat ::before, invisible. */
+.legend-row__box {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  border: 1px solid var(--cb-border);
+  background: var(--cb-bg);
+  color: var(--cb-check);
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.legend-row__box::before { content: ""; position: absolute; inset: -5px; }
+.legend-row__box svg { width: 13px; height: 13px; opacity: 0; transition: opacity 0.1s; }
+@media (hover: hover) and (pointer: fine) {
+  .legend-row:not(.is-disabled):hover .legend-row__box { border-color: var(--cb-border-hover); }
+}
+.legend-row input:checked ~ .legend-row__box {
+  background: var(--cb-checked-bg);
+  border-color: var(--cb-checked-bg);
+}
+.legend-row input:checked ~ .legend-row__box svg { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .legend-row:hover input:checked ~ .legend-row__box { background: var(--cb-checked-bg-hover); border-color: var(--cb-checked-bg-hover); }
+}
+.legend-row input:active ~ .legend-row__box { transform: scale(0.92); }
+.legend-row input:focus-visible ~ .legend-row__box { outline: 2px solid var(--chrome-ink); outline-offset: 2px; }
+.legend-row input:disabled ~ .legend-row__box {
+  background: var(--cb-disabled-bg);
+  border-color: var(--cb-disabled-border);
+  color: var(--cb-disabled-check);
+}
+
+/* Satu kartu per koridor yang dihighlight, maksimal 2 (lihat js/legend.js), dengan animasi masuk/keluar. */
+#legend-selected { display: flex; flex-direction: column; gap: 12px; }
+.legend-card {
+  transform-origin: top;
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
+}
+/* Scale-in + fade, snappy (180ms ease-out). Exit tetap asimetris: lebih cepat dan ease-in (konvensi keluar). */
+.legend-card.legend-card--enter { opacity: 0; transform: scale(0.95); }
+/* Keluar cukup fade (tanpa scale) — permintaan eksplisit: beda arah dari masuk itu wajar (lihat asimetri
+   masuk/keluar), tapi scale di sini terasa seperti gerakan tambahan yang tak perlu untuk sesuatu yang sudah
+   mau hilang. */
+.legend-card.legend-card--leave { opacity: 0; transition-duration: 140ms; transition-timing-function: ease-in; }
+.legend-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.legend-card__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: var(--chrome-ink);
+}
+.legend-card__name .swatch {
+  flex: none;
+  width: 24px;
+  height: 6px;
+  border-radius: 35px;
+  background: var(--c);
+}
+.legend-card__close {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  background: none;
+  border: 0;
+  /* Redup dulu, menghitam (atau memutih di Night) saat hover/fokus — bukan warna aksen tema, lihat feedback:
+     "tema besar" cuma 2 (light/dark), jadi X ini tak boleh ikut berbeda warna antara pagi/siang/sore. */
+  color: var(--chrome-muted);
+}
+/* Area sentuh 44px tanpa mengubah ukuran ikon 12px — pola yang sama dipakai .theme-toggle__button di situs utama. */
+.legend-card__close::before { content: ""; position: absolute; inset: -16px; }
+.legend-card__close svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+@media (hover: hover) and (pointer: fine) {
+  .legend-card__close:hover { color: var(--chrome-ink); }
+}
+.legend-card__close:focus-visible { color: var(--chrome-ink); }
+.legend-card__stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--chrome-muted);
+}
+.legend-card__stats .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--chrome-muted); }
+.legend-card__divider { margin: 8px 0; border: 0; border-top: 1px solid var(--chrome-border); }
+
+/* Daftar halte: tinggi satu baris 24px, maksimal 8 baris sebelum discroll (8 * 24 = 192px). */
+.legend-card__stops {
+  max-height: 192px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.stop-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+}
+.stop-row__rail {
+  position: relative;
+  flex: none;
+  width: 8px;
+  height: 24px;
+}
+/* Garis koridor menerus di belakang titik halte, seperti diagram rute asli. */
+.stop-row__rail::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: var(--c);
+  translate: -50% 0;
+}
+.stop-row:first-child .stop-row__rail::before { top: 50%; }
+.stop-row:last-child .stop-row__rail::before { bottom: 50%; }
+.stop-row__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stop-ring-fill);
+  border: 1.5px solid var(--c);
+}
+.stop-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.stop-row__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--chrome-ink);
+}
+.stop-row__transfers {
+  flex: none;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--chrome-muted), transparent 20%);
+}
+
+/* Info halte */
+#stop-info {
+  position: fixed;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 272px;
+  padding: 14px 16px 16px;
+}
+#stop-info[hidden] { display: none; }
+#stop-info h2 { margin: 0 36px 10px 0; font-family: var(--font-heading); font-size: 18px; font-weight: 500; color: var(--ink-strong); }
+#stop-info ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+#stop-info li { display: flex; align-items: center; gap: 10px; }
+/* Pil warna generik (dipakai di #stop-info; ukuran untuk legenda koridor di-override lebih spesifik di atas). */
+.swatch { flex: none; width: 26px; height: 8px; border-radius: 4px; background: var(--c); border: 2px solid var(--c); }
+#stop-info p { margin: 10px 0 0; font-size: 13px; color: var(--muted); white-space: pre-line; }
+#stop-info p[hidden] { display: none; }
+.close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  transition: transform 0.12s ease-out;
+}
+/* 32px visual di bawah target sentuh 44px minimum; ::before menambah 6px tiap sisi tanpa mengubah tampilan. */
+.close::before { content: ""; position: absolute; inset: -6px; }
+.close svg { width: 16px; height: 16px; }
+.close:active { transform: scale(0.94); }
+
+@media (max-width: 639px) {
+  #stop-info { right: 72px; width: auto; }
+  #banner { top: auto; bottom: 0; display: none; }
+
+  /* Legenda di mobile bukan panel mengambang permanen seperti dekstop/tab (itu makan porsi layar yang cukup
+     besar begitu ada koridor dihighlight) — jadi sheet atas-permintaan, dipicu tombol "list" di .controls
+     (lihat Figma "maps-mobile-menu reveal"). Peta dapat porsi layar penuh selama sheet tertutup. */
+  #legend-toggle-group { display: flex; }
+  /* Tombol zoom +/- disembunyikan di mobile (sesuai Figma) — di sana orang pakai gesture cubit untuk zoom,
+     bukan tombol; zoom-fit (reset) tetap ada karena itu bukan sesuatu yang bisa digantikan gesture. */
+  #zoom-group { display: none; }
+
+  #legend-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+  }
+  [data-legend="open"] #legend-scrim { opacity: 1; pointer-events: auto; }
+
+  /* Lebar pas 18px (bukan kotak 24px dengan ikon dipusatkan di dalamnya) supaya tepi kanan ikon X sejajar persis
+     dengan tepi kanan checkbox di bawahnya (keduanya flush ke tepi kolom konten) — area sentuh 44px tetap lewat
+     ::before, bukan lewat memperbesar kotaknya sendiri. */
+  .legend-close {
+    display: grid;
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--chrome-ink);
+  }
+  .legend-close::before { content: ""; position: absolute; inset: -13px; }
+  .legend-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+
+  /* Sheet penuh-lebar dari tepi bawah layar (radius hanya di atas, flush ke bawah) — bukan kartu mengambang,
+     beda dari #legend dekstop/tab di atas. */
+  #legend {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 76dvh;
+    margin: 0;
+    padding: 16px 24px calc(24px + env(safe-area-inset-bottom));
+    border-radius: 20px 20px 0 0;
+    background: var(--chrome-bg);
+    border: 1px solid var(--chrome-border);
+    border-bottom: 0;
+    box-shadow: 0 -8px 32px -8px rgb(0 0 0 / 0.22);
+    overflow-y: auto;
+    gap: 0;
+    transform: translateY(100%);
+    transition: transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  [data-legend="open"] #legend { transform: translateY(0); }
+
+  .legend-base { padding: 0; border: 0; box-shadow: none; background: none; border-radius: 0; margin-bottom: 24px; }
+  /* Judul dinamis (nama jaringan, net.meta.title) disembunyikan khusus di mobile — Figma pakai label generik
+     "Corridors" di sini, beda dari dekstop/tab yang menampilkan nama jaringannya. */
+  .legend-title { display: none; }
+  .legend-title-mobile { display: block; margin: 0 0 12px; font-family: var(--font-body); font-size: 14px; font-weight: 500; letter-spacing: 0.5px; color: var(--chrome-ink); }
+  #legend-rows { gap: 0; }
+  .legend-row { padding: 6px 0; }
+  .legend-row__box { width: 16px; height: 16px; }
+  .legend-row__box svg { width: 11.2px; height: 11.2px; }
+
+  .legend-selected-title { display: block; margin: 0 0 12px; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; color: var(--chrome-ink); }
+  .legend-selected-title[hidden] { display: none; }
+  .legend-card { border-radius: 4px; box-shadow: none; }
+  /* Figma nempatin baris stats langsung di bawah nama (cuma 2px, bukan 8px seperti versi dekstop) — bikin
+     kartu terasa lebih padat/ringkas sesuai sheet mobile. */
+  .legend-card__stats { margin-top: 2px; }
+  /* Kartu koridor aktif di mobile tak punya tombol "x" sendiri — cara menghapusnya cukup uncheck baris
+     koridornya di atas (satu sumber kebenaran untuk highlighted, lihat js/legend.js), bukan dua affordance
+     terpisah untuk aksi yang sama. */
+  .legend-card__close { display: none; }
+
+  /* Sempat dicoba varian "icon-button" xlarge (40x40) di sini, tapi di sebelah .nav-btn (~35px tinggi) jadi
+     kebanting/tidak sepadat — large (32x32, sama dengan dekstop/tab) justru sejalan dengan tinggi nav-btn.
+     Jadi dibiarkan ikut nilai bawaan .ctrl-btn, tak perlu override khusus mobile. */
+
+  @media (prefers-reduced-motion: reduce) {
+    #legend, #legend-scrim { transition-duration: 0.01ms; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line, .stop, .legend-row__box, .ctrl-btn, .stop-ring, .label-pos, .label-anim, .legend-card,
+  .nav-btn, .icon-btn, .close { transition: none; }
+}
