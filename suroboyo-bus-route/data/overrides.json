@@ -1,0 +1,233 @@
+{
+  "corridors": {
+    "R1": {
+      "main": "#D21E28",
+      "surface": "#FAEBEC",
+      "border": "#F5BABD",
+      "hover": "#AF1921",
+      "pressed": "#460A0D"
+    },
+    "R2": {
+      "main": "#067D9B",
+      "surface": "#E6F6FA",
+      "border": "#AFD3DB",
+      "hover": "#056881",
+      "pressed": "#022A34"
+    },
+    "R4": {
+      "main": "#C08F49",
+      "surface": "#F4EBDF",
+      "border": "#EADAC2",
+      "hover": "#A0773D",
+      "pressed": "#403018"
+    },
+    "R5": {
+      "main": "#E772A2",
+      "surface": "#FCEDF3",
+      "border": "#F6CBDD",
+      "hover": "#C05F87",
+      "pressed": "#743951"
+    }
+  },
+  "lines": {
+    "suroboyo-bus-r2-ke-unesa": {
+      "turnTo": "suroboyo-bus-r2-ke-kejawan-putih"
+    },
+    "suroboyo-bus-r1-ke-pelabuhan-tanjung-perak": {
+      "turnTo": "suroboyo-bus-r1-ke-terminal-purabaya"
+    }
+  },
+  "legs": {
+    "suroboyo-bus-r2-ke-unesa": {
+      "taman-makam-pahlawan-2>putat-gede-2": [],
+      "sman-4>pemuda": [],
+      "pens-2>its-gebang": [
+        [
+          -7.27931,
+          112.78996
+        ]
+      ],
+      "patung-kuda-2>jono-soewojo-2": []
+    },
+    "suroboyo-bus-r2-ke-kejawan-putih": {
+      "graha-family-a>ptc-a": [],
+      "ptc-a>jono-soewojo-1": [],
+      "putat-gede-1>taman-makam-pahlawan-1": [],
+      "tunjungan>simpang-dukuh": [],
+      "simpang-dukuh>gubernur-suryo": [],
+      "gubernur-suryo>balai-kota": [],
+      "balai-kota>grand-city": [],
+      "moestopo>rsud-dr-soetomo": "follow",
+      "rsud-dr-soetomo>unair-kampus-b": "follow",
+      "unair-kampus-b>kertajaya-1": "follow",
+      "pcm>kejawan-putih-tambak": [
+        [
+          -7.277297,
+          112.806036
+        ],
+        [
+          -7.277704,
+          112.805839
+        ]
+      ],
+      "pens-1>laguna": "follow",
+      "jono-soewojo-1>patung-kuda-1": []
+    },
+    "suroboyo-bus-r1-ke-terminal-purabaya": {
+      "tugu-pahlawan>alun-alun-contong": [],
+      "alun-alun-contong>siola": []
+    }
+  },
+  "aliases": {
+    "Bundaran ITS": "Bunderan ITS",
+    "RSUD Soetomo": "RSUD Dr Soetomo",
+    "Basra 2": "Basuki Rahmat"
+  },
+  "mergeByName": [
+    "Simpang Dukuh",
+    "Gubernur Suryo",
+    "Pangsud"
+  ],
+  "timeThemes": {
+    "pagi": {
+      "label": "Early morning",
+      "range": "05.00-09.00",
+      "bg": "#F0E4EE",
+      "corridors": {
+        "R1": {
+          "main": "#D21E28",
+          "surface": "#FAEBEC",
+          "border": "#F5BABD",
+          "hover": "#AF1921",
+          "pressed": "#460A0D"
+        },
+        "R2": {
+          "main": "#067D9B",
+          "surface": "#E6F6FA",
+          "border": "#AFD3DB",
+          "hover": "#056881",
+          "pressed": "#022A34"
+        },
+        "R4": {
+          "main": "#C08F49",
+          "surface": "#F4EBDF",
+          "border": "#EADAC2",
+          "hover": "#A0773D",
+          "pressed": "#403018"
+        },
+        "R5": {
+          "main": "#E772A2",
+          "surface": "#FCEDF3",
+          "border": "#F6CBDD",
+          "hover": "#C05F87",
+          "pressed": "#743951"
+        }
+      }
+    },
+    "siang": {
+      "label": "Midday",
+      "range": "09.00-15.00",
+      "bg": "#FFFFFF",
+      "corridors": {
+        "R1": {
+          "main": "#D21E28",
+          "surface": "#FAEBEC",
+          "border": "#F5BABD",
+          "hover": "#AF1921",
+          "pressed": "#460A0D"
+        },
+        "R2": {
+          "main": "#067D9B",
+          "surface": "#E6F6FA",
+          "border": "#AFD3DB",
+          "hover": "#056881",
+          "pressed": "#022A34"
+        },
+        "R4": {
+          "main": "#C08F49",
+          "surface": "#F4EBDF",
+          "border": "#EADAC2",
+          "hover": "#A0773D",
+          "pressed": "#403018"
+        },
+        "R5": {
+          "main": "#E772A2",
+          "surface": "#FCEDF3",
+          "border": "#F6CBDD",
+          "hover": "#C05F87",
+          "pressed": "#743951"
+        }
+      }
+    },
+    "sore": {
+      "label": "Afternoon",
+      "range": "15.00-18.00",
+      "bg": "#FBEAD3",
+      "corridors": {
+        "R1": {
+          "main": "#D21E28",
+          "surface": "#FAEBEC",
+          "border": "#F5BABD",
+          "hover": "#AF1921",
+          "pressed": "#460A0D"
+        },
+        "R2": {
+          "main": "#067D9B",
+          "surface": "#E6F6FA",
+          "border": "#AFD3DB",
+          "hover": "#056881",
+          "pressed": "#022A34"
+        },
+        "R4": {
+          "main": "#C08F49",
+          "surface": "#F4EBDF",
+          "border": "#EADAC2",
+          "hover": "#A0773D",
+          "pressed": "#403018"
+        },
+        "R5": {
+          "main": "#E772A2",
+          "surface": "#FCEDF3",
+          "border": "#F6CBDD",
+          "hover": "#C05F87",
+          "pressed": "#743951"
+        }
+      }
+    },
+    "malam": {
+      "label": "Night",
+      "range": "18.00-05.00",
+      "bg": "#040A1F",
+      "corridors": {
+        "R1": {
+          "main": "#8F0011",
+          "surface": "#140F20",
+          "border": "#2B1421",
+          "hover": "#AB1920",
+          "pressed": "#57161F"
+        },
+        "R2": {
+          "main": "#064B5E",
+          "surface": "#051126",
+          "border": "#061C31",
+          "hover": "#0F5F76",
+          "pressed": "#073145"
+        },
+        "R4": {
+          "main": "#7B5518",
+          "surface": "#0F1322",
+          "border": "#232125",
+          "hover": "#90692F",
+          "pressed": "#493825"
+        },
+        "R5": {
+          "main": "#973B63",
+          "surface": "#131127",
+          "border": "#2C1A33",
+          "hover": "#AE5077",
+          "pressed": "#5B2A49"
+        }
+      }
+    }
+  }
+}
