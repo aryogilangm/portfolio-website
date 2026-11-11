@@ -19,13 +19,10 @@
   <meta name="twitter:description" content="Peta skematik interaktif rute Suroboyo Bus dan Wira-Wiri untuk warga dan wisatawan Surabaya." />
   <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
   <script>
-    // Pasang tema yang tersimpan sebelum halaman digambar (mencegah kilatan terang saat memuat mode gelap).
-    try {
-      var m = localStorage.getItem('peta-waktu');
-      var h = new Date().getHours();
-      var auto = h >= 5 && h < 9 ? 'pagi' : h >= 9 && h < 15 ? 'siang' : h >= 15 && h < 18 ? 'sore' : 'malam';
-      document.documentElement.dataset.waktu = m && m !== 'auto' && ['pagi', 'siang', 'sore', 'malam'].indexOf(m) >= 0 ? m : auto;
-    } catch (e) { /* siang */ }
+    // Pasang tema sebelum halaman digambar. SELALU Early morning — tak disimpan antar kunjungan (sengaja):
+    // suasana lain, terutama Night, sengaja jadi kejutan yang baru ditemukan pengguna sendiri lewat tombol
+    // suasana tiap kali masuk halaman ini, bukan melanjutkan suasana terakhir atau mengikuti jam perangkat.
+    document.documentElement.dataset.waktu = 'pagi';
   </script>
   <link rel="preload" href="/suroboyo-bus-route/fonts/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/suroboyo-bus-route/fonts/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>

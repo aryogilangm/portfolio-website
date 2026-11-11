@@ -62,8 +62,8 @@ async function main() {
   document.title = `Peta ${net.meta.title}`;
   initTheme(net);
   // Tombol suasana waktu: 4 tombol pilih langsung (bukan siklus). Tak ada tombol "Auto" di kontrol tengah-bawah
-  // (sesuai Figma) — suasana tetap mengikuti jam perangkat sampai salah satu tombol ini diklik; tak ada yang
-  // menyala saat mode masih 'auto'.
+  // (sesuai Figma) — bawaannya SELALU Early morning (lihat theme.js) sampai salah satu tombol ini diklik; tak
+  // ada yang menyala saat mode masih 'auto', karena pengguna belum memilih sendiri.
   const themeBtns = [...document.querySelectorAll('#theme-group .ctrl-btn[data-waktu]')];
   const syncTheme = () => {
     const m = getMode();
