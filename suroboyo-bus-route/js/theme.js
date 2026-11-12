@@ -1,31 +1,27 @@
-// Tema suasana waktu: Early morning (05-09), Midday (09-15), Afternoon (15-18), Night (18-05), atau Auto (mengikuti jam perangkat).
+// Tema suasana waktu: Early morning (05-09), Midday (09-15), Afternoon (15-18), Night (18-05), atau Auto.
+// Auto SELALU berarti Early morning, bukan mengikuti jam perangkat — suasana lain (terutama Night) sengaja jadi
+// kejutan yang baru ditemukan pengguna sendiri lewat tombol suasana. Pilihan ini TIDAK disimpan antar kunjungan
+// (sengaja, bukan lupa): keluar dari halaman dan kembali lagi harus balik ke Early morning, bukan melanjutkan
+// suasana terakhir — kejutannya baru kalau selalu mulai dari awal.
 // Warna rute tiap suasana ada di data (network.json > meta.timeThemes, dibuat scripts/time-themes.mjs dari token koridor) dan
 // dipasang sebagai variabel CSS per jalur (`--line-<id>-main`, `--line-<id>-bus`, ...). Warna latar, teks, dan kartu ada di
 // css/style.css per `<html data-waktu="...">`. Ganti suasana cukup mengganti atribut dan variabel, tanpa membangun ulang peta.
-const KEY = 'peta-waktu';
 const rootEl = () => document.documentElement;
 
 export const THEMES = ['pagi', 'siang', 'sore', 'malam'];
 export const MODES = ['auto', ...THEMES];
 export const THEME_LABELS = { auto: 'Auto', pagi: 'Early morning', siang: 'Midday', sore: 'Afternoon', malam: 'Night' };
 
-// Suasana menurut jam (0-23).
-export const themeForHour = (h) => (h >= 5 && h < 9 ? 'pagi' : h >= 9 && h < 15 ? 'siang' : h >= 15 && h < 18 ? 'sore' : 'malam');
-
-// Alat perbandingan (lab/warna): ?waktu=<suasana> memaksa suasana tanpa menyimpannya, ?warna=lama memakai palet koridor lama.
+// Alat perbandingan (lab/warna): ?waktu=<suasana> memaksa suasana untuk sesi ini saja, ?warna=lama memakai palet koridor lama.
 const params = new URLSearchParams(location.search);
 export function storedMode() {
   const forced = params.get('waktu');
   if (MODES.includes(forced)) return forced;
-  try {
-    const m = localStorage.getItem(KEY);
-    if (MODES.includes(m)) return m;
-  } catch { /* penyimpanan tidak tersedia: otomatis */ }
   return 'auto';
 }
 let mode = 'auto';
 export const getMode = () => mode;
-export const getTheme = () => (mode === 'auto' ? themeForHour(new Date().getHours()) : mode);
+export const getTheme = () => (mode === 'auto' ? 'pagi' : mode);
 
 export const lineColor = (line) => `var(--line-${line.id}-main)`; // garis, cincin halte, badan bus
 export const lineBus = (line) => `var(--line-${line.id}-bus)`; // isi bus (token bus-background = border koridor); di Night putih (lampu dalam bus menyala)
@@ -75,13 +71,6 @@ export function initTheme(net) {
       paint();
     });
   }
-  // Mode otomatis: periksa tiap menit apakah suasana berganti.
-  let shown = getTheme();
-  setInterval(() => {
-    if (mode !== 'auto' || getTheme() === shown) return;
-    shown = getTheme();
-    animateSwap(() => { paint(); notify(); }, shown);
-  }, 60000);
 }
 
 // ---------- Transisi saat berpindah suasana ----------
@@ -252,10 +241,9 @@ function animateSwap(update, target = getTheme()) {
   });
 }
 
+// Dipanggil saat tombol suasana diklik. Hanya mengubah `mode` di memori (tidak disimpan ke localStorage —
+// lihat komentar di atas) supaya kunjungan berikutnya selalu mulai dari Auto (Early morning) lagi.
 export function setMode(next) {
   mode = MODES.includes(next) ? next : 'auto';
-  if (!params.get('waktu')) {
-    try { localStorage.setItem(KEY, mode); } catch { /* tidak disimpan */ }
-  }
-  animateSwap(() => { paint(); notify(); }, mode === 'auto' ? themeForHour(new Date().getHours()) : mode);
+  animateSwap(() => { paint(); notify(); }, mode === 'auto' ? 'pagi' : mode);
 }
