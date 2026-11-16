@@ -1061,7 +1061,11 @@ body:has(.navbar--home) .footer-main__inner {
   font-size: 18px;
   font-weight: 400;
   line-height: 27px;
-  letter-spacing: 0.7px;
+  /* Matches .paragraph's tracking — size/weight/color already separate
+     the heading from body text, so letter-spacing doesn't need to carry
+     that job too, and loose tracking on sentence-case text this size
+     reads gappy rather than refined. */
+  letter-spacing: 0.4px;
   color: var(--color-subheadline);
 }
 
