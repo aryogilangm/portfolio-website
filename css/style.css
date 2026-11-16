@@ -341,7 +341,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-paragraph);
 }
 
@@ -886,22 +886,27 @@ body:has(.navbar--home) .footer-main__inner {
 
 /* ===== Detail page (project case study) ===== */
 /* Full viewport width on purpose — unlike .container (used on
-   index/works, which has no visible background or border), each
-   .detail-section needs its bg + border-bottom to reach the actual
-   screen edges. Capping .detail-page itself at 1440px left a plain
-   white gap beyond that width with no section chrome in it at all,
-   which read as the border "stopping in the middle" on wide screens.
-   Content is instead capped per-section via padding (see
-   .detail-section's desktop rule below). */
+   index/works, which has no visible background), each .detail-section
+   needs its bg to reach the actual screen edges (matters for dark mode,
+   where the section bg differs from plain white). Capping .detail-page
+   itself at 1440px left a plain background-colored gap beyond that
+   width with no section chrome in it at all. Content is instead capped
+   per-section via padding (see .detail-section's desktop rule below). */
+/* Section-to-section spacing lives here as a single gap, not as each
+   .detail-section's own padding-top + padding-bottom stacked together —
+   stacking two paddings means every spacing change is really two edits
+   that have to agree, and it's easy to end up with double what you
+   meant (lived this: 100px/side silently became 200px). One gap value
+   can't stack with itself. */
 .detail-page {
   display: flex;
   flex-direction: column;
+  gap: var(--space-100);
 }
 
 .detail-section {
   background: var(--color-bg);
-  border-bottom: 1px solid var(--color-stroke);
-  padding: var(--space-64) var(--gutter);
+  padding: 0 var(--gutter);
   display: flex;
   flex-direction: column;
   /* 40px at mobile, 56px at tablet+ (see the tablet breakpoint below) —
@@ -910,12 +915,17 @@ body:has(.navbar--home) .footer-main__inner {
   gap: var(--space-40);
 }
 
+/* First section on the page: gap doesn't add space before the first
+   flex child, so it keeps its own top offset under the navbar. */
 .detail-section--tight {
   padding-top: var(--space-48);
 }
 
+/* Last section on the page: gap doesn't add space after the last flex
+   child either, so it keeps its own bottom offset before the footer,
+   matching the page's own section-to-section rhythm. */
 .detail-section--outro {
-  border-bottom: none;
+  padding-bottom: var(--space-100);
 }
 
 /* Article variant (long-form writing, e.g. article-agentic-ai.html):
@@ -2144,9 +2154,14 @@ dialog.image-lightbox[open]::backdrop {
   gap: var(--space-32);
 }
 
+/* Matches .paragraph's metrics exactly (16px/400/24px/0.4px) so the
+   footer email link doesn't read bigger or differently tracked than
+   the Linkedin/Dribbble/Upwork/copyright text beside it. */
 .link--large {
-  font-size: 18px;
-  line-height: 27px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.4px;
 }
 
 .footer-detail__links {
@@ -2217,12 +2232,7 @@ dialog.image-lightbox[open]::backdrop {
   }
 
   .detail-section {
-    padding-bottom: var(--space-80);
     gap: var(--space-56);
-  }
-
-  .detail-section:not(.detail-section--tight) {
-    padding-top: var(--space-80);
   }
 
   .detail-image-grid {
