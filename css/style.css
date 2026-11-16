@@ -1080,12 +1080,13 @@ h3.detail-title {
 }
 
 /* Geist titles instead of Nohemi — decided after comparing both live on
-   Bookdrop, now rolled out to every project case-study page (not
-   article-agentic-ai.html, which isn't a "detail page" in this sense and
-   keeps Nohemi). Section-headline (h2) needs medium weight to still read
-   as a title now that it shares Geist with body text; section-detail
-   (h3) stays regular since its color already separates it from
-   .paragraph. */
+   Bookdrop, now rolled out to every project case-study page, including
+   article-agentic-ai.html (kept Nohemi at first since it isn't a
+   project case-study, but left its section titles inconsistent with
+   every other detail page). Section-headline (h2) needs medium weight
+   to still read as a title now that it shares Geist with body text;
+   section-detail (h3) stays regular since its color already separates
+   it from .paragraph. */
 .detail-page--geist-titles h2.detail-title {
   font-family: var(--font-body);
   font-weight: 500;
