@@ -807,16 +807,17 @@ body.is-leaving {
    invisible on a near-black bg, and --color-button-bg matches
    --color-bg exactly, so the button at rest was just a border with no
    depth. Gives it a faint ambient fill at rest, and swaps the hover
-   lift for a light-tinted glow plus a brighter border instead of a
-   shadow that can't read on a dark surface. */
+   lift for a light-tinted glow plus a slightly brighter border —
+   border+glow stand in for the shadow light mode uses, but text color
+   stays put on hover just like light mode's does, so hover still
+   reads as one restrained signal changing, not several at once. */
 :root[data-theme="dark"] .button {
   background: rgba(255, 255, 255, 0.04);
 }
 
 @media (hover: hover) and (pointer: fine) {
   :root[data-theme="dark"] .button:hover {
-    border-color: var(--neutral-60);
-    color: var(--neutral-10);
+    border-color: var(--neutral-70);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 24px rgba(255, 255, 255, 0.06);
   }
 }
