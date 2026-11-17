@@ -730,7 +730,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-card-title);
   margin-top: var(--space-16);
 }
@@ -746,7 +746,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-card-subtitle);
 }
 
@@ -799,7 +799,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-text);
   margin-bottom: var(--space-24);
 }
@@ -816,7 +816,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-card-title);
 }
 
