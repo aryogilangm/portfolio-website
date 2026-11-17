@@ -105,21 +105,30 @@
 
   /* semantic colors */
   --color-bg: var(--neutral-10);
-  --color-paragraph: var(--neutral-70);
+  /* neutral-70 (#757575, ~4.6:1) read too washed-out gray; neutral-90
+     (#404040, ~10.4:1) sits one step lighter than the headline color
+     (neutral-110, #0a0a0a) — dark enough to read as "almost black"
+     while staying a distinct step from it. --color-card-subtitle
+     reuses this same value, same as the dark-mode treatment below. */
+  --color-paragraph: var(--neutral-90);
   --color-paragraph-highlight: var(--neutral-110);
-  --color-text: var(--neutral-70);
+  --color-text: var(--neutral-90);
   --color-headline: var(--primary-main);
   --color-subheadline: var(--neutral-110);
   --color-stroke: var(--neutral-30);
 
   --color-card-title: var(--neutral-110);
-  --color-card-subtitle: var(--neutral-70);
+  --color-card-subtitle: var(--neutral-90);
   --color-card-title-hover: var(--primary-main);
 
   --color-navbar-bg: var(--neutral-10);
   --color-navbar-text: var(--neutral-110);
 
-  --color-link-default: var(--neutral-70);
+  /* Matches --color-paragraph (not a fixed neutral) so an inline link
+     sitting inside a paragraph never drifts out of sync with the text
+     around it — the underline is what marks it as a link; color only
+     changes on hover/press. */
+  --color-link-default: var(--color-paragraph);
   --color-link-hover: var(--primary-main);
   --color-link-pressed: var(--primary-main);
 
@@ -193,21 +202,28 @@
   color-scheme: dark;
 
   --color-bg: var(--neutral-100);
-  --color-paragraph: var(--neutral-50);
+  /* neutral-50 (#c2c2c2, 10.6:1) read oddly dim to actually read for
+     long stretches; neutral-40 (#e0e0e0, ~14.7:1) matches the body-text
+     brightness dannyjpwilliams.com/about uses on a near-identical dark
+     bg, and reads easier at length. --color-card-subtitle now reuses
+     this same value instead of its own dimmer (and previously
+     AA-failing) token — card/experiment titles carry the hierarchy via
+     font-weight (see .work-card__title) instead of a color step. */
+  --color-paragraph: var(--neutral-40);
   --color-paragraph-highlight: var(--neutral-10);
-  --color-text: var(--neutral-50);
+  --color-text: var(--neutral-40);
   --color-headline: var(--primary-dark-main);
   --color-subheadline: var(--neutral-10);
   --color-stroke: var(--neutral-80);
 
   --color-card-title: var(--neutral-10);
-  --color-card-subtitle: var(--neutral-70);
+  --color-card-subtitle: var(--neutral-40);
   --color-card-title-hover: var(--primary-dark-main);
 
   --color-navbar-bg: var(--neutral-100);
   --color-navbar-text: var(--neutral-10);
 
-  --color-link-default: var(--neutral-50);
+  --color-link-default: var(--color-paragraph);
   --color-link-hover: var(--primary-dark-main);
   --color-link-pressed: var(--primary-dark-main);
 
@@ -630,7 +646,7 @@ body.is-leaving {
 }
 
 .container .headline {
-  margin-bottom: var(--space-40);
+  margin-bottom: var(--space-100);
 }
 
 .about {
@@ -728,9 +744,13 @@ body.is-leaving {
 .work-card__title {
   font-family: var(--font-body);
   font-size: 16px;
-  font-weight: 400;
+  /* --color-card-subtitle shares a value with --color-paragraph in
+     both themes (dark: --neutral-40, light: --neutral-90) — weight is
+     what keeps the title reading as a title next to a same-colored
+     subtitle line. */
+  font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-card-title);
   margin-top: var(--space-16);
 }
@@ -746,7 +766,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-card-subtitle);
 }
 
@@ -773,7 +793,10 @@ body.is-leaving {
   .button:hover {
     border-color: var(--color-button-stroke);
     color: var(--color-button-text);
-    box-shadow: 0 10px 10px -4px rgba(0, 0, 0, 0.1);
+    /* Two light layers instead of one heavy one — a single big shadow
+       at 10% reads flat/pasted-on; a tight close shadow plus a softer
+       far one reads as actual lift. */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03), 0 8px 16px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -781,6 +804,29 @@ body.is-leaving {
   background: var(--color-button-bg-pressed);
   border-color: transparent;
   color: var(--color-button-text-pressed);
+}
+
+/* Dark mode: a black drop shadow (the light-mode hover above) is
+   invisible on a near-black bg, and --color-button-bg matches
+   --color-bg exactly, so the button at rest was just a border with no
+   depth. Gives it a faint ambient fill at rest, and swaps the hover
+   lift for a light-tinted glow plus a slightly brighter border —
+   border+glow stand in for the shadow light mode uses, but text color
+   stays put on hover just like light mode's does, so hover still
+   reads as one restrained signal changing, not several at once. */
+:root[data-theme="dark"] .button {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="dark"] .button:hover {
+    border-color: var(--neutral-70);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 24px rgba(255, 255, 255, 0.06);
+  }
+}
+
+:root[data-theme="dark"] .button:active {
+  box-shadow: none;
 }
 
 .selected-works__cta {
@@ -791,7 +837,7 @@ body.is-leaving {
 
 /* ===== Experiments (home page, links out to article-* pages) ===== */
 .experiments {
-  margin-bottom: var(--space-40);
+  margin-bottom: var(--space-100);
 }
 
 .experiments__title {
@@ -799,7 +845,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-text);
   margin-bottom: var(--space-24);
 }
@@ -814,9 +860,11 @@ body.is-leaving {
 .experiment-card__title {
   font-family: var(--font-body);
   font-size: 16px;
-  font-weight: 400;
+  /* Same reasoning as .work-card__title: the description below shares
+     --color-paragraph's color, so weight carries the title's hierarchy. */
+  font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.4px;
   color: var(--color-card-title);
 }
 
@@ -828,10 +876,10 @@ body.is-leaving {
 
 .experiment-card__description {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 21px;
-  letter-spacing: 0.5px;
+  line-height: 24px;
+  letter-spacing: 0.4px;
   color: var(--color-card-subtitle);
   margin-top: var(--space-4);
 }
@@ -1003,6 +1051,41 @@ body:has(.navbar--home) .footer-main__inner {
   line-height: 21px;
   letter-spacing: 0.5px;
   color: var(--color-button-live-text);
+  transition: background-color 150ms ease-out, scale 150ms ease-out;
+}
+
+.watch-live:active {
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-live {
+    transition: background-color 150ms ease-out;
+  }
+  .watch-live:active {
+    scale: 1;
+  }
+}
+
+/* Tonal shift: light mode darkens toward black ("more ink"), dark
+   mode lightens toward white ("more light") instead of darkening
+   into the page bg — same color-mix technique, opposite target per
+   theme, so hover/press never just sinks into the background. */
+@media (hover: hover) and (pointer: fine) {
+  :root:not([data-theme="dark"]) .watch-live:hover {
+    background: color-mix(in oklch, var(--color-button-live-bg) 92%, black);
+  }
+  :root[data-theme="dark"] .watch-live:hover {
+    background: color-mix(in oklch, var(--color-button-live-bg) 88%, white);
+  }
+}
+
+:root:not([data-theme="dark"]) .watch-live:active {
+  background: color-mix(in oklch, var(--color-button-live-bg) 85%, black);
+}
+
+:root[data-theme="dark"] .watch-live:active {
+  background: color-mix(in oklch, var(--color-button-live-bg) 78%, white);
 }
 
 /* Text-only block (Figma "section-headline": h2/h3 + paragraph, no
@@ -1080,19 +1163,15 @@ h3.detail-title {
 }
 
 /* Geist titles instead of Nohemi — decided after comparing both live on
-   Bookdrop, now rolled out to every project case-study page (not
-   article-agentic-ai.html, which isn't a "detail page" in this sense and
-   keeps Nohemi). Section-headline (h2) needs medium weight to still read
-   as a title now that it shares Geist with body text; section-detail
-   (h3) stays regular since its color already separates it from
-   .paragraph. */
-.detail-page--geist-titles h2.detail-title {
-  font-family: var(--font-body);
-  font-weight: 500;
-}
-
+   Bookdrop, now rolled out to every project case-study page, including
+   article-agentic-ai.html (kept Nohemi at first since it isn't a
+   project case-study, but left its section titles inconsistent with
+   every other detail page). Both h2 and h3 need medium weight to still
+   read as titles now that they share Geist with body text. */
+.detail-page--geist-titles h2.detail-title,
 .detail-page--geist-titles h3.detail-title {
   font-family: var(--font-body);
+  font-weight: 500;
 }
 
 .detail-image {
