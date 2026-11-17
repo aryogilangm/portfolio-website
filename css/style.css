@@ -793,7 +793,10 @@ body.is-leaving {
   .button:hover {
     border-color: var(--color-button-stroke);
     color: var(--color-button-text);
-    box-shadow: 0 10px 10px -4px rgba(0, 0, 0, 0.1);
+    /* Two light layers instead of one heavy one — a single big shadow
+       at 10% reads flat/pasted-on; a tight close shadow plus a softer
+       far one reads as actual lift. */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03), 0 8px 16px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -1048,6 +1051,41 @@ body:has(.navbar--home) .footer-main__inner {
   line-height: 21px;
   letter-spacing: 0.5px;
   color: var(--color-button-live-text);
+  transition: background-color 150ms ease-out, scale 150ms ease-out;
+}
+
+.watch-live:active {
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-live {
+    transition: background-color 150ms ease-out;
+  }
+  .watch-live:active {
+    scale: 1;
+  }
+}
+
+/* Tonal shift: light mode darkens toward black ("more ink"), dark
+   mode lightens toward white ("more light") instead of darkening
+   into the page bg — same color-mix technique, opposite target per
+   theme, so hover/press never just sinks into the background. */
+@media (hover: hover) and (pointer: fine) {
+  :root:not([data-theme="dark"]) .watch-live:hover {
+    background: color-mix(in oklch, var(--color-button-live-bg) 92%, black);
+  }
+  :root[data-theme="dark"] .watch-live:hover {
+    background: color-mix(in oklch, var(--color-button-live-bg) 88%, white);
+  }
+}
+
+:root:not([data-theme="dark"]) .watch-live:active {
+  background: color-mix(in oklch, var(--color-button-live-bg) 85%, black);
+}
+
+:root[data-theme="dark"] .watch-live:active {
+  background: color-mix(in oklch, var(--color-button-live-bg) 78%, white);
 }
 
 /* Text-only block (Figma "section-headline": h2/h3 + paragraph, no
