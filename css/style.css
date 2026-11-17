@@ -803,6 +803,28 @@ body.is-leaving {
   color: var(--color-button-text-pressed);
 }
 
+/* Dark mode: a black drop shadow (the light-mode hover above) is
+   invisible on a near-black bg, and --color-button-bg matches
+   --color-bg exactly, so the button at rest was just a border with no
+   depth. Gives it a faint ambient fill at rest, and swaps the hover
+   lift for a light-tinted glow plus a brighter border instead of a
+   shadow that can't read on a dark surface. */
+:root[data-theme="dark"] .button {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="dark"] .button:hover {
+    border-color: var(--neutral-60);
+    color: var(--neutral-10);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 24px rgba(255, 255, 255, 0.06);
+  }
+}
+
+:root[data-theme="dark"] .button:active {
+  box-shadow: none;
+}
+
 .selected-works__cta {
   display: flex;
   justify-content: center;
