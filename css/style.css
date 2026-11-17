@@ -105,21 +105,30 @@
 
   /* semantic colors */
   --color-bg: var(--neutral-10);
-  --color-paragraph: var(--neutral-70);
+  /* neutral-70 (#757575, ~4.6:1) read too washed-out gray; neutral-90
+     (#404040, ~10.4:1) sits one step lighter than the headline color
+     (neutral-110, #0a0a0a) — dark enough to read as "almost black"
+     while staying a distinct step from it. --color-card-subtitle
+     reuses this same value, same as the dark-mode treatment below. */
+  --color-paragraph: var(--neutral-90);
   --color-paragraph-highlight: var(--neutral-110);
-  --color-text: var(--neutral-70);
+  --color-text: var(--neutral-90);
   --color-headline: var(--primary-main);
   --color-subheadline: var(--neutral-110);
   --color-stroke: var(--neutral-30);
 
   --color-card-title: var(--neutral-110);
-  --color-card-subtitle: var(--neutral-70);
+  --color-card-subtitle: var(--neutral-90);
   --color-card-title-hover: var(--primary-main);
 
   --color-navbar-bg: var(--neutral-10);
   --color-navbar-text: var(--neutral-110);
 
-  --color-link-default: var(--neutral-70);
+  /* Matches --color-paragraph (not a fixed neutral) so an inline link
+     sitting inside a paragraph never drifts out of sync with the text
+     around it — the underline is what marks it as a link; color only
+     changes on hover/press. */
+  --color-link-default: var(--color-paragraph);
   --color-link-hover: var(--primary-main);
   --color-link-pressed: var(--primary-main);
 
@@ -193,21 +202,28 @@
   color-scheme: dark;
 
   --color-bg: var(--neutral-100);
-  --color-paragraph: var(--neutral-50);
+  /* neutral-50 (#c2c2c2, 10.6:1) read oddly dim to actually read for
+     long stretches; neutral-40 (#e0e0e0, ~14.7:1) matches the body-text
+     brightness dannyjpwilliams.com/about uses on a near-identical dark
+     bg, and reads easier at length. --color-card-subtitle now reuses
+     this same value instead of its own dimmer (and previously
+     AA-failing) token — card/experiment titles carry the hierarchy via
+     font-weight (see .work-card__title) instead of a color step. */
+  --color-paragraph: var(--neutral-40);
   --color-paragraph-highlight: var(--neutral-10);
-  --color-text: var(--neutral-50);
+  --color-text: var(--neutral-40);
   --color-headline: var(--primary-dark-main);
   --color-subheadline: var(--neutral-10);
   --color-stroke: var(--neutral-80);
 
   --color-card-title: var(--neutral-10);
-  --color-card-subtitle: var(--neutral-70);
+  --color-card-subtitle: var(--neutral-40);
   --color-card-title-hover: var(--primary-dark-main);
 
   --color-navbar-bg: var(--neutral-100);
   --color-navbar-text: var(--neutral-10);
 
-  --color-link-default: var(--neutral-50);
+  --color-link-default: var(--color-paragraph);
   --color-link-hover: var(--primary-dark-main);
   --color-link-pressed: var(--primary-dark-main);
 
@@ -630,7 +646,7 @@ body.is-leaving {
 }
 
 .container .headline {
-  margin-bottom: var(--space-40);
+  margin-bottom: var(--space-100);
 }
 
 .about {
@@ -728,7 +744,11 @@ body.is-leaving {
 .work-card__title {
   font-family: var(--font-body);
   font-size: 16px;
-  font-weight: 400;
+  /* --color-card-subtitle shares a value with --color-paragraph in
+     both themes (dark: --neutral-40, light: --neutral-90) — weight is
+     what keeps the title reading as a title next to a same-colored
+     subtitle line. */
+  font-weight: 500;
   line-height: 24px;
   letter-spacing: 0.4px;
   color: var(--color-card-title);
@@ -791,7 +811,7 @@ body.is-leaving {
 
 /* ===== Experiments (home page, links out to article-* pages) ===== */
 .experiments {
-  margin-bottom: var(--space-40);
+  margin-bottom: var(--space-100);
 }
 
 .experiments__title {
@@ -814,7 +834,9 @@ body.is-leaving {
 .experiment-card__title {
   font-family: var(--font-body);
   font-size: 16px;
-  font-weight: 400;
+  /* Same reasoning as .work-card__title: the description below shares
+     --color-paragraph's color, so weight carries the title's hierarchy. */
+  font-weight: 500;
   line-height: 24px;
   letter-spacing: 0.4px;
   color: var(--color-card-title);
@@ -828,10 +850,10 @@ body.is-leaving {
 
 .experiment-card__description {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 21px;
-  letter-spacing: 0.5px;
+  line-height: 24px;
+  letter-spacing: 0.4px;
   color: var(--color-card-subtitle);
   margin-top: var(--space-4);
 }
@@ -1083,17 +1105,12 @@ h3.detail-title {
    Bookdrop, now rolled out to every project case-study page, including
    article-agentic-ai.html (kept Nohemi at first since it isn't a
    project case-study, but left its section titles inconsistent with
-   every other detail page). Section-headline (h2) needs medium weight
-   to still read as a title now that it shares Geist with body text;
-   section-detail (h3) stays regular since its color already separates
-   it from .paragraph. */
-.detail-page--geist-titles h2.detail-title {
-  font-family: var(--font-body);
-  font-weight: 500;
-}
-
+   every other detail page). Both h2 and h3 need medium weight to still
+   read as titles now that they share Geist with body text. */
+.detail-page--geist-titles h2.detail-title,
 .detail-page--geist-titles h3.detail-title {
   font-family: var(--font-body);
+  font-weight: 500;
 }
 
 .detail-image {
