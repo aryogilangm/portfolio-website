@@ -770,6 +770,34 @@ body.is-leaving {
   color: var(--color-card-subtitle);
 }
 
+/* ===== Scroll progress =====
+   A 2px sliver fixed at the very top edge of long case-study/article
+   pages, showing how far through the page the reader is. JS
+   (initScrollProgress in main.js) writes --scroll-progress on the
+   outer element as a 0-1 float on every scroll; the fill reads it via
+   transform: scaleX(), never width, so this never triggers layout on
+   scroll. Sits above the sticky navbar (z-index 10) since it's meant
+   to read as a page-level indicator, not part of the nav. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 101;
+  pointer-events: none;
+}
+
+.scroll-progress__fill {
+  display: block;
+  height: 100%;
+  background: var(--color-subheadline);
+  transform-origin: left center;
+  transform: scaleX(var(--scroll-progress, 0));
+  transition: transform 80ms linear;
+  will-change: transform;
+}
+
 /* ===== Button =====
    Component "button" di Figma (node 5:264, state=Default/Hover/Pressed, size=large): padding 8px/12px (bukan
    16px horizontal), hover cuma nambah shadow (warna tetap), pressed dapat bg solid --neutral-30/90 (bukan

@@ -86,6 +86,26 @@ function initNavbarScroll() {
 
 initNavbarScroll();
 
+// Scroll progress — writes --scroll-progress (0-1) on .scroll-progress
+// so its CSS fill can read it via transform: scaleX(), see style.css.
+// No-ops on pages that don't have the element (most of the site).
+function initScrollProgress() {
+  const bar = document.querySelector(".scroll-progress");
+  if (!bar) return;
+
+  const update = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+    bar.style.setProperty("--scroll-progress", Math.min(1, Math.max(0, progress)));
+  };
+
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+}
+
+initScrollProgress();
+
 /* theme-transition — site-wide light/dark switch animation (see design.md §6).
    themeTransition("dark" | "light") applies the theme, persists it and plays
    the wipe: the new theme is revealed by a clip-path wipe over the old one
