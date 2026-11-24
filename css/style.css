@@ -134,7 +134,6 @@
 
   --color-button-bg: var(--neutral-10);
   --color-button-bg-pressed: var(--neutral-30);
-  --color-button-stroke: var(--neutral-30);
   --color-button-text: var(--neutral-70);
   --color-button-text-pressed: var(--neutral-110);
 
@@ -229,7 +228,6 @@
 
   --color-button-bg: var(--neutral-100);
   --color-button-bg-pressed: var(--neutral-90);
-  --color-button-stroke: var(--neutral-80);
   --color-button-text: var(--neutral-50);
   --color-button-text-pressed: var(--neutral-60);
 
@@ -359,6 +357,13 @@ body.is-leaving {
   line-height: 24px;
   letter-spacing: 0.4px;
   color: var(--color-paragraph);
+}
+
+/* A bold lead-in label inside a paragraph (e.g. "Idle state: ...") —
+   500 instead of the browser's default bolder/700, same color as the
+   rest of the paragraph (Figma's text style only varies the weight). */
+.paragraph strong {
+  font-weight: 500;
 }
 
 .paragraph-highlight {
@@ -805,7 +810,14 @@ body.is-leaving {
 .button {
   display: inline-block;
   background: var(--color-button-bg);
-  border: 1px solid var(--color-button-stroke);
+  /* Transparent, not none: keeps the exact box-sizing: border-box
+     footprint a real 1px border would occupy, so the box-shadow ring
+     below sits flush at that same edge instead of growing the button
+     by 2px. The ring itself is pure black/white at low alpha (see
+     emil-surfaces), not a neutral token — a solid border color is
+     tuned to exactly one background, where the ring composites
+     correctly against whatever the button sits on. */
+  border: 1px solid transparent;
   border-radius: 8px;
   padding: var(--space-8) var(--space-12);
   font-family: var(--font-body);
@@ -814,42 +826,44 @@ body.is-leaving {
   letter-spacing: 0.7px;
   color: var(--color-button-text);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  /* Ring + a close, tight shadow even at rest — the button already
+     reads as a raised surface before any interaction, so hover only
+     has to intensify the same two layers (plus add a third, softer,
+     farther one) rather than introduce depth from nothing. */
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.04);
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .button:hover {
-    border-color: var(--color-button-stroke);
     color: var(--color-button-text);
-    /* Two light layers instead of one heavy one — a single big shadow
-       at 10% reads flat/pasted-on; a tight close shadow plus a softer
-       far one reads as actual lift. */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03), 0 8px 16px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 2px 4px rgb(0 0 0 / 0.05), 0 8px 16px rgb(0 0 0 / 0.07);
   }
 }
 
 .button:active {
   background: var(--color-button-bg-pressed);
-  border-color: transparent;
   color: var(--color-button-text-pressed);
+  /* Pressed flattens back to the page, same as releasing a real button
+     — the one moment with no shadow at all. */
+  box-shadow: none;
 }
 
-/* Dark mode: a black drop shadow (the light-mode hover above) is
-   invisible on a near-black bg, and --color-button-bg matches
-   --color-bg exactly, so the button at rest was just a border with no
-   depth. Gives it a faint ambient fill at rest, and swaps the hover
-   lift for a light-tinted glow plus a slightly brighter border —
-   border+glow stand in for the shadow light mode uses, but text color
-   stays put on hover just like light mode's does, so hover still
-   reads as one restrained signal changing, not several at once. */
+/* Dark mode: a black-tinted ring/shadow (the light-mode rule above) is
+   invisible on a near-black bg, so every layer flips to white at a low
+   alpha instead. No soft/far shadow layer here on purpose — a cast
+   shadow needs a light source and a surface to fall on, and a dark
+   background can't sell that illusion; a "soft white shadow" just
+   reads as an odd glow. Collapsing to a single ring (brighter on
+   hover) is the dark-mode-correct version of the same lift. */
 :root[data-theme="dark"] .button {
   background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08);
 }
 
 @media (hover: hover) and (pointer: fine) {
   :root[data-theme="dark"] .button:hover {
-    border-color: var(--neutral-70);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 24px rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.16);
   }
 }
 
@@ -1268,7 +1282,10 @@ dialog.image-lightbox {
      to take it instead — see initImageLightbox() in main.js), so it's
      a real focus target. Chrome gives <dialog> no default focus ring,
      but Safari does (a soft blue halo) — without this it shows for
-     the full open/close transition, looking exactly like a glitch. */
+     the full open/close transition, looking exactly like a glitch.
+     Deliberately no focus-visible replacement either — product
+     decision, flagged as a WCAG 2.4.7 gap (no visible focus indicator
+     for keyboard/AT users on this dialog or .detail-image-trigger). */
   outline: none;
   /* The native View Transitions API (see ::view-transition-group
      below) is the only open/close motion: it morphs the clicked
@@ -1360,9 +1377,7 @@ dialog.image-lightbox[open]::backdrop {
    exactly like it would for a real image that happened to be 3:2.
    object-fit: cover then crops the actual pixels to fill that box
    instead of letterboxing empty space. Never applied to
-   .detail-image-grid images, or to opted-in non-.detail-image
-   lightbox images like .fig-frame__img — see the base rule above and
-   initImageLightbox() in main.js for which images qualify. */
+   .detail-image-grid images — see the base rule above. */
 .image-lightbox__img.is-cropped {
   aspect-ratio: 3 / 2;
   object-fit: cover;
@@ -1614,8 +1629,12 @@ dialog.image-lightbox[open]::backdrop {
   height: calc(100dvh - var(--navbar-h, 62px) - 32px);
   border-radius: 12px;
   overflow: hidden;
-  /* 1px ring (the portfolio's neutral-30 stroke) + a soft layered lift */
-  box-shadow: 0 0 0 1px var(--neutral-30), 0 1px 1px rgb(0 0 0 / 0.03), 0 4px 8px -2px rgb(0 0 0 / 0.06), 0 14px 32px -12px rgb(0 0 0 / 0.14);
+  /* Translucent black ring (not the opaque neutral-30 stroke this used
+     to read off) + a soft layered lift — an alpha ring composites with
+     whatever sits behind the panel (article text, the map, either
+     theme's background), where a flat neutral hex is tuned to look
+     right against one background and pasted-on everywhere else. */
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 1px rgb(0 0 0 / 0.03), 0 4px 8px -2px rgb(0 0 0 / 0.06), 0 14px 32px -12px rgb(0 0 0 / 0.14);
   opacity: 0;
   visibility: hidden;
 }

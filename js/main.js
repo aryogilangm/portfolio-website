@@ -828,12 +828,16 @@ document.fonts?.ready.then(() => {
   document.querySelectorAll(".native-select").forEach(sizeNativeSelectToSelection);
 });
 
-// Lightbox for static detail-page screenshots (.detail-image) and the
-// article template's standalone diagrams (.fig-frame__img): wraps each
-// image with a zoom button and reuses one shared <dialog> per page.
-// Pure progressive enhancement over existing markup, so it applies
-// with no HTML changes beyond the opt-in selector in
-// initImageLightbox() below.
+// Lightbox for static detail-page screenshots (.detail-image): wraps
+// each image with a zoom button and reuses one shared <dialog> per
+// page. Pure progressive enhancement over existing markup, so it
+// applies to every detail page's .detail-image elements with no HTML
+// changes. Not applied to the article template's .fig-frame__img
+// diagrams: .fig-frame centers its image via place-items: center,
+// which only works when the <img> itself is the direct grid item —
+// the lightbox's button wrapper (width: 100%, no centering of its own
+// content) fills the whole track instead, leaving the narrower image
+// flush left inside it.
 
 // Image lightbox: the whole image is the click target (cursor: zoom-in
 // in style.css is the only hover affordance, no icon overlay) —
@@ -849,10 +853,7 @@ document.fonts?.ready.then(() => {
 // image itself, which is its own gesture-driven exit. No visible close
 // button — these are already every way in and out.
 function initImageLightbox() {
-  // .detail-image: every case-study screenshot. .fig-frame__img: the
-  // two standalone diagram images in the article template (the rest of
-  // .fig-frame is interactive iframes, not images, so unaffected).
-  const images = Array.from(document.querySelectorAll(".detail-image, .fig-frame__img"));
+  const images = Array.from(document.querySelectorAll(".detail-image"));
   if (!images.length) return;
 
   const dialog = document.createElement("dialog");
@@ -1042,10 +1043,9 @@ function initImageLightbox() {
       activeTrigger = button;
       activeSourceImg = image;
       // Crop to 3:2 for a standalone .detail-image (its own thumbnail
-      // is already cropped that way); leave a .detail-image-grid image,
-      // or a non-.detail-image opt-in like .fig-frame__img, at its
-      // natural ratio, same as its own thumbnail.
-      lightboxImg.classList.toggle("is-cropped", image.classList.contains("detail-image") && !image.closest(".detail-image-grid"));
+      // is already cropped that way); leave a .detail-image-grid image
+      // at its natural ratio, same as its own thumbnail.
+      lightboxImg.classList.toggle("is-cropped", !image.closest(".detail-image-grid"));
 
       if (!supportsViewTransitions || reducedMotion()) {
         lightboxImg.src = image.currentSrc || image.src;
