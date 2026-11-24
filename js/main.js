@@ -86,6 +86,26 @@ function initNavbarScroll() {
 
 initNavbarScroll();
 
+// Scroll progress — writes --scroll-progress (0-1) on .scroll-progress
+// so its CSS fill can read it via transform: scaleX(), see style.css.
+// No-ops on pages that don't have the element (most of the site).
+function initScrollProgress() {
+  const bar = document.querySelector(".scroll-progress");
+  if (!bar) return;
+
+  const update = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+    bar.style.setProperty("--scroll-progress", Math.min(1, Math.max(0, progress)));
+  };
+
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+}
+
+initScrollProgress();
+
 /* theme-transition — site-wide light/dark switch animation (see design.md §6).
    themeTransition("dark" | "light") applies the theme, persists it and plays
    the wipe: the new theme is revealed by a clip-path wipe over the old one
@@ -697,6 +717,109 @@ function initDetailPagesDemo() {
 
 initDetailPagesDemo();
 
+// Suroboyo Bus article ("Designing for The People who Ride"): one native
+// <select> swaps between three grids of generated background options.
+function initThemeVibes() {
+  const demo = document.querySelector(".vibes");
+  if (!demo) return;
+
+  const select = demo.querySelector(".native-select");
+  const grids = Array.from(demo.querySelectorAll(".vibes__grid"));
+
+  sizeNativeSelectToSelection(select);
+  select.addEventListener("change", () => {
+    grids.forEach((grid) => {
+      grid.hidden = grid.dataset.themeVibe !== select.value;
+    });
+    sizeNativeSelectToSelection(select);
+  });
+}
+
+initThemeVibes();
+
+// Suroboyo Bus article: the live map iframe has a fixed 1440x960 layout; scale it to whatever width its frame has.
+function initLiveMapFrames() {
+  const root = document.documentElement;
+  const isDark = () => root.dataset.theme === "dark";
+  const maps = Array.from(document.querySelectorAll(".fig-frame__live"));
+
+  // The map has its own four "times of day"; the article's light/dark maps to Early morning / Night. Set before the
+  // iframe loads (?waktu=) so a dark page never flashes the light map, and switched live via the map's own API.
+  const themed = (src) => src.replace(/[?&]waktu=\w+/, "") + (isDark() ? "&waktu=malam" : "");
+  maps.forEach((map) => {
+    if (isDark()) map.src = themed(map.src);
+  });
+  new MutationObserver(() => {
+    maps.forEach((map) => {
+      const api = map.contentWindow?.__peta;
+      if (api) api.setMode(isDark() ? "malam" : "pagi");
+      else map.src = themed(map.src); // not loaded yet (lazy): just change what it will load
+    });
+  }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+  document.querySelectorAll(".fig-frame--live").forEach((frame) => {
+    const fit = () => frame.style.setProperty("--live-scale", String(frame.clientWidth / 1440));
+    fit();
+    new ResizeObserver(fit).observe(frame);
+  });
+}
+
+initLiveMapFrames();
+
+// Suroboyo Bus article ("Tools Instead of Prompts"): the button shows and hides a floating panel with the map tools.
+// The panel's iframe loads on first open, so visitors who never open it don't download the tools.
+function initToolsPanel() {
+  const button = document.querySelector("[data-tools-toggle]");
+  const panel = document.querySelector(".tools-panel");
+  if (!button || !panel) return;
+  const frame = panel.querySelector(".tools-panel__frame");
+  const navbar = document.querySelector(".navbar");
+  const syncNavbar = () => {
+    if (navbar) panel.style.setProperty("--navbar-h", `${navbar.offsetHeight}px`);
+  };
+  syncNavbar();
+  window.addEventListener("resize", syncNavbar);
+
+  const setOpen = (open) => {
+    if (open && !frame.src) frame.src = frame.dataset.src;
+    panel.classList.toggle("is-open", open);
+    panel.inert = !open;
+    button.setAttribute("aria-expanded", String(open));
+    button.textContent = open ? "Hide the tools" : "Play with the tools";
+  };
+  button.addEventListener("click", () => setOpen(button.getAttribute("aria-expanded") !== "true"));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && panel.classList.contains("is-open")) {
+      setOpen(false);
+      button.focus();
+    }
+  });
+}
+
+initToolsPanel();
+
+// Suroboyo Bus article ("Getting the Routes Right"): a native <select> switches the embedded prototype between
+// Geographic and Eight directions (the embedded page reads documentElement.dataset.view).
+function initPrototypeSwitch() {
+  const frame = document.querySelector(".fig-frame--proto");
+  if (!frame) return;
+  const select = frame.querySelector(".native-select");
+  const iframe = frame.querySelector(".fig-frame__proto");
+  const apply = () => {
+    const doc = iframe.contentDocument;
+    if (doc?.documentElement.hasAttribute("data-embed")) doc.documentElement.dataset.view = select.value;
+  };
+
+  sizeNativeSelectToSelection(select);
+  select.addEventListener("change", () => {
+    apply();
+    sizeNativeSelectToSelection(select);
+  });
+  iframe.addEventListener("load", apply);
+}
+
+initPrototypeSwitch();
+
 // Canvas text measurement above falls back to the browser's default font
 // metrics if Geist hasn't finished loading yet when each init function
 // above runs — re-measuring once it's ready corrects any select sized
@@ -705,64 +828,258 @@ document.fonts?.ready.then(() => {
   document.querySelectorAll(".native-select").forEach(sizeNativeSelectToSelection);
 });
 
-// Lightbox for static detail-page screenshots (.detail-image): wraps each
-// image with a zoom button and reuses one shared <dialog> per page. Pure
-// progressive enhancement over existing markup, so it applies to every
-// detail page's .detail-image elements with no HTML changes.
+// Lightbox for static detail-page screenshots (.detail-image): wraps
+// each image with a zoom button and reuses one shared <dialog> per
+// page. Pure progressive enhancement over existing markup, so it
+// applies to every detail page's .detail-image elements with no HTML
+// changes. Not applied to the article template's .fig-frame__img
+// diagrams: .fig-frame centers its image via place-items: center,
+// which only works when the <img> itself is the direct grid item —
+// the lightbox's button wrapper (width: 100%, no centering of its own
+// content) fills the whole track instead, leaving the narrower image
+// flush left inside it.
 
-// Bootstrap Icons "arrows-angle-expand" / "arrows-angle-contract" — same
-// icons used for this control in Figma (node 256:21461 / 256:21210).
-const ICON_ARROWS_ANGLE_EXPAND = `<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707"/></svg>`;
-const ICON_ARROWS_ANGLE_CONTRACT = `<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707M15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707"/></svg>`;
-
+// Image lightbox: the whole image is the click target (cursor: zoom-in
+// in style.css is the only hover affordance, no icon overlay) —
+// modeled on thinkingroominc.com's case-study pages. The enlarged
+// image morphs directly out of the exact on-page position/size of the
+// thumbnail that was clicked, via the native View Transitions API
+// (document.startViewTransition(), moving view-transition-name between
+// the thumbnail and the dialog's own <img> — see setContinuityName()
+// below), and reverses the same morph back into the thumbnail on
+// close. Falls back to a plain, unanimated open/close where the API
+// doesn't exist or the user prefers reduced motion. Closes via Escape,
+// a backdrop click, or (touch only) a drag-down-to-dismiss on the
+// image itself, which is its own gesture-driven exit. No visible close
+// button — these are already every way in and out.
 function initImageLightbox() {
   const images = Array.from(document.querySelectorAll(".detail-image"));
   if (!images.length) return;
 
   const dialog = document.createElement("dialog");
   dialog.className = "image-lightbox";
-  dialog.innerHTML = `
-    <button type="button" class="image-lightbox__close" aria-label="Close image">
-      ${ICON_ARROWS_ANGLE_CONTRACT}
-    </button>
-    <img class="image-lightbox__img" alt="" />
-  `;
+  dialog.innerHTML = `<img class="image-lightbox__img" alt="" />`;
   document.body.appendChild(dialog);
 
-  const lightboxImg = dialog.querySelector(".image-lightbox__img");
-  const closeBtn = dialog.querySelector(".image-lightbox__close");
-  let trigger = null;
+  // Falls back to a plain, unanimated open/close where the View
+  // Transitions API doesn't exist (Firefox, older Safari) or the user
+  // prefers reduced motion — checked per open/close, not just once,
+  // since prefers-reduced-motion can change mid-session.
+  const supportsViewTransitions = !!document.startViewTransition;
+  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  closeBtn.addEventListener("click", () => dialog.close());
+  // .theme-toggle carries a permanent view-transition-name (style.css)
+  // for the site's own light/dark wipe transition, so its own layer
+  // survives that wipe. But view-transition-name isn't scoped to the
+  // transition that's supposed to use it — ANY startViewTransition()
+  // call anywhere on the page, ours included, captures it as its own
+  // extra animated group too, at the UA default duration/easing,
+  // unrelated to and unsynchronized with the lightbox's own, which
+  // showed up as an extra ghost layer during the open/close morph.
+  // "none" (not "") overrides the CSS-set name while in flight; clearing
+  // the inline value afterwards lets the CSS rule re-apply for the
+  // actual theme-switch feature. Cleared at `finished`, once the whole
+  // transition (snapshots AND the animation itself) is completely over
+  // — not at `ready`, which only means the snapshots are taken and the
+  // animation is *about* to start; mutating any element's style while
+  // the transition's pseudo-element overlay is still actively animating
+  // leaves a stale copy of the old snapshot visibly stuck on screen for
+  // a few frames.
+  //
+  // activeCount (not a bare boolean) is what makes this safe when a
+  // close follows an open quickly enough to overlap it — e.g. Escape
+  // within ~100ms, well inside the open transition's own ~300ms.
+  // Calling startViewTransition() again while one is still running
+  // makes the browser skip the first one immediately, resolving ITS
+  // `finished` right as the second transition is still being set up or
+  // is already capturing its own snapshots. With a plain "clear on my
+  // own finished", the first (open) transition's cleanup fires in that
+  // window and restores the real theme-toggle name while the second
+  // (close) transition is mid-flight — reproducing the same stale-
+  // snapshot ghost via two overlapping calls instead of one mistimed
+  // one. The counter only restores the real name once every overlapping
+  // call (including skipped ones) has resolved.
+  let activeViewTransitionCount = 0;
+  function startLightboxViewTransition(updateCallback) {
+    const themeToggle = document.querySelector(".theme-toggle");
+    if (activeViewTransitionCount === 0 && themeToggle) themeToggle.style.viewTransitionName = "none";
+    activeViewTransitionCount++;
+    const transition = document.startViewTransition(updateCallback);
+    // `ready` and `updateCallbackDone` ALSO reject independently when a
+    // transition is skipped (not just `finished`) — we never read
+    // either here, so a rejection on them would otherwise be its own,
+    // separate unhandled promise rejection. Silencing both alongside
+    // `finished` below.
+    transition.ready.catch(() => {});
+    transition.updateCallbackDone.catch(() => {});
+    // `finished` REJECTS (AbortError), not resolves, for a transition
+    // that got skipped by a newer one starting — exactly the overlap
+    // case this whole function exists for. .catch() first so that
+    // rejection doesn't surface as an unhandled promise rejection; the
+    // counter still needs to run either way.
+    transition.finished.catch(() => {}).finally(() => {
+      activeViewTransitionCount--;
+      if (activeViewTransitionCount === 0 && themeToggle) themeToggle.style.viewTransitionName = "";
+    });
+    return transition;
+  }
+
+  // Only one element may carry view-transition-name: lightbox-shared at
+  // a time — the API requires it unique across the old/new snapshot
+  // trees. Tracking which one currently has it (instead of just setting
+  // it on whichever element is at hand) means the PREVIOUS holder is
+  // always cleared first: without this, closing back onto thumbnail A
+  // then opening thumbnail B left A still tagged, so both A and B
+  // carried the name at once — a duplicate that breaks the pairing
+  // silently, falling back to the browser's default root cross-fade.
+  let continuityNamedEl = null;
+  function setContinuityName(el) {
+    if (continuityNamedEl && continuityNamedEl !== el) continuityNamedEl.style.viewTransitionName = "";
+    if (el) el.style.viewTransitionName = "lightbox-shared";
+    continuityNamedEl = el;
+  }
+
+  const lightboxImg = dialog.querySelector(".image-lightbox__img");
+  let activeTrigger = null;
+  let activeSourceImg = null;
+
+  function closeLightbox() {
+    if (!dialog.open) return;
+    if (!supportsViewTransitions || reducedMotion()) {
+      dialog.close();
+      return;
+    }
+    // Move the name from lightboxImg back onto the thumbnail it opened
+    // from, inside the mutation callback, so the API morphs the
+    // lightbox image back down into its grid slot instead of just
+    // disappearing in place.
+    setContinuityName(lightboxImg);
+    startLightboxViewTransition(() => {
+      dialog.close();
+      setContinuityName(activeSourceImg);
+    });
+  }
 
   // Clicking the backdrop lands a click event on <dialog> itself (the
   // image inside has its own box, so a click on it never reaches here).
   dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) dialog.close();
+    if (event.target === dialog) closeLightbox();
+  });
+
+  // Escape fires "cancel" (cancelable) before the dialog closes itself
+  // — prevent the default instant close and run the view-transition
+  // close first instead, same as every other close path.
+  dialog.addEventListener("cancel", (event) => {
+    if (reducedMotion()) return;
+    event.preventDefault();
+    closeLightbox();
   });
 
   dialog.addEventListener("close", () => {
-    trigger?.focus();
+    activeTrigger?.focus({ preventScroll: true });
+    lightboxImg.classList.remove("is-dragging");
+    activeSourceImg = null;
   });
 
+  // Drag-down-to-dismiss — touch only (desktop has Escape and the
+  // backdrop click instead; touchstart/move/end simply never fire for
+  // a mouse, so nothing extra is needed to keep this off desktop).
+  // Follows the finger 1:1 while dragging — a transition here would
+  // fight every touchmove frame (see .is-dragging in style.css) — and
+  // past DISMISS_THRESHOLD it closes immediately (the drag itself was
+  // the exit motion); short of it, it springs back via the CSS
+  // transition restored once the drag ends.
+  const DISMISS_THRESHOLD = 110;
+  let dragStartY = null;
+  let dragDeltaY = 0;
+
+  lightboxImg.addEventListener(
+    "touchstart",
+    (event) => {
+      dragStartY = event.touches[0].clientY;
+      lightboxImg.classList.add("is-dragging");
+    },
+    { passive: true },
+  );
+
+  lightboxImg.addEventListener(
+    "touchmove",
+    (event) => {
+      if (dragStartY === null) return;
+      dragDeltaY = Math.max(0, event.touches[0].clientY - dragStartY);
+      lightboxImg.style.transform = `translateY(${dragDeltaY}px)`;
+      lightboxImg.style.opacity = String(1 - Math.min(dragDeltaY / 300, 0.6));
+    },
+    { passive: true },
+  );
+
+  const endDrag = () => {
+    if (dragStartY === null) return;
+    lightboxImg.classList.remove("is-dragging");
+    if (dragDeltaY > DISMISS_THRESHOLD) {
+      dialog.close();
+    } else {
+      lightboxImg.style.transform = "";
+      lightboxImg.style.opacity = "";
+    }
+    dragStartY = null;
+    dragDeltaY = 0;
+  };
+
+  lightboxImg.addEventListener("touchend", endDrag);
+  lightboxImg.addEventListener("touchcancel", endDrag);
+
   images.forEach((image) => {
-    const wrap = document.createElement("div");
-    wrap.className = "detail-image-wrap";
-    image.replaceWith(wrap);
-    wrap.appendChild(image);
+    const button = document.createElement("button");
+    button.type = "button";
+    // .detail-image-wrap: layout hook other rules key off (see
+    // style.css). .detail-image-trigger: the button reset + cursor.
+    button.className = "detail-image-wrap detail-image-trigger";
+    button.setAttribute("aria-label", "Open image full size");
+    image.replaceWith(button);
+    button.appendChild(image);
 
-    const zoomBtn = document.createElement("button");
-    zoomBtn.type = "button";
-    zoomBtn.className = "detail-image-zoom";
-    zoomBtn.setAttribute("aria-label", "Zoom image");
-    zoomBtn.innerHTML = ICON_ARROWS_ANGLE_EXPAND;
-    wrap.appendChild(zoomBtn);
+    button.addEventListener("click", () => {
+      activeTrigger = button;
+      activeSourceImg = image;
+      // Crop to 3:2 for a standalone .detail-image (its own thumbnail
+      // is already cropped that way); leave a .detail-image-grid image
+      // at its natural ratio, same as its own thumbnail.
+      lightboxImg.classList.toggle("is-cropped", !image.closest(".detail-image-grid"));
 
-    zoomBtn.addEventListener("click", () => {
-      trigger = zoomBtn;
+      if (!supportsViewTransitions || reducedMotion()) {
+        lightboxImg.src = image.currentSrc || image.src;
+        lightboxImg.alt = image.alt;
+        dialog.showModal();
+        return;
+      }
+
+      // The mutation callback is what the View Transitions API actually
+      // diffs — the name has to move from the thumbnail to lightboxImg
+      // *inside* it (not before/after), so the "old" snapshot is the
+      // thumbnail as it was and the "new" snapshot is lightboxImg as it
+      // ends up.
+      //
+      // Decode happens *before* startViewTransition() is called, not
+      // inside its update callback. An async update callback means the
+      // API's internal "capture new snapshot" step has to wait on our
+      // promise too — under rapid or back-to-back opens this produced a
+      // case where an open was delayed by a full extra cycle. Pre-
+      // decoding keeps the update callback synchronous, which the API
+      // can run and capture immediately.
       lightboxImg.src = image.currentSrc || image.src;
       lightboxImg.alt = image.alt;
-      dialog.showModal();
+      lightboxImg
+        .decode()
+        .catch(() => {})
+        .then(() => {
+          if (activeSourceImg !== image) return; // superseded by a later click
+          setContinuityName(image);
+          startLightboxViewTransition(() => {
+            dialog.showModal();
+            setContinuityName(lightboxImg);
+          });
+        });
     });
   });
 }

@@ -31,11 +31,6 @@
      --chrome-ink. Solid (bukan alpha) dengan alasan sama seperti --chrome-* lain: elemen ini duduk langsung di
      atas halaman, bukan di atas card opak, jadi alpha akan menembuskan warna latar tema (pagi/sore dst). */
   --chrome-pressed-solid: #ededed;
-  /* Disabled nav-btn duduk langsung di halaman (sama seperti --chrome-pressed-solid) — solid, bukan alpha dari
-     --cb-disabled-* (itu buat checkbox yang duduk di atas card legend yang opak, beda konteks). */
-  --chrome-disabled-solid: #ededed;
-  --chrome-disabled-border: #e0e0e0;
-  --chrome-disabled-text: #9e9e9e;
   --chrome-shadow: 0 2px 6px rgb(0 0 0 / 0.05), 0 10px 24px -8px rgb(0 0 0 / 0.1);
   /* Component "CheckBox" di Figma (node 281:14401), warna persis dari sana. Sama 2 "tema besar" dengan --chrome-*
      di atas: tak berubah antara pagi/siang/sore, hanya diganti di malam (lihat override-nya). */
@@ -48,15 +43,6 @@
   --cb-disabled-bg: #ededed;
   --cb-disabled-border: #e0e0e0;
   --cb-disabled-check: #9e9e9e;
-  /* Tooltip shadcn-style (https://ui.shadcn.com/docs/components/base/tooltip): surface-nya SEARAH dengan tema
-     halaman (terang di atas halaman terang, gelap di atas halaman gelap — lihat override di
-     :root[data-waktu="malam"]), sama seperti --chrome-* lain. Border alpha-hitam + shadow berlapis (bukan satu
-     shadow besar) biar terasa fisik/melayang, bukan "ditempel". Sama 2 "tema besar" (tak ikut retint
-     pagi/siang/sore). */
-  --tooltip-default-bg: #ffffff;
-  --tooltip-default-stroke: rgb(0 0 0 / 0.08);
-  --tooltip-default-text: #0a0a0a;
-  --tooltip-default-shadow: 0 1px 2px rgb(0 0 0 / 0.03), 0 6px 12px -4px rgb(0 0 0 / 0.05), 0 16px 28px -12px rgb(0 0 0 / 0.07);
   --gutter: 32px;
   --font-body: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-heading: "Nohemi", "Geist", -apple-system, sans-serif;
@@ -115,19 +101,12 @@
   --chrome-ink: #ffffff;
   /* Abu-abu netral murni (dulu #9e9e9e) terasa kekuningan/kecoklatan di atas halaman biru tua ini (contrast
      simultan: mata memberi warna hangat semu ke abu-abu netral yang dikelilingi warna dingin) — digeser sedikit
-     ke biru supaya "setuju" dengan hue halaman, sama seperti --chrome-disabled-text/--cb-disabled-check yang
-     sudah lebih dulu begini. */
+     ke biru supaya "setuju" dengan hue halaman, sama seperti --cb-disabled-check yang sudah lebih dulu begini. */
   --chrome-muted: #9aa3ba;
   --chrome-hover: rgb(255 255 255 / 0.06);
   /* Figma cuma punya satu set warna (light); #283149 dipilih dengan logika sama seperti --chrome-shadow di
      malam — mencampur chrome-bg dengan putih (bukan hitam) supaya tetap terlihat "ditekan" di atas kartu gelap. */
   --chrome-pressed-solid: #283149;
-  /* Sama alasan dengan --chrome-pressed-solid: solid (bukan alpha rendah seperti --cb-disabled-bg) supaya peta
-     di baliknya tidak menembus tombol. Warna sendiri (lebih gelap dari --chrome-pressed-solid, border solid
-     bukan alpha) dipilih manual lewat perbandingan 4 varian — lihat histori sesi. */
-  --chrome-disabled-solid: #141a2e;
-  --chrome-disabled-border: #2e364d;
-  --chrome-disabled-text: #7d859a;
   --chrome-shadow: 0 2px 6px rgb(0 0 0 / 0.25), 0 10px 28px -8px rgb(0 0 0 / 0.45);
   /* Figma cuma punya satu set warna (light); versi malam disesuaikan sendiri supaya tetap kontras di kartu gelap
      --chrome-bg (checked-hover dibikin lebih TERANG, bukan lebih gelap seperti di Figma, karena di sini makin
@@ -141,12 +120,6 @@
   --cb-disabled-bg: rgb(255 255 255 / 0.06);
   --cb-disabled-border: rgb(255 255 255 / 0.1);
   --cb-disabled-check: #6b7280;
-  /* Sama arah dengan --chrome-* di tema ini (gelap). Border alpha-putih (bukan solid) tetap dipakai di sini
-     karena itu konvensi border malam yang sudah berlaku di seluruh token --chrome- dan --cb- proyek ini. */
-  --tooltip-default-bg: #0b1530;
-  --tooltip-default-stroke: rgb(255 255 255 / 0.1);
-  --tooltip-default-text: #ffffff;
-  --tooltip-default-shadow: 0 1px 2px rgb(0 0 0 / 0.2), 0 6px 16px -6px rgb(0 0 0 / 0.3), 0 16px 32px -14px rgb(0 0 0 / 0.35);
 }
 
 /* Transisi suasana (js/theme.js, View Transitions): gambar lama diam, gambar baru dibuka di atasnya lewat animasi WAAPI. */
@@ -196,6 +169,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 button { font: inherit; color: inherit; cursor: pointer; }
+
+/* ?embed — bare map inside the case-study article's figure container. */
+:root[data-embed] body { background: transparent; }
+:root[data-embed] .page-nav,
+:root[data-embed] .controls,
+:root[data-embed] #legend,
+:root[data-embed] #legend-scrim,
+:root[data-embed] #stop-info,
+:root[data-embed] #banner { display: none !important; }
+/* Embedded in the article on a touch screen: a vertical swipe over the map must scroll the page, not pan the map. The
+   map is only draggable while a tool mode (move stops / edit routes) is on. */
+:root[data-embed] #map { touch-action: pan-y pinch-zoom; }
+:root[data-embed] #map.editing, :root[data-embed] #map.route-editing { touch-action: none; }
 
 /* Peta */
 #map {
@@ -369,66 +355,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transform: scale(0.96);
 }
 .nav-btn:focus-visible { outline: 2px solid var(--chrome-ink); outline-offset: 2px; }
-
-/* "See how it was built" sementara nonaktif (studi kasus belum rilis, peta sudah). Pakai --chrome-disabled-*
-   (solid, duduk langsung di halaman) — BUKAN --cb-disabled-* (itu alpha rendah, didesain buat checkbox yang
-   duduk di atas card legend yang opak; dipakai di sini sempat bikin tombolnya tembus pandang ke peta di malam). */
-.nav-btn--disabled {
-  color: var(--chrome-disabled-text);
-  border-color: var(--chrome-disabled-border);
-  background: var(--chrome-disabled-solid);
-  cursor: not-allowed;
-}
-.nav-btn--disabled:hover,
-.nav-btn--disabled:active {
-  box-shadow: none;
-  background: var(--chrome-disabled-solid);
-  border-color: var(--chrome-disabled-border);
-  color: var(--chrome-disabled-text);
-  transform: none;
-}
-
-/* Tooltip gaya shadcn (https://ui.shadcn.com/docs/components/base/tooltip), warna lewat token
-   --tooltip-default-* (lihat :root dan override malam). Copy-nya pendek jadi aman dipusatkan di tengah
-   tombol (nggak perlu logika rata-kiri/kanan khusus layar sempit). Hover digate (hover: hover) seperti tombol
-   lain, focus-within tetap jalan untuk keyboard/sentuh. */
-.nav-btn-tip-wrapper { position: relative; display: inline-flex; }
-.nav-btn-tip {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  z-index: 20;
-  margin-top: 8px;
-  translate: -50% 0;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--tooltip-default-stroke);
-  background: var(--tooltip-default-bg);
-  box-shadow: var(--tooltip-default-shadow);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--tooltip-default-text);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 150ms ease-out;
-}
-.nav-btn-tip-wrapper:focus-within .nav-btn-tip { opacity: 1; }
-@media (hover: hover) and (pointer: fine) {
-  .nav-btn-tip-wrapper:hover .nav-btn-tip { opacity: 1; }
-}
-/* Segitiga kecil (persegi diputar 45°, warna sama dengan tooltip) yang menempel di tepi atasnya. */
-.nav-btn-tip-arrow {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  z-index: -1;
-  width: 8px;
-  height: 8px;
-  translate: -50% -50%;
-  rotate: 45deg;
-  background: var(--tooltip-default-bg);
-}
 
 /* Kontrol: grup tombol tengah-bawah, tetap (ukuran dan posisi tidak berubah saat zoom peta), tiga sub-grup
    (suasana waktu / zoom / sesuaikan) dipisah gap, meniru https://muhraufan.com/lab/tokyo-transit-map-app.html.

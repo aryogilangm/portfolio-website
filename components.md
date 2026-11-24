@@ -39,24 +39,37 @@ work-card (link, seluruh card bisa diklik)
 
 ## 2. `button`
 
-**Figma:** Component Set `button` (page asset), 3 states: `Default`, `hover`, `state3` (pressed)
-**Dipakai di:** tombol "All Works" di home
+**Figma:** Component Set `button` (page asset-component), properti `size` (`large` / `default`) × `state` (`Default` / `hover` / `pressed` / `disable`) = 8 variant. Ikon `globe` di kiri hanya placeholder di Figma, tidak ikut ke HTML.
+**Dipakai di:** tombol "All Works" di home (default), tombol "Play with the tools" / "Hide the tools" di article-suroboyo-bus-route (default)
 
-### Spec per state
-| State | Background | Border | Text color |
+### Ukuran
+| Size | Teks | Padding | Tinggi | Class |
+|---|---|---|---|---|
+| `large` | Geist 16px / 24px Regular, letter-spacing 0.4px | 8px 12px | 42px | `.button` |
+| `default` | Geist 14px / 21px Regular, letter-spacing 0.4px | 6px 12px | 35px | `.button.button--default` |
+
+Radius 8px di kedua ukuran. Pakai `default` untuk tombol aksi kecil di dekat konten (mis. di bawah gambar artikel); `large` untuk CTA mandiri. Saat ini semua pemakaian di situs pakai `default` — `large` tersedia di CSS tapi belum ada tombol yang pakai.
+
+### Spec per state (sama untuk kedua ukuran)
+Border asli diganti ring/shadow translucent (lihat emil-surfaces) supaya komposit ke background apapun, bukan warna solid yang cuma pas di satu background.
+
+| State | Background | Shadow/ring | Text color |
 |---|---|---|---|
-| Default | `#ffffff` | 1px `#ededed` | `#757575` |
-| Hover | `#ffffff` (sama seperti default) | 1px `#ededed` | `#757575` + `box-shadow: 0 10px 10px -4px rgba(0,0,0,0.1)` |
-| Pressed | `#ffffff` | tidak ada border | `#0a0a0a` |
+| Default | `#ffffff` | ring `rgb(0 0 0 / 0.08)` + shadow tipis | `#757575` |
+| Hover | `#ffffff` (sama seperti default) | ring + bayangan tiga lapis (lihat CSS) | `#757575` |
+| Pressed | `#ededed` | tidak ada shadow | `#0a0a0a` |
+| Disable | `#ededed` | 1px `#e0e0e0` | `#9e9e9e` |
 
-- `border-radius: 8px`, `padding: 8px 16px`
-- Font: Geist 16px Regular
+Dark mode: ring putih translucent tunggal (lebih terang saat hover), tanpa shadow lunak — bayangan gelap tidak kebaca di background gelap.
+
+Catatan: state `disable` ada di Figma tetapi belum punya class di CSS (belum dipakai di halaman mana pun).
 
 ### Implementasi
-`.button` — lihat [css/style.css](css/style.css).
+`.button` (large) dan `.button--default` (default) — lihat [css/style.css](css/style.css).
 
 ```html
-<a href="works.html" class="button">All Works</a>
+<a href="works.html" class="button button--default">All Works</a>
+<button type="button" class="button button--default">Play with the tools</button>
 ```
 
 ---

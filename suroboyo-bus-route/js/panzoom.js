@@ -12,9 +12,12 @@ export function createPanZoom(svg, viewport, { minK = 0.2, maxK = 5, onChange } 
     viewport.setAttribute('transform', `translate(${x} ${y}) scale(${k})`);
     onChange?.(k);
   };
+  // Layout size, not getBoundingClientRect(): the latter is scaled when the page is shown inside a CSS-scaled iframe
+  // (the case-study article embeds the map at 2x and shrinks it), which would make fit() size the map for the wrong box.
+  const size = () => ({ width: svg.clientWidth, height: svg.clientHeight });
   const local = (e) => {
     const r = svg.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    return { x: (e.clientX - r.left) * (svg.clientWidth / r.width), y: (e.clientY - r.top) * (svg.clientHeight / r.height) };
   };
   const zoomAt = (cx, cy, nk) => {
     nk = clamp(nk, minK, maxK);
@@ -42,7 +45,7 @@ export function createPanZoom(svg, viewport, { minK = 0.2, maxK = 5, onChange } 
 
   function zoomBy(factor) {
     touched = true;
-    const r = svg.getBoundingClientRect();
+    const r = size();
     const cx = r.width / 2;
     const cy = r.height / 2;
     const nk = clamp(k * factor, minK, maxK);
@@ -50,7 +53,7 @@ export function createPanZoom(svg, viewport, { minK = 0.2, maxK = 5, onChange } 
   }
 
   function fitTarget({ top = 40, right = 40, bottom = 40, left = 40 } = {}) {
-    const r = svg.getBoundingClientRect();
+    const r = size();
     const b = viewport.getBBox();
     const w = r.width - left - right;
     const h = r.height - top - bottom;
@@ -63,6 +66,8 @@ export function createPanZoom(svg, viewport, { minK = 0.2, maxK = 5, onChange } 
   }
 
   svg.addEventListener('wheel', (e) => {
+    // Embedded in an article: plain scrolling belongs to the host page; only pinch/ctrl+wheel zooms the map.
+    if (document.documentElement.dataset.embed !== undefined && !e.ctrlKey) return;
     e.preventDefault();
     touched = true;
     cancelAnimationFrame(tween);
