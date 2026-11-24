@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layout prototypes compare</title>
+  <style>
+    :root { --bg: #f4f4f6; --ink: #1d1f23; --muted: #6b7078; --card: #fff; --border: #dcdce0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink); font: 13px ui-sans-serif, system-ui, sans-serif; }
+    header { padding: 14px 16px 4px; }
+    header h1 { margin: 0 0 2px; font-size: 15px; }
+    header p { margin: 0; color: var(--muted); }
+    #grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; padding: 12px 16px 16px; }
+    figure { margin: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    figcaption { padding: 10px 12px 0; }
+    figcaption b { display: block; font-size: 13px; }
+    figcaption span { color: var(--muted); font-size: 12px; }
+    svg { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; }
+    .note { padding: 0 16px 16px; color: var(--muted); font-size: 12px; }
+    /* ?embed: one bare figure at a time for the case-study article (the select there picks geo or eight). */
+    :root[data-embed], :root[data-embed] body { height: 100%; background: transparent; overflow: hidden; }
+    :root[data-embed] header, :root[data-embed] .note, :root[data-embed] figcaption { display: none; }
+    :root[data-embed] #grid { display: block; height: 100%; padding: 0; }
+    :root[data-embed] figure { height: 100%; border: 0; border-radius: 0; background: transparent; }
+    :root[data-embed] figure:not([data-view="geo"]) { display: none; }
+    :root[data-embed][data-view="eight"] figure[data-view="geo"] { display: none; }
+    :root[data-embed][data-view="eight"] figure[data-view="eight"] { display: block; }
+    :root[data-embed][data-theme="dark"] { color-scheme: dark; }
+    :root[data-embed] svg { width: 100%; height: 100%; aspect-ratio: auto; }
+  </style>
+  <script>
+    // ?embed: follow the article's light/dark theme and let the article switch the view (document.documentElement.dataset.view).
+    if (new URLSearchParams(location.search).has('embed')) {
+      const root = document.documentElement;
+      root.dataset.embed = '';
+      root.dataset.view = 'geo';
+      const sync = () => { root.dataset.theme = parent.document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'; };
+      sync();
+      new MutationObserver(sync).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Two layout directions, same network</h1>
+    <p>Both come from the project data.</p>
+  </header>
+  <div id="grid"></div>
+  <p class="note">Geographic is lightly simplified (Douglas-Peucker at <code id="tol"></code> m) to remove small wiggles and spurs. Stops are left out so the route lines are easy to compare. Lines are 1px wide and shifted to the left of their direction of travel, so each road shows its two directions as two lines.</p>
+  <script type="module">
+    import { projector } from '../../js/geo.js';
+
+    const TIDY_M = 130; // how far Geographic may stray from the real road shape while smoothing out wiggles
+    document.querySelector('#tol').textContent = TIDY_M;
+
+    const [geo, eight] = await Promise.all([
+      fetch('../../data/network.geo.json').then((r) => r.json()),
+      fetch('../../data/network.json').then((r) => r.json()),
+    ]);
+
+    const toXY = (net) => {
+      const p = projector(net.meta.origin, net.meta.scale);
+      return (lat, lng) => p(lat, lng);
+    };
+
+    // Whole path of a line as projected points (legs are lists of [lat, lng], joined end to end).
+    function linePath(line, xy) {
+      const pts = [];
+      for (const leg of line.legs) for (const [lat, lng] of leg) {
+        const q = xy(lat, lng);
+        const last = pts[pts.length - 1];
+        if (!last || Math.hypot(q.x - last.x, q.y - last.y) > 1e-6) pts.push(q);
+      }
+      return pts;
+    }
+
+    // Douglas-Peucker; tolerance in map units (1 unit = scale metres).
+    function simplify(pts, tol) {
+      if (pts.length < 3) return pts;
+      const keep = new Array(pts.length).fill(false);
+      keep[0] = keep[pts.length - 1] = true;
+      const stack = [[0, pts.length - 1]];
+      while (stack.length) {
+        const [a, b] = stack.pop();
+        let worst = -1, wi = -1;
+        for (let i = a + 1; i < b; i++) {
+          const d = segDist(pts[i], pts[a], pts[b]);
+          if (d > worst) { worst = d; wi = i; }
+        }
+        if (worst > tol) { keep[wi] = true; stack.push([a, wi], [wi, b]); }
+      }
+      return pts.filter((_, i) => keep[i]);
+    }
+    function segDist(p, a, b) {
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const len2 = dx * dx + dy * dy;
+      const t = len2 ? Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / len2)) : 0;
+      return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+    }
+    // Offset a path by `d` map units to the left of its direction of travel (screen y points down).
+    function shiftLeft(pts, d) {
+      const n = pts.length;
+      const seg = [];
+      for (let i = 1; i < n; i++) {
+        const dx = pts[i].x - pts[i - 1].x, dy = pts[i].y - pts[i - 1].y, len = Math.hypot(dx, dy) || 1;
+        seg.push({ x: dy / len, y: -dx / len });
+      }
+      return pts.map((p, i) => {
+        const a = seg[Math.max(0, i - 1)], b = seg[Math.min(seg.length - 1, i)];
+        let nx = a.x + b.x, ny = a.y + b.y;
+        const nl = Math.hypot(nx, ny);
+        if (nl < 1e-6) { nx = a.x; ny = a.y; } else { nx /= nl; ny /= nl; }
+        const k = Math.max(0.5, nx * a.x + ny * a.y); // cap the mitre on sharp corners
+        return { x: p.x + (nx * d) / k, y: p.y + (ny * d) / k };
+      });
+    }
+
+    function build(net, mode) {
+      const xy = toXY(net);
+      const scale = net.meta.scale;
+      return net.lines.map((line) => {
+        let pts = linePath(line, xy);
+        if (mode === 'geo') pts = simplify(pts, TIDY_M / scale);
+        return { color: line.color, pts };
+      });
+    }
+
+    const EMBED = document.documentElement.hasAttribute('data-embed');
+    // Night corridor set (suroboyo-bus-route/color.md), used when the article is in dark mode.
+    const NIGHT = { '#D21E28': '#8F0011', '#067D9B': '#064B5E', '#C08F49': '#7B5518', '#E772A2': '#973B63' };
+
+    function draw(lines, title, sub, view) {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const l of lines) for (const p of l.pts) { x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y); }
+      const w = x1 - x0, h = y1 - y0;
+      // Embedded: the frame is 3:2 (like the article's 720x480 figures), so fit the map to that instead of a square.
+      const vw = EMBED ? Math.max(w, h * 1.5) * 1.06 : Math.max(w, h) * 1.06;
+      const vh = EMBED ? vw / 1.5 : vw;
+      const side = vw;
+      const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      const vb = [cx - vw / 2, cy - vh / 2, vw, vh].map((v) => v.toFixed(1)).join(' ');
+      // Both directions of a corridor share one centre line in the data, so push each one to the left of its own
+      // direction of travel. Opposite directions then land on opposite sides and show as two lanes.
+      const lane = side / 330;
+      const paths = lines.map((l) => `<polyline fill="none" stroke="${l.color}" data-night="${NIGHT[l.color] || l.color}" stroke-width="1" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round" points="${shiftLeft(l.pts, lane).map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}"/>`).join('');
+      const fig = document.createElement('figure');
+      fig.dataset.view = view;
+      fig.innerHTML = `<figcaption><b>${title}</b><span>${sub}</span></figcaption><svg viewBox="${vb}" role="img" aria-label="${title}">${paths}</svg>`;
+      document.querySelector('#grid').append(fig);
+    }
+
+    draw(build(geo, 'geo'), 'Geographic', 'Real road shapes, cleaned up', 'geo');
+    draw(build(eight, 'eight'), 'Eight directions', 'Every segment locked to 45°', 'eight');
+
+    // Dark theme: swap each line to its Night colour (and back).
+    const paintTheme = () => {
+      const dark = document.documentElement.dataset.theme === 'dark';
+      for (const pl of document.querySelectorAll('polyline')) {
+        pl.dataset.day ??= pl.getAttribute('stroke');
+        pl.setAttribute('stroke', dark ? pl.dataset.night : pl.dataset.day);
+      }
+    };
+    paintTheme();
+    new MutationObserver(paintTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  </script>
+</body>
+</html>

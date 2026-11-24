@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Map display demo</title>
+  <script>
+    // ?embed: only the panel, for the article. Follows the article's light/dark theme.
+    if (new URLSearchParams(location.search).has('embed')) {
+      const root = document.documentElement;
+      root.dataset.embed = '';
+      const sync = () => { root.dataset.waktu = parent.document.documentElement.dataset.theme === 'dark' ? 'malam' : 'pagi'; };
+      sync();
+      new MutationObserver(sync).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+  </script>
+  <link rel="stylesheet" href="/suroboyo-bus-route/css/style.css?v=embed2">
+  <style>
+    html, body { height: 100%; margin: 0; overflow: hidden; }
+    iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
+    #panel { position: fixed; top: 12px; right: 12px; bottom: 12px; z-index: 10; width: 300px; overflow: auto; padding: 14px 12px 12px; box-sizing: border-box;
+      border: 1px solid var(--border); border-radius: 16px; background: var(--card); color: var(--ink); box-shadow: var(--shadow); font-size: 13px; }
+    #panel h1 { margin: 0 4px 2px; font-size: 15px; font-weight: 650; }
+    #panel > p { margin: 0 4px 12px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .group { margin-top: 6px; }
+    .group > button { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 10px 4px 8px; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+    .group > button svg { transition: transform 0.15s ease-out; }
+    .group.closed > button svg { transform: rotate(-90deg); }
+    .group.closed .items { display: none; }
+    .items { display: grid; gap: 6px; }
+    .dk { position: relative; display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 12px; border-radius: 10px; overflow: hidden;
+      background: var(--hover); cursor: ew-resize; user-select: none; touch-action: none; outline: none; }
+    .dk .fill { position: absolute; inset: 0 auto 0 0; background: color-mix(in oklab, var(--accent) 28%, transparent); pointer-events: none; }
+    .dk span { position: relative; pointer-events: none; }
+    .dk .val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+    .dk.off { opacity: 0.45; cursor: not-allowed; }
+    .dk.off .fill { display: none; }
+    .dk:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+    .actions { display: flex; gap: 8px; margin-top: 14px; }
+    .actions button { flex: 1; height: 36px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--ink); font: inherit; cursor: pointer; }
+    .actions button:hover { background: var(--hover); }
+    .actions button:active { transform: scale(0.97); }
+    .actions button.primary { background: var(--accent); border-color: transparent; color: #fff; }
+    .actions button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .stops-box { margin: 0 0 8px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .stops-box h2 { margin: 0 4px 4px; font-size: 13px; font-weight: 600; }
+    .stops-box p { margin: 0 4px 10px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; height: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--hover); color: var(--ink); font: inherit; cursor: pointer; }
+    .toggle:active { transform: scale(0.98); }
+    .toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .toggle .pill { padding: 2px 10px; border-radius: 999px; background: var(--border); font-size: 12px; }
+    .toggle[aria-pressed="true"] .pill { background: var(--accent); color: #fff; }
+    .actions button:disabled { color: var(--muted); cursor: default; }
+    .actions button.primary:disabled { background: var(--hover); border-color: var(--border); color: var(--muted); }
+    .actions button:disabled:hover { background: var(--card); }
+    .actions button:disabled:active { transform: none; }
+    .route-lines { display: grid; gap: 4px; margin-top: 8px; }
+    .route-lines[hidden] { display: none; }
+    .route-lines button { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border: 1px solid transparent; border-radius: 10px; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+    .route-lines button:hover { background: var(--hover); }
+    .route-lines button[aria-checked="true"] { border-color: var(--border); background: var(--hover); font-weight: 600; }
+    .route-lines button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .route-lines i { flex: none; width: 22px; height: 6px; border-radius: 3px; background: var(--c); }
+    .snaps { display: grid; gap: 2px; margin-top: 8px; }
+    .snaps[hidden] { display: none; }
+    .snaps label { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 10px; border-radius: 10px; cursor: pointer; }
+    .snaps label:hover { background: var(--hover); }
+    .snaps input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+    .snaps span { margin: 2px 10px 0; color: var(--muted); font-size: 12px; }
+    #stop-note { margin: 8px 4px 0; min-height: 1.2em; color: var(--ink); font-size: 12px; font-variant-numeric: tabular-nums; }
+    #bus-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 0 8px; }
+    #bus-controls button { height: 34px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--ink); font: inherit; cursor: pointer; }
+    #bus-controls button:hover { background: var(--hover); }
+    #bus-controls button:active { transform: scale(0.97); }
+    #bus-controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .time-box { margin: 0 0 12px; }
+    .time-box h2 { margin: 0 4px 6px; font-size: 13px; font-weight: 600; }
+    #time-switch { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; padding: 3px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+    #time-switch button { min-height: 44px; padding: 4px 2px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: 11px; line-height: 1.2; cursor: pointer; }
+    #time-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+    #time-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .time-box .sub { margin: 10px 4px 6px; }
+    #ms-switch, #ease-switch { display: grid; gap: 3px; margin-top: 4px; padding: 3px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+    #ms-switch { grid-template-columns: repeat(4, 1fr); }
+    #ease-switch { grid-template-columns: 1fr 1fr; }
+    #ms-switch button, #ease-switch button { min-height: 40px; padding: 4px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+    #ms-switch button[aria-pressed="true"], #ease-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+    #ms-switch button:focus-visible, #ease-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .time-box .hint { margin: 6px 4px 0; font-size: 12px; color: var(--muted); }
+    #time-note { margin: 6px 4px 0; min-height: 1.3em; font-size: 12px; color: var(--muted); }
+    :root[data-embed] body { background: transparent; }
+    :root[data-embed] #map { display: none; }
+    :root[data-embed] #panel { inset: 0; width: auto; border: 0; border-radius: 0; box-shadow: none; }
+    #status { margin: 10px 4px 0; min-height: 1.2em; color: var(--muted); font-size: 12px; }
+    /* ===== ?embed: the panel inside the case-study article, styled with the portfolio's tokens (neutral scale, Geist +
+       Nohemi, 6/8px radii, quiet borders) so it doesn't look like a different product. Light = early morning, dark =
+       night (set from the article's theme, see the inline script above). ===== */
+    :root[data-embed] {
+      --p-bg: #ffffff;
+      --p-surface: #f5f5f5;      /* neutral-20: slider rows, toggles */
+      --p-fill: #e0e0e0;         /* neutral-40: slider fill */
+      --p-border: #ededed;       /* neutral-30 */
+      --p-border-strong: #c2c2c2;
+      --p-text: #404040;         /* neutral-90, paragraph */
+      --p-strong: #0a0a0a;       /* neutral-110, headings */
+      --p-muted: #757575;        /* neutral-70 */
+      --p-on-strong: #ffffff;
+      --p-pressed: #ededed;
+      --p-btn-border: #ededed;
+      --p-btn-border-hover: #ededed;
+      --p-btn-text: #757575;
+      --p-pill: #ededed;
+    }
+    :root[data-embed][data-waktu="malam"] {
+      /* Neutral dark greys from the site's scale (--neutral-100/90/80...), no blue cast. The raised surfaces are
+         the page background nudged toward neutral-90, so they stay in the same family. */
+      --n-100: #111110;
+      --n-90: #404040;
+      --p-bg: color-mix(in srgb, var(--n-90) 26%, var(--n-100));      /* panel */
+      --p-surface: color-mix(in srgb, var(--n-90) 52%, var(--n-100)); /* rows, toggles */
+      --p-fill: var(--n-90);     /* neutral-90: slider fill */
+      --p-border: rgb(255 255 255 / 0.1);
+      --p-border-strong: #757575; /* neutral-70 */
+      --p-btn-border: #616161;   /* neutral-80 = --color-button-stroke */
+      --p-btn-border-hover: #757575;
+      --p-btn-text: #c2c2c2;     /* neutral-50 = --color-button-text */
+      --p-text: #e0e0e0;         /* neutral-40 = --color-paragraph */
+      --p-strong: #ffffff;       /* neutral-10 = --color-paragraph-highlight */
+      --p-muted: #9e9e9e;        /* neutral-60 */
+      --p-on-strong: #0a0a0a;    /* neutral-110 = tab-switcher active text */
+      --p-pressed: var(--n-90);  /* neutral-90 = --color-button-bg-pressed */
+      --p-pill: var(--n-90);
+    }
+    :root[data-embed] body { -webkit-font-smoothing: antialiased; }
+    :root[data-embed] #panel {
+      padding: 20px 16px 16px;
+      background: var(--p-bg);
+      color: var(--p-text);
+      font: 400 14px/20px var(--font-body);
+      letter-spacing: 0.4px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--p-fill) transparent;
+    }
+    :root[data-embed] #panel::-webkit-scrollbar { width: 8px; }
+    :root[data-embed] #panel::-webkit-scrollbar-thumb { background: var(--p-fill); border-radius: 4px; }
+    :root[data-embed] #panel h1 { margin: 0 0 12px; font: 500 16px/24px var(--font-heading); letter-spacing: 0.4px; color: var(--p-strong); } /* Paragraph/16 */
+    /* The how-to paragraph and the bus Pause/Restart buttons are left out of the article's panel. */
+    :root[data-embed] #panel > p,
+    :root[data-embed] #bus-controls { display: none; }
+    :root[data-embed] .stops-box h2,
+    :root[data-embed] .time-box h2 { margin: 0 0 4px; font: 500 14px/20px var(--font-body); color: var(--p-strong); }
+    :root[data-embed] .stops-box p { margin: 0 0 12px; font-size: 12px; line-height: 18px; color: var(--p-muted); }
+    :root[data-embed] .stops-box { margin: 0 0 12px; padding-bottom: 16px; border-bottom: 1px solid var(--p-border); }
+    :root[data-embed] .stops-box b { font-weight: 500; color: var(--p-text); }
+    :root[data-embed] .group { margin-top: 4px; }
+    :root[data-embed] .group > button { padding: 10px 0 8px; font-weight: 500; color: var(--p-strong); }
+    :root[data-embed] .group > button svg { color: var(--p-muted); }
+    :root[data-embed] .items { gap: 6px; }
+
+    /* Slider rows */
+    :root[data-embed] .dk { height: 40px; padding: 0 12px; border-radius: 6px; background: var(--p-surface); color: var(--p-text); }
+    :root[data-embed] .dk .fill { background: var(--p-fill); }
+    :root[data-embed] .dk .val { font: 500 14px/20px var(--font-body); font-variant-numeric: tabular-nums; color: var(--p-strong); }
+    :root[data-embed] .dk:focus-visible,
+    :root[data-embed] .toggle:focus-visible,
+    :root[data-embed] .actions button:focus-visible,
+    :root[data-embed] #bus-controls button:focus-visible,
+    :root[data-embed] .route-lines button:focus-visible { outline: 2px solid var(--p-strong); outline-offset: 2px; box-shadow: none; }
+
+    /* Buttons: the portfolio's .button (quiet border, 8px radius, muted text, soft lift on hover, press = 0.96) */
+    :root[data-embed] #bus-controls { gap: 8px; margin: 0 0 16px; }
+    :root[data-embed] #bus-controls button,
+    :root[data-embed] .actions button {
+      height: 40px; border: 1px solid var(--p-btn-border); border-radius: 8px; background: var(--p-bg); color: var(--p-btn-text);
+      font: 400 14px/20px var(--font-body); letter-spacing: 0.4px;
+      transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+    }
+    :root[data-embed][data-waktu="malam"] #bus-controls button,
+    :root[data-embed][data-waktu="malam"] .actions button { background: rgba(255, 255, 255, 0.04); }
+    @media (hover: hover) and (pointer: fine) {
+      :root[data-embed] #bus-controls button:hover,
+      :root[data-embed] .actions button:hover { background: var(--p-bg); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03), 0 8px 16px rgba(0, 0, 0, 0.05); }
+      :root[data-embed][data-waktu="malam"] #bus-controls button:hover,
+      :root[data-embed][data-waktu="malam"] .actions button:hover { background: rgba(255, 255, 255, 0.04); border-color: var(--p-btn-border-hover); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 24px rgba(255, 255, 255, 0.06); }
+    }
+    :root[data-embed] #bus-controls button:active,
+    :root[data-embed] .actions button:active { background: var(--p-pressed); border-color: transparent; color: var(--p-strong); box-shadow: none; transform: scale(0.96); }
+    :root[data-embed] .actions { margin-top: 16px; }
+    :root[data-embed] .actions button.primary { background: var(--p-strong); border-color: transparent; color: var(--p-on-strong); }
+
+    /* Toggles (route edit / stop move) */
+    :root[data-embed] .toggle { height: 40px; padding: 0 12px; border-radius: 6px; background: var(--p-surface); color: var(--p-text); font: 400 14px/20px var(--font-body); letter-spacing: 0.4px; }
+    :root[data-embed] .toggle:active { transform: scale(0.98); }
+    :root[data-embed] .toggle .pill { padding: 2px 10px; border-radius: 999px; background: var(--p-pill); color: var(--p-muted); font: 500 12px/18px var(--font-body); }
+    :root[data-embed][data-waktu="malam"] .toggle .pill { background: var(--p-pill); color: var(--p-btn-text); }
+    :root[data-embed] .toggle[aria-pressed="true"] .pill { background: var(--p-strong); color: var(--p-on-strong); }
+
+    /* Route line picker and snapping */
+    :root[data-embed] .route-lines button { height: 40px; border-radius: 6px; color: var(--p-text); font: 400 14px/20px var(--font-body); letter-spacing: 0.4px; }
+    :root[data-embed] .route-lines button:hover { background: var(--p-surface); }
+    :root[data-embed] .route-lines button[aria-checked="true"] { border-color: var(--p-border-strong); background: var(--p-surface); font-weight: 500; color: var(--p-strong); }
+    :root[data-embed] .snaps label { min-height: 40px; border-radius: 6px; color: var(--p-text); }
+    :root[data-embed] .snaps label:hover { background: var(--p-surface); }
+    :root[data-embed] .snaps input { accent-color: var(--p-strong); }
+    :root[data-embed] .snaps span { font-size: 12px; line-height: 18px; color: var(--p-muted); }
+    :root[data-embed] #status { display: none; }
+  </style>
+</head>
+<body>
+  <iframe id="map" src="/suroboyo-bus-route/index.html" title="Main map"></iframe>
+  <section id="panel" aria-label="Map display demo">
+    <h1>Map display</h1>
+    <p>Drag a row left or right to change its value. Arrow keys nudge by one step, Shift ×5. Double-click a row to reset it. Nothing is saved.</p>
+
+    <div id="bus-controls" role="group" aria-label="Bus animation">
+      <button id="bus-play" type="button" aria-pressed="true">Pause</button>
+      <button id="bus-restart" type="button">Restart</button>
+    </div>
+
+    <div class="time-box" hidden>
+      <h2>Time of day</h2>
+      <div id="time-switch" role="group" aria-label="Time of day"></div>
+      <p id="time-note"></p>
+      <h2 class="sub">Transition speed</h2>
+      <div id="ms-switch" role="group" aria-label="Transition speed"></div>
+      <div id="ease-switch" role="group" aria-label="Transition easing"></div>
+      <p class="hint">Soft radial from the bottom centre. Switch the time of day above to feel it, or compare all speeds side by side in <a href="../transisi/">lab/transisi</a>.</p>
+    </div>
+
+    <div class="stops-box first">
+      <h2>Edit routes</h2>
+      <p>Turn it on, pick a line, then drag a <b>corner</b> anywhere. Drag the <b>bar in the middle of a segment</b> to pull out a new bend (Shift: move the whole segment). Double-click a corner to delete it. Turn on the 45° lock to keep it neat like a transit map. Stops do not move.</p>
+      <button id="route-toggle" class="toggle" type="button" aria-pressed="false">Route edit mode <span class="pill">Off</span></button>
+      <div id="route-lines" class="route-lines" role="radiogroup" aria-label="Line being edited" hidden></div>
+      <div id="route-snap" class="snaps" role="group" aria-label="Snapping" hidden>
+        <label><input type="checkbox" data-snap="lock"> Lock segments to 45° steps</label>
+        <label><input type="checkbox" data-snap="octi" checked> Snap to neat 45° lines</label>
+        <label><input type="checkbox" data-snap="align" checked> Align with other points (guide lines)</label>
+        <label><input type="checkbox" data-snap="grid" checked> 10 m grid</label>
+        <span>Hold Alt while dragging to turn snapping off temporarily.</span>
+      </div>
+    </div>
+
+    <div class="stops-box">
+      <h2>Move stops</h2>
+      <p>Turn it on, then drag a stop on the map. A stop only moves along its own line. Stops shared by two lines move together. Left/right arrows on a focused stop move it 10 m (Shift 50 m).</p>
+      <button id="edit-toggle" class="toggle" type="button" aria-pressed="false">Stop move mode <span class="pill">Off</span></button>
+    </div>
+
+    <div id="groups"></div>
+    <div class="actions">
+      <button id="reset" type="button">Reset</button>
+    </div>
+    <div id="status" role="status"></div>
+  </section>
+  <script type="module" src="/suroboyo-bus-route/demo/tampilan/demo.js?v=1"></script>
+</body>
+</html>
