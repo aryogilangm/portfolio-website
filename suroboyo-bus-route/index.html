@@ -23,6 +23,8 @@
     // suasana lain, terutama Night, sengaja jadi kejutan yang baru ditemukan pengguna sendiri lewat tombol
     // suasana tiap kali masuk halaman ini, bukan melanjutkan suasana terakhir atau mengikuti jam perangkat.
     document.documentElement.dataset.waktu = 'pagi';
+    // ?embed: the bare map for the case-study article (no nav, controls or legend, transparent background).
+    if (new URLSearchParams(location.search).has('embed')) document.documentElement.dataset.embed = '';
   </script>
   <link rel="preload" href="/suroboyo-bus-route/fonts/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/suroboyo-bus-route/fonts/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -45,13 +47,7 @@
       <svg class="nav-btn__icon" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M15 8C15 7.72386 14.7761 7.5 14.5 7.5L2.70711 7.5L5.85355 4.35355C6.04882 4.15829 6.04882 3.84171 5.85355 3.64645C5.65829 3.45118 5.34171 3.45118 5.14645 3.64645L1.14645 7.64645C0.951184 7.84171 0.951184 8.15829 1.14645 8.35355L5.14645 12.3536C5.34171 12.5488 5.65829 12.5488 5.85355 12.3536C6.04882 12.1583 6.04882 11.8417 5.85355 11.6464L2.70711 8.5H14.5C14.7761 8.5 15 8.27614 15 8Z" /></svg>
       Back to home
     </a>
-    <span class="nav-btn-tip-wrapper">
-      <button type="button" class="nav-btn nav-btn--disabled" aria-disabled="true" aria-describedby="nav-btn-tip">See how it was built</button>
-      <span role="tooltip" id="nav-btn-tip" class="nav-btn-tip">
-        Still writing up this case study
-        <span aria-hidden="true" class="nav-btn-tip-arrow"></span>
-      </span>
-    </span>
+    <a href="/article-suroboyo-bus-route.html" class="nav-btn">See how it was built</a>
   </nav>
 
   <div class="controls">

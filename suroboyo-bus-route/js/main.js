@@ -205,9 +205,10 @@ async function main() {
   };
 
   // Pegangan untuk lab/tampilan: ubah ukuran langsung tanpa memuat ulang, atur mode geser halte dan sunting rute.
-  // Hanya dipasang di localhost (sama seperti lapse-dev.js) — endpoint /__save-* yang dipanggilnya tidak ada
-  // di hosting statis produksi, dan surface edit/drag ini memang tidak untuk pengunjung biasa.
-  if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__peta = {
+  // Dipasang di localhost (sama seperti lapse-dev.js) dan di peta ?embed milik artikel (demo/tampilan sebagai panel
+  // "Play with the tools"). Endpoint /__save-* yang dipanggil lab tidak ada di hosting statis produksi; demo tidak
+  // pernah menyimpan.
+  if (['localhost', '127.0.0.1'].includes(location.hostname) || new URLSearchParams(location.search).has('embed')) window.__peta = {
     style,
     view: () => panzoom.view(),
     setView: (v) => panzoom.setView(v),

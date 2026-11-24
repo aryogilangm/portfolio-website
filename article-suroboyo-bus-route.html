@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <script>
+    // Theme: light by default; the navbar toggle persists the choice in localStorage.
+    (function () {
+      var theme = "light";
+      try { theme = localStorage.getItem("theme") === "dark" ? "dark" : "light"; } catch (e) {}
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <title>Suroboyo Bus Route Map — Aryo Gilang Maudyansa</title>
+  <meta name="description" content="How I designed an interactive Suroboyo Bus route map with an AI agent: routes, tools instead of prompts, themes that follow the day, and focusing on two corridors." />
+  <link rel="canonical" href="https://aryogilang.com/experiments/suroboyo-bus-route-map" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aryogilang.com/experiments/suroboyo-bus-route-map" />
+  <meta property="og:title" content="Suroboyo Bus Route Map — Aryo Gilang Maudyansa" />
+  <meta property="og:description" content="How I designed an interactive Suroboyo Bus route map with an AI agent: routes, tools instead of prompts, themes that follow the day, and focusing on two corridors." />
+  <meta property="og:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Suroboyo Bus Route Map — Aryo Gilang Maudyansa" />
+  <meta name="twitter:description" content="How I designed an interactive Suroboyo Bus route map with an AI agent: routes, tools instead of prompts, themes that follow the day, and focusing on two corridors." />
+  <meta name="twitter:image" content="https://aryogilang.com/assets/marketing/OG-image.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/marketing/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/marketing/favicon-180.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/marketing/favicon-512.png" />
+  <link rel="preload" href="/assets/fonts/geist/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/geist/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/css/style.css?v=art25" />
+  <script type="importmap">
+  {
+    "imports": {
+      "@aiforui/lapse": "/node_modules/@aiforui/lapse/dist/index.mjs",
+      "@aiforui/lapse/panel": "/node_modules/@aiforui/lapse/dist/panel.mjs",
+      "@aiforui/lapse/install": "/node_modules/@aiforui/lapse/dist/install.mjs"
+    }
+  }
+  </script>
+  <script type="module" src="/js/lapse-dev.js"></script>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__fill"></div></div>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <nav class="navbar navbar--transparent-desktop">
+    <div class="navbar__inner">
+      <a href="/index.html" class="navbar__title">HOME</a>
+      <div class="theme-toggle" role="group" aria-label="Color theme">
+        <button type="button" class="theme-toggle__button" data-theme-option="light" aria-label="Light theme" aria-pressed="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></button>
+        <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-label="Dark theme" aria-pressed="false"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/></svg></button>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="content-nav" aria-label="Section navigation">
+    <button type="button" class="content-nav__label" aria-expanded="false">List of content</button>
+    <ul class="content-nav__list">
+      <li><a href="#overview" class="content-nav__link">Overview</a></li>
+      <li><a href="#getting-the-routes-right" class="content-nav__link">Getting the Routes Right</a></li>
+      <li><a href="#tools-instead-of-prompts" class="content-nav__link">Tools Instead of Prompts</a></li>
+      <li><a href="#designing-for-riders" class="content-nav__link">Designing for The People who Ride</a></li>
+      <li><a href="#two-corridors" class="content-nav__link">Focussing on Two Corridors</a></li>
+      <li><a href="#outcome" class="content-nav__link">Outcome</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content" tabindex="-1" class="detail-page detail-page--geist-titles">
+
+    <section id="overview" class="detail-section detail-section--article detail-section--tight">
+      <a href="/suroboyo-bus-route/index.html" class="link back-link">Back to map</a>
+      <h1 class="title">Suroboyo Bus Route Map</h1>
+      <p class="paragraph">I can&rsquo;t stop watching the trains on Muhammad Raufan&rsquo;s Tokyo transit map. They glide along the lines and slide into stations, and every time I open it I stay longer than I planned. So I set myself a challenge: build the same kind of map for Suroboyo Bus, with an AI agent doing the engineering side while I make the design decisions.</p>
+      <p class="paragraph">I wasn&rsquo;t the first to draw Surabaya&rsquo;s routes. Transport for Surabaya, a non-profit, had already made a map, and it influenced mine a lot, layout included. The routes and stop names are still Surabaya&rsquo;s own.</p>
+    </section>
+
+    <section id="getting-the-routes-right" class="detail-section detail-section--article">
+      <h2 class="detail-title">Getting the Routes Right</h2>
+      <p class="paragraph">I built the map one corridor at a time, since each can take a few hours to get right. For every corridor I collected the stop names and their coordinates in a spreadsheet.</p>
+      <div class="article-figure">
+        <div class="fig-frame"><img class="fig-frame__img fig-frame__img--sheet" src="/assets/images/suroboyo-bus-route/spreadsheet-screenshot.svg" width="538" height="316" alt="Spreadsheet of stop names and their coordinates, one corridor at a time" loading="lazy" decoding="async"></div>
+        <p class="caption">My spreadsheet of stop names and their coordinates, one corridor at a time.</p>
+      </div>
+      <p class="paragraph">My first attempt was to have the agent place those stops on Google Maps. The result had too many turns, and the stops were slightly off even with exact coordinates.</p>
+      <p class="paragraph">So I asked for two prototypes to compare. Geographic kept the real road shapes, wiggles included. Eight directions locked every segment to 45&deg; angles, so the routes came out tidy and still easy to recognise. I chose Eight directions.</p>
+      <div class="article-figure">
+        <div class="fig-frame fig-frame--proto">
+          <div class="native-select-wrap">
+            <select class="native-select" aria-label="Prototype">
+              <option value="geo" selected>Geographic</option>
+              <option value="eight">Eight directions</option>
+            </select>
+            <svg class="native-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </div>
+          <iframe class="fig-frame__proto" src="/suroboyo-bus-route/lab/prototipe/?embed&amp;v=1" title="Route map prototype" loading="lazy"></iframe>
+        </div>
+      </div>
+      <p class="paragraph">The routes still needed cleaning up, so I redrew each corridor in Figma, using Transport for Surabaya&rsquo;s map as a guide. I wasn&rsquo;t changing the style, only tidying the routes.</p>
+      <div class="article-figure">
+        <div class="fig-frame"><img class="fig-frame__img fig-frame__img--map theme-light-only" src="/assets/images/suroboyo-bus-route/route-map-figma.svg" width="492" height="386" alt="The Suroboyo Bus route map redrawn in Figma, with every corridor tidied into straight and 45-degree segments" loading="lazy" decoding="async"><img class="fig-frame__img fig-frame__img--map theme-dark-only" src="/assets/images/suroboyo-bus-route/route-map-figma-dark.svg" width="492" height="386" alt="The Suroboyo Bus route map redrawn in Figma, with every corridor tidied into straight and 45-degree segments" loading="lazy" decoding="async"></div>
+        <p class="caption">This is the map I redrew in Figma, to make it easier to implement and build.</p>
+      </div>
+    </section>
+
+    <section id="tools-instead-of-prompts" class="detail-section detail-section--article">
+      <h2 class="detail-title">Tools Instead of Prompts</h2>
+      <p class="paragraph">Every change to the map meant another prompt, and every prompt cost me time and tokens. Placing the stops alone took many rounds of coordinates and corrections, so I asked for a tool where I drag a stop to where it belongs and save the position. Polishing the design had the same problem. Route thickness, stop size, and the size and roundness of the buses are things I judge by eye, and describing them in prompts would have been slow and fiddly, so I added them as sliders to the same tool. Now I move a slider, look at the map, and decide.</p>
+      <div class="article-figure">
+        <div class="fig-frame fig-frame--live"><iframe class="fig-frame__live" data-live-map="tools" src="/suroboyo-bus-route/?embed&amp;v=4" title="Suroboyo Bus map you can change with the tools" loading="lazy"></iframe></div>
+        <button type="button" class="button button--default figure-action" data-tools-toggle aria-expanded="false" aria-controls="tools-panel">Play with the tools</button>
+      </div>
+      <p class="paragraph">When a decision is about feel, I&rsquo;d rather build a tool than write a longer prompt.</p>
+    </section>
+
+    <section id="designing-for-riders" class="detail-section detail-section--article">
+      <h2 class="detail-title">Designing for The People who Ride</h2>
+      <p class="paragraph">The Tokyo map has a light and a dark mode, so I started with the same. Then I thought about who this map is for. Buses carry people who get on and off at every stop, each with somewhere to be. So I made four themes that follow their day: early morning, midday, afternoon and night.</p>
+      <p class="paragraph">Night was easy. Instead of pure black I used a dark navy, like a clear night sky. The other three were hard, and Pinterest gave me nothing. Then one evening I looked at the cover of American Football - American Football (LP3) and it matched the early morning in my head. I went back through my Apple Music library and found two more covers for midday and afternoon.</p>
+      <div class="article-figure">
+        <div class="fig-frame fig-frame--covers">
+          <figure class="cover">
+            <span class="cover__theme">Early Morning</span>
+            <img src="/assets/images/suroboyo-bus-route/theme-inspiration/early-morning.webp" width="160" height="160" alt="Cover of American Football - American Football (LP3)" loading="lazy" decoding="async">
+            <figcaption class="cover__title">American Football - American Football LP3</figcaption>
+          </figure>
+          <figure class="cover">
+            <span class="cover__theme">Midday</span>
+            <img src="/assets/images/suroboyo-bus-route/theme-inspiration/midday.jpg" width="160" height="160" alt="Cover of Geese - Getting Killed" loading="lazy" decoding="async">
+            <figcaption class="cover__title">Geese - Getting Killed</figcaption>
+          </figure>
+          <figure class="cover">
+            <span class="cover__theme">Afternoon</span>
+            <img src="/assets/images/suroboyo-bus-route/theme-inspiration/afternoon.webp" width="160" height="160" alt="Cover of Tyler, The Creator - Flower Boy" loading="lazy" decoding="async">
+            <figcaption class="cover__title">Tyler, The Creator - Flower Boy</figcaption>
+          </figure>
+        </div>
+      </div>
+      <p class="paragraph">I gave Claude Code the colours and mood of each cover and asked for ten backgrounds. I picked two or three, asked for ten more based on those, and repeated. The first rounds still looked like AI to me, so it took several passes.</p>
+      <div class="article-figure">
+        <div class="fig-frame fig-frame--vibes vibes">
+          <div class="native-select-wrap">
+            <select class="native-select" aria-label="Theme">
+              <option value="early-morning" selected>Early Morning</option>
+              <option value="midday">Midday</option>
+              <option value="afternoon">Afternoon</option>
+            </select>
+            <svg class="native-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </div>
+          <div class="vibes__grid" data-theme-vibe="early-morning">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-01.webp" width="120" height="120" alt="Early Morning background option 1" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-02.webp" width="120" height="120" alt="Early Morning background option 2" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-03.webp" width="120" height="120" alt="Early Morning background option 3" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-04.webp" width="120" height="120" alt="Early Morning background option 4" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-05.webp" width="120" height="120" alt="Early Morning background option 5" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-06.webp" width="120" height="120" alt="Early Morning background option 6" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-07.webp" width="120" height="120" alt="Early Morning background option 7" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-08.webp" width="120" height="120" alt="Early Morning background option 8" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-09.webp" width="120" height="120" alt="Early Morning background option 9" loading="eager" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/early-morning-10.webp" width="120" height="120" alt="Early Morning background option 10" loading="eager" decoding="async">
+          </div>
+          <div class="vibes__grid" data-theme-vibe="midday" hidden>
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-01.webp" width="120" height="120" alt="Midday background option 1" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-02.webp" width="120" height="120" alt="Midday background option 2" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-03.webp" width="120" height="120" alt="Midday background option 3" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-04.webp" width="120" height="120" alt="Midday background option 4" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-05.webp" width="120" height="120" alt="Midday background option 5" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-06.webp" width="120" height="120" alt="Midday background option 6" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-07.webp" width="120" height="120" alt="Midday background option 7" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-08.webp" width="120" height="120" alt="Midday background option 8" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-09.webp" width="120" height="120" alt="Midday background option 9" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/midday-10.webp" width="120" height="120" alt="Midday background option 10" loading="lazy" decoding="async">
+          </div>
+          <div class="vibes__grid" data-theme-vibe="afternoon" hidden>
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-01.webp" width="120" height="120" alt="Afternoon background option 1" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-02.webp" width="120" height="120" alt="Afternoon background option 2" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-03.webp" width="120" height="120" alt="Afternoon background option 3" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-04.webp" width="120" height="120" alt="Afternoon background option 4" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-05.webp" width="120" height="120" alt="Afternoon background option 5" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-06.webp" width="120" height="120" alt="Afternoon background option 6" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-07.webp" width="120" height="120" alt="Afternoon background option 7" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-08.webp" width="120" height="120" alt="Afternoon background option 8" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-09.webp" width="120" height="120" alt="Afternoon background option 9" loading="lazy" decoding="async">
+            <img src="/assets/images/suroboyo-bus-route/theme-vibes/thumbs/afternoon-10.webp" width="120" height="120" alt="Afternoon background option 10" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="two-corridors" class="detail-section detail-section--article">
+      <h2 class="detail-title">Focussing on Two Corridors</h2>
+      <p class="paragraph">The Tokyo map lets you focus on one line and fades the rest. I wanted the same, but one line wasn&rsquo;t enough. Many Suroboyo Bus stops are shared by two or three corridors, so riders often change corridors mid-trip, and with one corridor in focus you can&rsquo;t see where the trip continues.</p>
+      <p class="paragraph">I asked friends who ride Suroboyo Bus regularly how they travel. From what they&rsquo;ve seen and their own habits, they usually change corridors once, at a transit stop, to reach where they&rsquo;re going.</p>
+      <p class="paragraph">So the map lets you focus on two corridors, the one you board and the one you change to.</p>
+      <div class="article-figure">
+        <div class="fig-frame fig-frame--live"><iframe class="fig-frame__live" src="/suroboyo-bus-route/?embed&amp;v=4&amp;lines=suroboyo-bus-r1-ke-pelabuhan-tanjung-perak,suroboyo-bus-r1-ke-terminal-purabaya,suroboyo-bus-r2-ke-unesa,suroboyo-bus-r2-ke-kejawan-putih" title="Suroboyo Bus map with corridors R1 and R2 in focus" loading="lazy"></iframe></div>
+      </div>
+    </section>
+
+    <section id="outcome" class="detail-section detail-section--article detail-section--outro">
+      <h2 class="detail-title">Outcome</h2>
+      <p class="paragraph">I built this to learn. It was a case study, and a way to see how far I can go working with an AI agent. But I liked the result more than I expected. I&rsquo;ve caught myself opening it to check a route, and I can see it helping other people understand Suroboyo Bus more easily. I haven&rsquo;t decided whether to release it. If I do, it will be free.</p>
+    </section>
+
+  </main>
+
+  <footer class="footer-detail">
+    <div class="footer-detail__inner">
+      <a href="mailto:aryo.maudyansa@gmail.com" class="link link--large">aryo.maudyansa@gmail.com</a>
+      <div class="footer-detail__links">
+        <a href="https://www.linkedin.com/in/aryogilangm/" target="_blank" rel="noopener" class="paragraph link">Linkedin</a>
+        <a href="https://dribbble.com/aryogilangm" target="_blank" rel="noopener" class="paragraph link">Dribbble</a>
+        <a href="https://www.upwork.com/freelancers/~017572c489a3688cb3?mp_source=share" target="_blank" rel="noopener" class="paragraph link">Upwork</a>
+        <p class="paragraph">&copy;2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="tools-panel" id="tools-panel" role="region" aria-label="Map tools" inert>
+    <iframe class="tools-panel__frame" data-src="/suroboyo-bus-route/demo/tampilan/?embed&amp;v=6" title="Map tools"></iframe>
+  </div>
+
+  <script src="/js/main.js?v=art25"></script>
+</body>
+</html>

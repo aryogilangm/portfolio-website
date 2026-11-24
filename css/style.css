@@ -857,6 +857,14 @@ body.is-leaving {
   box-shadow: none;
 }
 
+/* Ukuran "default" (Figma button, size=default): teks 14px/21px, padding 6px 12px. Tanpa modifier, .button = size=large
+   (16px/24px, padding 8px 12px). */
+.button--default {
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 21px;
+}
+
 .selected-works__cta {
   display: flex;
   justify-content: center;
@@ -1034,9 +1042,9 @@ body:has(.navbar--home) .footer-main__inner {
 }
 
 /* Gallery pages (Kasatmata, ZNTRAL): single images keep their own proportions
-   instead of the fixed 840/491 crop. The width/height attributes on each <img>
+   instead of the fixed 720/480 crop. The width/height attributes on each <img>
    reserve the space before it loads. */
-.detail-section.detail-section--gallery > img.detail-image {
+.detail-section.detail-section--gallery .detail-image-wrap > img.detail-image {
   height: auto;
   aspect-ratio: auto;
   object-fit: contain;
@@ -1205,63 +1213,38 @@ h3.detail-title {
 .detail-image {
   width: 100%;
   height: auto; /* keeps width/height attributes as a ratio hint only */
-  aspect-ratio: 840 / 491;
+  /* 720x480 (3:2) and a square 0px radius — picked after comparing
+     against the previous 840/491 crop and a 0/2/4px radius trial,
+     both tried live on Booksmart before rolling out everywhere. */
+  aspect-ratio: 720 / 480;
   object-fit: cover;
   /* Must match the asset's own background: the rounded corner anti-aliases
      the image over this fill, so a lighter fill shows as a light fringe. */
   background: var(--color-asset-bg);
-  border-radius: 6px;
+  border-radius: 2px;
 }
 
 /* ===== Image lightbox (zoom) =====
-   .detail-image-wrap / .detail-image-zoom are injected by
-   initImageLightbox() in main.js around every .detail-image — see that
-   function for why this is pure progressive enhancement over existing
-   markup. */
+   .detail-image-wrap (layout hook, kept for the :has() selectors
+   above and the gallery rule below) and .detail-image-trigger (the
+   actual interactive button) are injected by initImageLightbox() in
+   main.js around every .detail-image — see that function for why this
+   is pure progressive enhancement over existing markup.
+   No visible zoom icon on purpose: cursor: zoom-in is the only hover
+   affordance, and the same button is the whole click target — modeled
+   on thinkingroominc.com's case-study image zoom. */
 .detail-image-wrap {
   position: relative;
   display: block;
 }
 
-.detail-image-zoom {
-  position: absolute;
-  top: var(--space-12);
-  right: var(--space-12);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.detail-image-trigger {
+  width: 100%;
+  padding: 0;
   border: none;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  cursor: pointer;
-  transition: background 150ms ease, scale 150ms ease-out;
-}
-
-/* Visible circle stays 32×32 per spec; this invisible pseudo-element
-   extends the actual hit area to the 44×44 touch-target floor without
-   growing the icon on screen. */
-.detail-image-zoom::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .detail-image-zoom:hover {
-    background: rgba(0, 0, 0, 0.65);
-  }
-}
-
-.detail-image-zoom:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-
-.detail-image-zoom:active {
-  scale: 0.94;
+  background: none;
+  cursor: zoom-in;
+  outline: none;
 }
 
 dialog.image-lightbox {
@@ -1270,105 +1253,180 @@ dialog.image-lightbox {
   margin: auto;
   width: fit-content;
   height: fit-content;
-  max-width: 92vw;
-  max-height: 92vh;
+  /* 1200x800 at the 1440x900 desktop reference, scaling down
+     proportionally below that (83.33vw/88.89vh = 1200/1440, 800/900)
+     and capped at the absolute 1200/800 so it doesn't keep growing on
+     wider monitors. At 1200x800 the zoomed image reads as "brought
+     forward", not "takes over the screen". */
+  max-width: min(83.3333vw, 1200px);
+  max-height: min(88.8889vh, 800px);
   border: none;
   padding: 0;
   background: transparent;
-  opacity: 0;
-  scale: 0.96;
-  transition:
-    opacity 150ms cubic-bezier(0.4, 0, 1, 1),
-    scale 150ms cubic-bezier(0.4, 0, 1, 1),
-    overlay 150ms allow-discrete,
-    display 150ms allow-discrete;
-}
-
-dialog.image-lightbox[open] {
-  opacity: 1;
-  scale: 1;
-  transition:
-    opacity 220ms cubic-bezier(0.32, 0.72, 0, 1),
-    scale 220ms cubic-bezier(0.32, 0.72, 0, 1),
-    overlay 220ms allow-discrete,
-    display 220ms allow-discrete;
-}
-
-@starting-style {
-  dialog.image-lightbox[open] {
-    opacity: 0;
-    scale: 0.96;
-  }
+  cursor: zoom-out;
+  /* showModal() autofocuses the dialog itself (no close button inside
+     to take it instead — see initImageLightbox() in main.js), so it's
+     a real focus target. Chrome gives <dialog> no default focus ring,
+     but Safari does (a soft blue halo) — without this it shows for
+     the full open/close transition, looking exactly like a glitch. */
+  outline: none;
+  /* The native View Transitions API (see ::view-transition-group
+     below) is the only open/close motion: it morphs the clicked
+     thumbnail's own snapshot directly into this dialog's content, and
+     back again on close. This dialog's box must appear/disappear in
+     the exact same frame as showModal()/close(), not over its own
+     separate fade — dialog.close() and the view-transition-name
+     handoff back to the thumbnail both happen synchronously inside
+     the same update callback (see closeLightbox() in main.js), so the
+     instant the name moves off the lightbox <img>, the real element
+     becomes visible again in normal rendering at its old, full-size,
+     un-shrunk layout. A competing fade here would show that real,
+     full-size image fading out on its own timeline while the View
+     Transition's shrinking snapshot plays on top of it — two
+     differently-timed copies of the same photo, which is exactly the
+     lingering "ghost" bug this still-ness fixes. */
+  transition: none;
 }
 
 dialog.image-lightbox::backdrop {
-  background: rgba(0, 0, 0, 0);
-  transition: background 150ms cubic-bezier(0.4, 0, 1, 1), overlay 150ms allow-discrete, display 150ms allow-discrete;
+  /* Matches --color-bg — the page's own canvas color per theme (white
+     in light mode, --neutral-100 in dark) — rather than a dimmed/
+     darkened overlay, so the zoomed image reads as moving to its own
+     spot on the same canvas instead of a modal taking over the page.
+     color-mix at 0% is used for the closed state (not the bare
+     "transparent" keyword) so the browser has two same-hue colors to
+     interpolate between — transitioning from the keyword transparent
+     to an opaque hex can shift through unrelated hues mid-fade in some
+     engines, where two color-mix results of the same base color only
+     ever differ in alpha. */
+  background: color-mix(in srgb, var(--color-bg) 0%, transparent);
+  /* Independent of the dialog's own box above — a plain full-viewport
+     fade has no shared-element morph standing in for it, so (unlike
+     the dialog) it keeps a smooth transition of its own. */
+  transition: background 300ms cubic-bezier(0.32, 0.72, 0, 1), overlay 300ms allow-discrete, display 300ms allow-discrete;
 }
 
 dialog.image-lightbox[open]::backdrop {
-  background: rgba(0, 0, 0, 0.8);
-  transition: background 220ms ease, overlay 220ms allow-discrete, display 220ms allow-discrete;
+  background: var(--color-bg);
 }
 
 @starting-style {
   dialog.image-lightbox[open]::backdrop {
-    background: rgba(0, 0, 0, 0);
+    background: color-mix(in srgb, var(--color-bg) 0%, transparent);
   }
 }
 
 .image-lightbox__img {
   display: block;
-  max-width: 92vw;
-  max-height: 92vh;
+  /* Same 1200x800-at-1440x900 cap as the dialog above — see its
+     comment. This is the resting (fully open) size the View
+     Transition morphs the thumbnail's snapshot into. */
+  max-width: min(83.3333vw, 1200px);
+  max-height: min(88.8889vh, 800px);
   width: auto;
   height: auto;
-  border-radius: 6px;
+  /* No forced ratio by default — matches .detail-image-grid img's own
+     "aspect-ratio: auto; object-fit: contain" (see the comment there):
+     grid images are deliberately never cropped on the page, so zooming
+     one must not crop it either, or wide multi-panel screenshots split
+     into portrait grid halves (natural ratio nowhere near 3:2) lose
+     their side panels to the crop. .is-cropped below opts back in for
+     standalone .detail-image, whose own thumbnail IS a fixed 720/480
+     crop. initImageLightbox() in main.js toggles the class per image. */
+  border-radius: 2px;
+  cursor: default;
+  transform-origin: center;
+  /* Touch only — see initImageLightbox()'s drag-to-dismiss. none stops
+     the browser's own scroll/zoom gestures from fighting the drag;
+     the two user-drag/user-select resets stop the native image-drag
+     ghost from hijacking the same gesture. */
+  touch-action: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  /* Only used by the drag-to-dismiss gesture's spring-back (see
+     endDrag() in main.js) — the open/close motion itself is entirely
+     the View Transition morph below, which doesn't touch this
+     element's own transform/opacity. */
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-.image-lightbox__close {
-  position: fixed;
-  top: var(--space-24);
-  right: var(--space-24);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  cursor: pointer;
-  transition: background 150ms ease, scale 150ms ease-out;
+/* Standalone .detail-image's thumbnail ratio is fixed site-wide at 3:2
+   (see its aspect-ratio: 720/480), so its zoomed image crops to that
+   same ratio instead of revealing the source file's native one —
+   keeps the zoomed shape visually consistent with the thumbnail.
+   aspect-ratio overrides the <img>'s intrinsic ratio for sizing
+   purposes only — width/height stay auto, so the max-width/max-height
+   letterbox above still picks the binding dimension on its own,
+   exactly like it would for a real image that happened to be 3:2.
+   object-fit: cover then crops the actual pixels to fill that box
+   instead of letterboxing empty space. Never applied to
+   .detail-image-grid images, or to opted-in non-.detail-image
+   lightbox images like .fig-frame__img — see the base rule above and
+   initImageLightbox() in main.js for which images qualify. */
+.image-lightbox__img.is-cropped {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
 }
 
-.image-lightbox__close::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
+/* The shared-element open/close morph — document.startViewTransition()
+   in main.js moves view-transition-name: lightbox-shared from the
+   clicked thumbnail onto this dialog's <img> (open) or back (close)
+   inside the DOM-mutation callback; the API snapshots both states and
+   generates ::view-transition-group(lightbox-shared) to morph position,
+   size, and border-radius between them on its own — no transform math
+   needed in JS at all. Where the browser doesn't support the API, or
+   the user prefers reduced motion, initImageLightbox() falls back to a
+   plain, unanimated open/close instead of this entirely. */
+::view-transition-group(lightbox-shared) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .image-lightbox__close:hover {
-    background: rgba(0, 0, 0, 0.65);
-  }
-}
-
-.image-lightbox__close:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-
-.image-lightbox__close:active {
-  scale: 0.94;
+/* By default the API also cross-fades ::view-transition-old (opacity
+   1→0) and ::view-transition-new (opacity 0→1) *underneath* the
+   group's own position/size morph above — meant for when old and new
+   are genuinely different content. Here they're the same photo, just a
+   different size/crop, so that extra fade reads as a soft double-
+   exposure/ghost over the real image mid-morph instead of adding
+   anything. Disabling both leaves only the group's geometric morph,
+   with the new image fully opaque the entire time. */
+::view-transition-old(lightbox-shared),
+::view-transition-new(lightbox-shared) {
+  animation: none;
+  mix-blend-mode: normal;
+  /* The UA default here is closer to object-fit: contain — it stretches
+     the captured snapshot to fill ::view-transition-group's own width/
+     height, which the browser animates as two independent values.
+     Nothing guarantees the group's own width:height ratio stays
+     constant at every sampled frame of the morph even when both ends
+     share the same ratio — whenever it drifts, "contain" letterboxes
+     the snapshot inside it, revealing .detail-image's own
+     background-color (var(--color-asset-bg)) in the gap. object-fit:
+     cover forces the snapshot to always fully cover the box regardless
+     of its instantaneous ratio, so nothing behind it can ever show
+     through. */
+  object-fit: cover;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  dialog.image-lightbox,
-  dialog.image-lightbox[open],
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* While an active touch drag is in progress the transform/opacity must
+   snap with zero transition — see initImageLightbox(). A transition
+   here would fight every touchmove update. */
+.image-lightbox__img.is-dragging {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
   dialog.image-lightbox::backdrop,
-  dialog.image-lightbox[open]::backdrop {
+  dialog.image-lightbox[open]::backdrop,
+  .image-lightbox__img {
     transition: none;
   }
 }
@@ -1380,6 +1438,225 @@ dialog.image-lightbox[open]::backdrop {
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
+}
+
+/* Article figure frame (Figma "img-1", 720x480, #fafafa). Variants: --covers, --vibes (has a select), --proto and --live (map iframes). */
+.fig-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 6px;
+  background: #fafafa;
+  overflow: hidden;
+}
+:root[data-theme="dark"] .fig-frame {
+  background: var(--fig-bg);
+}
+.fig-frame__img {
+  display: block;
+  height: auto;
+}
+/* Images with a light and a dark version: the unused one is display:none, so a lazy image is never downloaded. */
+.theme-dark-only { display: none; }
+:root[data-theme="dark"] .theme-light-only { display: none; }
+:root[data-theme="dark"] .theme-dark-only { display: block; }
+.fig-frame__img--sheet { width: 74.7%; } /* 538 / 720 */
+.fig-frame__img--map { width: 68.3%; }   /* 492 / 720 */
+
+/* Three album covers: theme label, cover (max 160px), title. Flexible columns with at least 24px at each side (like the
+   other figure frames), so on narrower frames the covers shrink and keep room at the edges. In a 720px frame it matches
+   Figma: 160px covers, 48px apart, 72px at the sides. */
+.fig-frame--covers {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 24px;
+  justify-items: stretch;
+  align-content: center;
+  align-items: start;
+  padding-inline: max(24px, calc((100% - 576px) / 2));
+}
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 160px;
+  margin: 0 auto;
+  text-align: center;
+}
+.cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.cover__theme {
+  font: 500 12px/18px var(--font-body);
+  letter-spacing: 0.5px;
+  color: var(--color-paragraph-highlight);
+}
+.cover__title {
+  font: 400 12px/18px var(--font-body);
+  letter-spacing: 0.5px;
+  color: var(--color-paragraph);
+}
+
+/* Background options per theme: native-select at the top left, 5x2 grid of 120px thumbnails. */
+.fig-frame--vibes {
+  display: block;
+  place-items: start;
+  padding: 24px;
+}
+.fig-frame--vibes .native-select-wrap {
+  margin: 0 0 54px; /* select 34px -> grid mulai di y=112 */
+}
+.vibes__grid {
+  margin-left: 4px; /* grid di x=28, select di x=24 */
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)); /* 120px in a 720px frame, smaller in narrower ones */
+  max-width: 664px;
+  gap: 16px;
+}
+.vibes__grid[hidden] {
+  display: none;
+}
+.vibes__grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* Mobile: frames whose content can't shrink (album covers, background grid) drop the 3:2 ratio so nothing is clipped. */
+@media (max-width: 767px) {
+  .fig-frame--covers,
+  .fig-frame--vibes {
+    aspect-ratio: auto;
+  }
+  /* Covers: two rows (2 + 1), the last one in the left column, for more room. */
+  .fig-frame--covers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 24px;
+    padding-block: 32px;
+  }
+  .fig-frame--vibes {
+    padding: 16px;
+  }
+  .fig-frame--vibes .native-select-wrap {
+    margin-bottom: 16px;
+  }
+  /* Background grid: 4 columns, so 3 rows (4 + 4 + 2). */
+  .vibes__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-left: 0;
+    gap: 8px;
+  }
+}
+
+/* Map prototypes (lab/prototipe?embed): the select sits over an iframe that fills the frame. */
+.fig-frame--proto {
+  display: block;
+}
+.fig-frame--proto .native-select-wrap {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 1;
+}
+.fig-frame__proto {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+/* Live map (?embed iframe). */
+.fig-frame--live {
+  display: block;
+}
+/* The map renders at a fixed 1440x960 and is scaled to the frame's width (--live-scale, set by initLiveMapFrames in
+   js/main.js; 0.5 in a 720px frame). Fixed pixels, not percentages, so every browser lays it out the same and the whole
+   map (it needs ~1300px to fit) is always in view. */
+.fig-frame__live {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 1440px;
+  height: 960px;
+  max-width: none;
+  transform: scale(var(--live-scale, 0.5));
+  transform-origin: 0 0;
+  border: 0;
+  background: transparent;
+}
+
+/* Map tools panel ("Play with the tools"): fixed on the right on desktop, opened and closed by the button under the map.
+   It holds the demo/tampilan?embed iframe, which drives the live map in the article. */
+.tools-panel {
+  position: fixed;
+  /* Below the navbar (the dark mode switch lives there): 8px under it, 24px from the right and bottom of the screen.
+     initToolsPanel sets --navbar-h from the navbar's real height. */
+  top: calc(var(--navbar-h, 62px) + 8px);
+  right: 24px;
+  z-index: 110;
+  width: 300px;
+  height: calc(100dvh - var(--navbar-h, 62px) - 32px);
+  border-radius: 12px;
+  overflow: hidden;
+  /* 1px ring (the portfolio's neutral-30 stroke) + a soft layered lift */
+  box-shadow: 0 0 0 1px var(--neutral-30), 0 1px 1px rgb(0 0 0 / 0.03), 0 4px 8px -2px rgb(0 0 0 / 0.06), 0 14px 32px -12px rgb(0 0 0 / 0.14);
+  opacity: 0;
+  visibility: hidden;
+}
+:root[data-theme="dark"] .tools-panel {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12), 0 14px 32px -12px rgb(0 0 0 / 0.6);
+}
+.tools-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+/* Below 1280px the text column fills the screen, so a panel on the right would cover the text and the map. It becomes a
+   bottom sheet instead, centered and half the screen tall, so the map above it stays in view. */
+@media (max-width: 1279.98px) {
+  .tools-panel {
+    top: auto;
+    right: auto;
+    bottom: 24px;
+    left: 50%;
+    width: min(360px, calc(100vw - 48px));
+    height: min(50dvh, 560px);
+    transform: translateX(-50%);
+  }
+}
+.tools-panel__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+/* Button under a figure (e.g. "Play with the tools"), centered as in Figma. */
+.figure-action {
+  align-self: center;
+}
+
+/* "Back to map" above the article title. */
+.back-link {
+  align-self: flex-start;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 /* ===== Hardcoded article figures =====
@@ -1559,7 +1836,7 @@ dialog.image-lightbox[open]::backdrop {
 .iteration-demo {
   position: relative;
   width: 100%;
-  border-radius: 6px;
+  border-radius: 2px;
   background: var(--neutral-10);
   /* Alpha black, not solid neutral-40 (components.md's earlier asset-stroke
      token) — on the white card bg it reads lighter than neutral-40 and
@@ -1917,18 +2194,19 @@ dialog.image-lightbox[open]::backdrop {
 }
 
 /* Grid images keep their own natural proportions (no forced crop/stretch)
-   — unlike the single full-width .detail-image, which is a fixed 840/491
+   — unlike the single full-width .detail-image, which is a fixed 720/480
    crop on purpose. Only applies to real <img> tags: they have an
    intrinsic size to size from. Placeholder <div>s (before the real
    image is uploaded) have nothing to size from and would collapse to
-   0 height, so they keep a fallback ratio instead. */
+   0 height, so they keep a fallback ratio instead — half the 720 width
+   minus the grid gap, at the same 480 height. */
 .detail-image-grid img.detail-image {
   aspect-ratio: auto;
   object-fit: contain;
 }
 
 .detail-image-grid div.detail-image {
-  aspect-ratio: 408 / 492;
+  aspect-ratio: 348 / 480;
 }
 
 /* Gallery variant (Kasatmata, ZNTRAL): stays a 2-column grid even on
@@ -2427,7 +2705,7 @@ dialog.image-lightbox[open]::backdrop {
   gap: var(--space-16);
   padding: var(--space-24) var(--space-24) 0;
   background: var(--color-asset-bg);
-  border-radius: 6px;
+  border-radius: 2px;
   overflow: hidden;
 }
 /* --color-asset-bg has no dark value of its own ("exported assets are
@@ -2549,7 +2827,7 @@ dialog.image-lightbox[open]::backdrop {
    "Shipping Information" section plus Order Summary and crops right
    before the footer, the most content a "preview, not the whole page"
    framing can show without starting to look like there's nothing left
-   to scroll to. Bottom corners are square (0), top stay 6px — on
+   to scroll to. Bottom corners are square (0), top stay rounded — on
    purpose, not an oversight: a rounded bottom edge reads as "this is
    where the content ends"; a square one reads as "this continues
    past the crop", which is the honest signal here now that the image
@@ -2558,7 +2836,7 @@ dialog.image-lightbox[open]::backdrop {
   position: relative;
   width: 100%;
   overflow: hidden;
-  border-radius: 6px 6px 0 0;
+  border-radius: 2px 2px 0 0;
   aspect-ratio: 840 / 620;
 }
 
@@ -2590,14 +2868,6 @@ dialog.image-lightbox[open]::backdrop {
 @media (max-width: 767px) {
   .stepper-demo {
     padding: var(--space-16) var(--space-16) 0;
-  }
-  /* Top radius only — bottom stays 0 here too (not "4px 4px 4px 4px"):
-     the square-bottom reasoning (signals "cropped, keeps going below
-     the fold" rather than "content ends here") still applies at this
-     breakpoint, this is just a smaller top radius to match the card's
-     tighter 16px padding at mobile vs. 24px on desktop/tablet. */
-  .stepper-demo__stage {
-    border-radius: 4px 4px 0 0;
   }
 }
 
@@ -2637,7 +2907,7 @@ dialog.image-lightbox[open]::backdrop {
   gap: var(--space-16);
   padding: var(--space-24);
   background: var(--color-asset-bg);
-  border-radius: 6px;
+  border-radius: 2px;
   /* Lets .deep-dive-demo__body's height scale in cqw off THIS element's
      own content width, so the 491px figure (tuned for the ~840px
      desktop column) holds the same proportion at every breakpoint —
@@ -2681,7 +2951,7 @@ dialog.image-lightbox[open]::backdrop {
   width: 100%;
   height: calc(100cqw * 1001 / 1440);
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .deep-dive-demo__panel {
@@ -2747,13 +3017,13 @@ dialog.image-lightbox[open]::backdrop {
   left: 0;
   width: 100%;
   height: auto;
-  /* Matches .deep-dive-demo__body's own radius (4px) — the image sits
+  /* Matches .deep-dive-demo__body's own radius (2px) — the image sits
      flush against that parent (no gap), so per "inner radius = outer
      radius − padding" the inner radius is the outer radius unchanged.
      Without this the image's own box stayed square-cornered and its
      outline/shadow got sliced off abruptly at the parent's rounded
      clip instead of following the curve. */
-  border-radius: 4px;
+  border-radius: 2px;
   display: none;
   opacity: 0;
   pointer-events: none;
@@ -2889,7 +3159,7 @@ dialog.image-lightbox[open]::backdrop {
   gap: var(--space-16);
   padding: var(--space-24);
   background: var(--color-asset-bg);
-  border-radius: 6px;
+  border-radius: 2px;
 }
 :root[data-theme="dark"] .detail-pages-demo {
   background: #1e1f23;
@@ -2925,10 +3195,10 @@ dialog.image-lightbox[open]::backdrop {
   display: none;
   width: 100%;
   height: auto;
-  /* 4px, matching .deep-dive-demo__shot/__body exactly, not this
-     card's own 6px — same "shadow instead of outline" rationale, see
-     below, picked for one consistent asset-image radius site-wide. */
-  border-radius: 4px;
+  /* 2px, matching .deep-dive-demo__shot/__body and every other card's
+     own radius now that there's a single site-wide asset radius — same
+     "shadow instead of outline" rationale, see below. */
+  border-radius: 2px;
   opacity: 0;
   pointer-events: none;
   user-select: none;

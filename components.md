@@ -39,24 +39,33 @@ work-card (link, seluruh card bisa diklik)
 
 ## 2. `button`
 
-**Figma:** Component Set `button` (page asset), 3 states: `Default`, `hover`, `state3` (pressed)
-**Dipakai di:** tombol "All Works" di home
+**Figma:** Component Set `button` (page asset-component), properti `size` (`large` / `default`) × `state` (`Default` / `hover` / `pressed` / `disable`) = 8 variant. Ikon `globe` di kiri hanya placeholder di Figma, tidak ikut ke HTML.
+**Dipakai di:** tombol "All Works" di home (large), tombol "Play with the tools" / "Hide the tools" di article-suroboyo-bus-route (default)
 
-### Spec per state
+### Ukuran
+| Size | Teks | Padding | Tinggi | Class |
+|---|---|---|---|---|
+| `large` | Geist 16px / 24px Regular, letter-spacing 0.4px | 8px 12px | 42px | `.button` |
+| `default` | Geist 14px / 21px Regular, letter-spacing 0.4px | 6px 12px | 35px | `.button.button--default` |
+
+Radius 8px di kedua ukuran. Pakai `default` untuk tombol aksi kecil di dekat konten (mis. di bawah gambar artikel); `large` untuk CTA mandiri.
+
+### Spec per state (sama untuk kedua ukuran)
 | State | Background | Border | Text color |
 |---|---|---|---|
 | Default | `#ffffff` | 1px `#ededed` | `#757575` |
-| Hover | `#ffffff` (sama seperti default) | 1px `#ededed` | `#757575` + `box-shadow: 0 10px 10px -4px rgba(0,0,0,0.1)` |
-| Pressed | `#ffffff` | tidak ada border | `#0a0a0a` |
+| Hover | `#ffffff` (sama seperti default) | 1px `#ededed` | `#757575` + bayangan tipis dua lapis (lihat CSS) |
+| Pressed | `#ededed` | tidak ada border | `#0a0a0a` |
+| Disable | `#ededed` | 1px `#e0e0e0` | `#9e9e9e` |
 
-- `border-radius: 8px`, `padding: 8px 16px`
-- Font: Geist 16px Regular
+Catatan: state `disable` ada di Figma tetapi belum punya class di CSS (belum dipakai di halaman mana pun).
 
 ### Implementasi
-`.button` — lihat [css/style.css](css/style.css).
+`.button` (large) dan `.button--default` (default) — lihat [css/style.css](css/style.css).
 
 ```html
 <a href="works.html" class="button">All Works</a>
+<button type="button" class="button button--default">Play with the tools</button>
 ```
 
 ---
