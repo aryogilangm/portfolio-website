@@ -53,23 +53,36 @@ Radius 8px di kedua ukuran. Pakai `default` untuk tombol aksi kecil di dekat kon
 ### Spec per state (sama untuk kedua ukuran)
 Border asli diganti ring/shadow translucent (lihat emil-surfaces) supaya komposit ke background apapun, bukan warna solid yang cuma pas di satu background.
 
+**Update (pasca review `emil-surfaces`):** hover versi Figma asli ("cuma nambah shadow tiga lapis, warna tetap") kerasa generik — bayangan menyebar simetris ke segala arah persis seperti template UI-kit. Diganti jadi: permukaan tombol sendiri yang nge-tint satu step (`color-mix`) + satu shadow tipis & rapat, bukan tiga lapis blur yang melebar. Ide dasarnya: depth datang dari materialnya berubah, bukan dari glow yang muncul di bawahnya.
+
 | State | Background | Shadow/ring | Text color |
 |---|---|---|---|
 | Default | `#ffffff` | ring `rgb(0 0 0 / 0.08)` + shadow tipis | `#757575` |
-| Hover | `#ffffff` (sama seperti default) | ring + bayangan tiga lapis (lihat CSS) | `#757575` |
+| Hover | tint 3% ke arah `--color-subheadline` (`color-mix`) | ring `rgb(0 0 0 / 0.1)` + 1 shadow tipis (bukan 3 lapis) | `#757575` |
 | Pressed | `#ededed` | tidak ada shadow | `#0a0a0a` |
-| Disable | `#ededed` | 1px `#e0e0e0` | `#9e9e9e` |
+| Disable | `#ededed` (neutral-30) | 1px solid `#e0e0e0` (neutral-40, bukan translucent — disable tidak perlu baca sebagai "raised") | `#9e9e9e` (neutral-60) |
 
-Dark mode: ring putih translucent tunggal (lebih terang saat hover), tanpa shadow lunak — bayangan gelap tidak kebaca di background gelap.
+Dark mode: ring putih translucent tunggal (lebih terang saat hover), tanpa shadow lunak — bayangan gelap tidak kebaca di background gelap. Disable dark: bg `rgba(255,255,255,.02)`, ring `rgb(255 255 255 / .05)`, teks `neutral-80`.
 
-Catatan: state `disable` ada di Figma tetapi belum punya class di CSS (belum dipakai di halaman mana pun).
+State `disable` sekarang punya class (`:disabled` untuk `<button>`, atau atribut `aria-disabled="true"` untuk `<a>` yang divisualkan disabled tapi tetap butuh markup non-interaktif di belakangnya) — sebelumnya cuma ada di Figma.
+
+### Variant — ghost (baru, belum dipakai di halaman manapun)
+Untuk aksi low-emphasis (misalnya berdampingan dengan CTA utama) yang sengaja tidak elevated sama sekali — **tidak ada shadow di state apapun**, depth cuma dari tint background. Tambahkan modifier `.button--ghost` bareng `.button`:
+
+| State | Background (light) | Background (dark) |
+|---|---|---|
+| Default | transparent | transparent |
+| Hover | `neutral-20` (`#f5f5f5`) | `rgba(255,255,255,.06)` |
+| Pressed | `neutral-30` (`#ededed`) | `rgba(255,255,255,.02)` |
+| Disable | transparent, teks `neutral-50` | transparent, teks `neutral-80` |
 
 ### Implementasi
-`.button` (large) dan `.button--default` (default) — lihat [css/style.css](css/style.css).
+`.button` (large) dan `.button--default` (default) — lihat [css/style.css](css/style.css). Modifier `.button--ghost` bisa digabung dengan keduanya.
 
 ```html
 <a href="works.html" class="button button--default">All Works</a>
 <button type="button" class="button button--default">Play with the tools</button>
+<button type="button" class="button button--default button--ghost" disabled>Low-emphasis action</button>
 ```
 
 ---
