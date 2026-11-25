@@ -805,8 +805,9 @@ body.is-leaving {
 
 /* ===== Button =====
    Component "button" di Figma (node 5:264, state=Default/Hover/Pressed, size=large): padding 8px/12px (bukan
-   16px horizontal), hover cuma nambah shadow (warna tetap), pressed dapat bg solid --neutral-30/90 (bukan
-   cuma teks yang berubah warna). */
+   16px horizontal), pressed dapat bg solid --neutral-30/90 (bukan cuma teks yang berubah warna). Hover sudah
+   diupdate dari spec Figma asli (shadow doang) ke background tint + shadow tipis — lihat emil-surfaces review
+   di components.md §2. */
 .button {
   display: inline-block;
   background: var(--color-button-bg);
@@ -835,9 +836,15 @@ body.is-leaving {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* Depth comes from the material itself shifting one step (color-mix),
+     plus one tight, close shadow — not a spreading three-layer blur
+     stack. A glow blooming outward on every side is what reads as a
+     generic UI-kit hover; a surface that visibly changes under the
+     cursor reads as considered. */
   .button:hover {
+    background: color-mix(in oklch, var(--color-button-bg) 97%, var(--color-subheadline));
     color: var(--color-button-text);
-    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 2px 4px rgb(0 0 0 / 0.05), 0 8px 16px rgb(0 0 0 / 0.07);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.04);
   }
 }
 
@@ -847,6 +854,14 @@ body.is-leaving {
   /* Pressed flattens back to the page, same as releasing a real button
      — the one moment with no shadow at all. */
   box-shadow: none;
+}
+
+.button:disabled,
+.button[aria-disabled="true"] {
+  background: var(--neutral-30);
+  color: var(--neutral-60);
+  box-shadow: 0 0 0 1px var(--neutral-40);
+  cursor: not-allowed;
 }
 
 /* Dark mode: a black-tinted ring/shadow (the light-mode rule above) is
@@ -868,6 +883,68 @@ body.is-leaving {
 }
 
 :root[data-theme="dark"] .button:active {
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .button:disabled,
+:root[data-theme="dark"] .button[aria-disabled="true"] {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--neutral-80);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05);
+}
+
+/* ===== Button — ghost =====
+   A variant with no shadow in ANY state — a ghost button sits flush on
+   the page, it doesn't elevate. Not every control needs simulated depth;
+   a plain background tint on hover/press is correct here, not a fallback.
+   Not yet used on any page — added so one exists when a low-emphasis
+   action (e.g. next to a primary CTA) needs it. */
+.button--ghost {
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button--ghost:hover {
+    background: var(--neutral-20);
+    box-shadow: none;
+  }
+}
+
+.button--ghost:active {
+  background: var(--neutral-30);
+  color: var(--color-button-text-pressed);
+  box-shadow: none;
+}
+
+.button--ghost:disabled,
+.button--ghost[aria-disabled="true"] {
+  background: transparent;
+  color: var(--neutral-50);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .button--ghost {
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="dark"] .button--ghost:hover {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+}
+
+:root[data-theme="dark"] .button--ghost:active {
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .button--ghost:disabled,
+:root[data-theme="dark"] .button--ghost[aria-disabled="true"] {
+  background: transparent;
+  color: var(--neutral-80);
   box-shadow: none;
 }
 
