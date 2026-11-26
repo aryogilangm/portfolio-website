@@ -105,20 +105,24 @@
 
   /* semantic colors */
   --color-bg: var(--neutral-10);
-  /* neutral-70 (#757575, ~4.6:1) read too washed-out gray; neutral-90
-     (#404040, ~10.4:1) sits one step lighter than the headline color
-     (neutral-110, #0a0a0a) — dark enough to read as "almost black"
-     while staying a distinct step from it. --color-card-subtitle
-     reuses this same value, same as the dark-mode treatment below. */
-  --color-paragraph: var(--neutral-90);
+  /* neutral-70 (#757575, ~4.6:1) read too washed-out; neutral-90
+     (#404040, ~10.4:1) sat too close to the headline color (neutral-110,
+     #0a0a0a, ~19.8:1) — both read as "almost black", so the page never
+     built a clear light/dark hierarchy and felt heavier than it should.
+     neutral-80 (#616161, ~6.2:1) widens that gap to roughly the same
+     ratio a reference site (adrien.website) uses between its heading
+     and body grays, while staying well clear of the 4.5:1 AA floor.
+     --color-card-subtitle reuses this same value, same as the
+     dark-mode treatment below. */
+  --color-paragraph: var(--neutral-80);
   --color-paragraph-highlight: var(--neutral-110);
-  --color-text: var(--neutral-90);
+  --color-text: var(--neutral-80);
   --color-headline: var(--primary-main);
   --color-subheadline: var(--neutral-110);
   --color-stroke: var(--neutral-30);
 
   --color-card-title: var(--neutral-110);
-  --color-card-subtitle: var(--neutral-90);
+  --color-card-subtitle: var(--neutral-80);
   --color-card-title-hover: var(--primary-main);
 
   --color-navbar-bg: var(--neutral-10);
@@ -288,6 +292,11 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* No weight/style here is currently faked (every font-weight used
+     site-wide — 400/500 — has a real loaded file), but this makes a
+     future regression (e.g. a stray font-weight: 700) show up as an
+     obvious missing-weight bug instead of a quietly faked bold. */
+  font-synthesis: none;
 }
 
 /* ===== Page transition (quiet fade) ===== */
@@ -342,12 +351,44 @@ body.is-leaving {
 
 /* ===== Type styles ===== */
 .title {
-  font-family: var(--font-heading);
-  font-size: 18px;
+  /* Geist, not Nohemi — matches .detail-title and every other heading
+     already moved off Nohemi. Color/weight match --color-subheadline
+     (same dark neutral every other title on the site uses) instead of
+     the accent blue, so hierarchy comes from size/weight alone. 20px
+     steps enough off the 16px body to read as a heading without
+     needing display-tight leading; 30px line-height (1.5) keeps the
+     same leading ratio .detail-title already uses. */
+  font-family: var(--font-body);
+  font-size: 20px;
   font-weight: 500;
-  line-height: 27px;
-  letter-spacing: 0.7px;
-  color: var(--color-headline);
+  line-height: 30px;
+  /* Sentence case, not an uppercase label — reading-size text like this
+     doesn't need tracking in either direction (emil-typography). */
+  letter-spacing: 0;
+  color: var(--color-subheadline);
+}
+
+/* ===== Homepage identity (name + role) =====
+   Replaces the old single-line "Hi, I'm Aryo" hero. Reference:
+   emilkowal.ski — name and role both sit at body text size (16px);
+   color (dark name, gray role) carries the hierarchy instead of a
+   bigger font. One line, "name / role" — .identity__role is an inline
+   span inside .identity__name and inherits its size/weight/leading,
+   only the color differs. Kept separate from .title (still the
+   heading style for article/project pages) since this is a different
+   component living only on the homepage. */
+.identity__name {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--color-subheadline);
+  margin: 0;
+}
+
+.identity__role {
+  color: var(--color-paragraph);
 }
 
 .paragraph {
@@ -355,7 +396,10 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  /* Body text at reading sizes doesn't need tracking in either direction
+     (see emil-typography) — Geist is already tight enough at 16px that
+     the old 0.4px just read as unnecessarily loose. */
+  letter-spacing: 0;
   color: var(--color-paragraph);
 }
 
@@ -382,9 +426,20 @@ body.is-leaving {
   color: var(--color-paragraph);
 }
 
+/* Underline drawn as a background-gradient line, not native
+   text-decoration — the line never changes thickness (color-only
+   hover, per design feedback), but keeping it off text-decoration
+   means any future motion on it animates cleanly instead of fighting
+   the browser's own underline rendering (see emil-typography). */
 .link {
-  text-decoration: underline;
   color: var(--color-link-default);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  padding-bottom: 1px;
+  transition: color 150ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -755,7 +810,7 @@ body.is-leaving {
      subtitle line. */
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
   color: var(--color-card-title);
   margin-top: var(--space-16);
 }
@@ -771,7 +826,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
   color: var(--color-card-subtitle);
 }
 
@@ -824,7 +879,10 @@ body.is-leaving {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0.7px;
+  /* Sentence case label ("All Works", "Play with the tools"), not an
+     uppercase one — reading-size text doesn't need tracking either
+     direction (emil-typography). */
+  letter-spacing: 0;
   color: var(--color-button-text);
   cursor: pointer;
   /* Ring + a close, tight shadow even at rest — the button already
@@ -972,7 +1030,11 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  /* "EXPERIMENTS" is typed uppercase, not .paragraph-family sentence
+     case — a small uppercase label wants a touch of positive tracking
+     so the capitals don't clump (emil-typography), so this keeps 0.7px
+     on purpose instead of following .paragraph's 0. */
+  letter-spacing: 0.7px;
   color: var(--color-text);
   margin-bottom: var(--space-24);
 }
@@ -991,7 +1053,7 @@ body.is-leaving {
      --color-paragraph's color, so weight carries the title's hierarchy. */
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
   color: var(--color-card-title);
 }
 
@@ -1006,7 +1068,7 @@ body.is-leaving {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
   color: var(--color-card-subtitle);
   margin-top: var(--space-4);
 }
@@ -1275,7 +1337,7 @@ body:has(.navbar--home) .footer-main__inner {
      the heading from body text, so letter-spacing doesn't need to carry
      that job too, and loose tracking on sentence-case text this size
      reads gappy rather than refined. */
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
   color: var(--color-subheadline);
 }
 
@@ -2639,14 +2701,14 @@ dialog.image-lightbox[open]::backdrop {
   gap: var(--space-32);
 }
 
-/* Matches .paragraph's metrics exactly (16px/400/24px/0.4px) so the
+/* Matches .paragraph's metrics exactly (16px/400/24px/0) so the
    footer email link doesn't read bigger or differently tracked than
    the Linkedin/Dribbble/Upwork/copyright text beside it. */
 .link--large {
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
 }
 
 .footer-detail__links {
