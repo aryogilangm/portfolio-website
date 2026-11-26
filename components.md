@@ -45,8 +45,8 @@ work-card (link, seluruh card bisa diklik)
 ### Ukuran
 | Size | Teks | Padding | Tinggi | Class |
 |---|---|---|---|---|
-| `large` | Geist 16px / 24px Regular, letter-spacing 0.4px | 8px 12px | 42px | `.button` |
-| `default` | Geist 14px / 21px Regular, letter-spacing 0.4px | 6px 12px | 35px | `.button.button--default` |
+| `large` | Geist 16px / 24px Regular, letter-spacing 0 | 8px 12px | 42px | `.button` |
+| `default` | Geist 14px / 21px Regular, letter-spacing 0 | 6px 12px | 35px | `.button.button--default` |
 
 Radius 8px di kedua ukuran. Pakai `default` untuk tombol aksi kecil di dekat konten (mis. di bawah gambar artikel); `large` untuk CTA mandiri. Saat ini semua pemakaian di situs pakai `default` — `large` tersedia di CSS tapi belum ada tombol yang pakai.
 
